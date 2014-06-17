@@ -1,0 +1,129 @@
+#
+#	Linux makefile for morph © Richard Dobson, CDP Ltd 2014
+#
+
+CC=gcc
+CFLAGS= -O -Wall -Dlinux -Dunix -I ../include -I ../../include
+SFSYS= ../../lib/libsfsys.a
+CDP2K= ../../lib/libcdp2k.a
+PROG=morph
+BINS= main.o ap_morph.o morph.o
+  
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+#
+#	targets
+#
+
+all:	makefile.linux $(PROG)
+
+makefile.linux:	Makefile.linux main.c ap_morph.c morph.c
+	$(CC) -M $(CFLAGS) main.c ap_morph.c morph.c > tmp.make
+	cat Makefile.linux tmp.make > makefile.linux
+	rm tmp.make	   
+
+$(PROG):	$(BINS)
+	$(CC) $(CFLAGS) $(BINS) -o $(PROG) $(CDP2K) $(SFSYS) -lm
+
+clean:
+	rm -f $(PROG)
+	
+veryclean:	clean
+	rm -f *.o
+
+install:	$(PROG)
+	cp $(PROG) ../Release
+#
+#	dependencies
+#
+
+main.o: main.c /usr/include/stdc-predef.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64.h \
+ /usr/lib64/gcc/x86_64-suse-linux/4.8/include/stddef.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib64/gcc/x86_64-suse-linux/4.8/include/stdarg.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/bits/stdio.h /usr/include/stdlib.h \
+ /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
+ /usr/include/endian.h /usr/include/bits/endian.h \
+ /usr/include/bits/byteswap.h /usr/include/bits/byteswap-16.h \
+ /usr/include/sys/types.h /usr/include/time.h /usr/include/sys/select.h \
+ /usr/include/bits/select.h /usr/include/bits/sigset.h \
+ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+ /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
+ /usr/include/bits/stdlib-bsearch.h /usr/include/bits/stdlib-float.h \
+ ../include/structures.h ../../include/sfsys.h ../include/tkglobals.h \
+ /usr/include/math.h /usr/include/bits/huge_val.h \
+ /usr/include/bits/huge_valf.h /usr/include/bits/huge_vall.h \
+ /usr/include/bits/inf.h /usr/include/bits/nan.h \
+ /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
+ /usr/include/bits/mathinline.h ../include/headread.h \
+ ../include/cdpstate.h ../include/morph.h ../include/filetype.h \
+ ../include/processno.h ../include/modeno.h ../include/formants.h \
+ ../include/cdpmain.h ../include/special.h ../include/logic.h \
+ ../include/globcon.h /usr/include/ctype.h /usr/include/xlocale.h \
+ /usr/include/string.h /usr/include/bits/string.h \
+ /usr/include/bits/string2.h
+ap_morph.o: ap_morph.c /usr/include/stdc-predef.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64.h \
+ /usr/lib64/gcc/x86_64-suse-linux/4.8/include/stddef.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib64/gcc/x86_64-suse-linux/4.8/include/stdarg.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/bits/stdio.h /usr/include/stdlib.h \
+ /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
+ /usr/include/endian.h /usr/include/bits/endian.h \
+ /usr/include/bits/byteswap.h /usr/include/bits/byteswap-16.h \
+ /usr/include/sys/types.h /usr/include/time.h /usr/include/sys/select.h \
+ /usr/include/bits/select.h /usr/include/bits/sigset.h \
+ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+ /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
+ /usr/include/bits/stdlib-bsearch.h /usr/include/bits/stdlib-float.h \
+ ../include/structures.h ../../include/sfsys.h ../include/cdpmain.h \
+ ../include/tkglobals.h /usr/include/math.h /usr/include/bits/huge_val.h \
+ /usr/include/bits/huge_valf.h /usr/include/bits/huge_vall.h \
+ /usr/include/bits/inf.h /usr/include/bits/nan.h \
+ /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
+ /usr/include/bits/mathinline.h ../include/headread.h \
+ ../include/cdpstate.h ../include/pnames.h ../include/morph.h \
+ ../include/processno.h ../include/modeno.h ../include/globcon.h \
+ ../include/logic.h ../include/filetype.h ../include/mixxcon.h \
+ ../include/speccon.h ../include/flags.h ../include/arrays.h \
+ ../include/formants.h ../../include/osbind.h /usr/include/string.h \
+ /usr/include/xlocale.h /usr/include/bits/string.h \
+ /usr/include/bits/string2.h ../include/srates.h
+morph.o: morph.c /usr/include/stdc-predef.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64.h \
+ /usr/lib64/gcc/x86_64-suse-linux/4.8/include/stddef.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib64/gcc/x86_64-suse-linux/4.8/include/stdarg.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/bits/stdio.h /usr/include/stdlib.h \
+ /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
+ /usr/include/endian.h /usr/include/bits/endian.h \
+ /usr/include/bits/byteswap.h /usr/include/bits/byteswap-16.h \
+ /usr/include/sys/types.h /usr/include/time.h /usr/include/sys/select.h \
+ /usr/include/bits/select.h /usr/include/bits/sigset.h \
+ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+ /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
+ /usr/include/bits/stdlib-bsearch.h /usr/include/bits/stdlib-float.h \
+ ../include/structures.h ../../include/sfsys.h ../include/pnames.h \
+ ../include/tkglobals.h /usr/include/math.h /usr/include/bits/huge_val.h \
+ /usr/include/bits/huge_valf.h /usr/include/bits/huge_vall.h \
+ /usr/include/bits/inf.h /usr/include/bits/nan.h \
+ /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
+ /usr/include/bits/mathinline.h ../include/headread.h \
+ ../include/cdpstate.h ../include/globcon.h ../include/modeno.h \
+ ../include/arrays.h ../include/morph.h ../include/cdpmain.h \
+ ../include/formants.h ../include/speccon.h /usr/include/string.h \
+ /usr/include/xlocale.h /usr/include/bits/string.h \
+ /usr/include/bits/string2.h

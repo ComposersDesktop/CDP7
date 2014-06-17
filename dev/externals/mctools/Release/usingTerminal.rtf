@@ -1,0 +1,592 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf320
+{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fmodern\fcharset0 CourierNewPS-BoldMT;\f2\fmodern\fcharset0 CourierNewPSMT;
+\f3\fmodern\fcharset0 Courier;\f4\froman\fcharset0 TimesNewRomanPSMT;}
+{\colortbl;\red255\green255\blue255;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid2}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
+{\info
+{\title acdpdoc.doc}
+{\subject CDP document template}
+{\author Archer Endrich}
+{\*\company CDP}}\paperw11900\paperh16840\margl1441\margr1010\margb1441\margt1441\vieww11900\viewh16820\viewkind1
+\deftab432
+\pard\tx2160\tx4032\pardeftab432\sa240\qj
+
+\f0\fs24 \cf0 \
+\pard\pardeftab432\sb120\sa120\qj
+
+\b\fs32 \cf0  Configuring OS X for command-line programs \
+\pard\pardeftab432\ql\qnatural
+
+\b0\fs24 \cf0 \
+
+\i These instructions are written for users of the CDP Multi-Channel Toolkit who have not installed the full CDP system, and who have not used command-line programs before. CDP users may also find it relevant, if they want to use the system from the command line.
+\i0 \
+\
+Underneath the slick graphics, OS X is a species of Unix.  Some tasks can only be performed using a text console, and by typing in instructions.  In OS X, this text console is called "Terminal", which can be found in 
+\b /Applications/Utilities
+\b0 . It is recommended that this be made accessible from the Dock: simply drag "Terminal" to the Dock.  OS X also provides a text editor, called "TextEdit", which can be found in 
+\b /Applications
+\b0 . Drag this to the dock in the same way. Note that by default it creates new documents in RTF format; you will need to change this to Plain Text format via TextEdit's Preferences page. \
+\
+Toolkit users are faced with three basic tasks:\
+\pard\tx220\tx720\pardeftab432\li720\fi-720\ql\qnatural
+\ls1\ilvl0\cf0 {\listtext	\'95	}configuring Terminal to find the various command-line programs in the Toolkit\
+{\listtext	\'95	}Navigating through directories containing soundfiles\
+{\listtext	\'95	}running Toolkit programs to process or play soundfiles\
+\pard\tx566\pardeftab432\ql\qnatural
+\cf0 \
+\pard\tx220\tx720\pardeftab432\li720\fi-720\ql\qnatural
+\ls2\ilvl0\cf0 Other tasks might include:\
+	\
+{\listtext	\'95	}copying soundfiles\
+{\listtext	\'95	}moving soundfiles between directories\
+{\listtext	\'95	}deleting soundfiles\
+{\listtext	\'95	}renaming soundfiles\
+\pard\tx566\pardeftab432\ql\qnatural
+\cf0 \
+These tasks can all be performed from the command-line. In more advanced usage, wildcard characters can be used to perform multiple changes with one command. For more complex batch processing shell scripts (offering powerful programming facilities) can be used, taking full advantage of the underlying unix-like nature of OS X.\
+\pard\pardeftab432\ql\qnatural
+\cf0 \
+Clicking on the Terminal icon in the Dock will launch Terminal, which will display a window to receive text commands and print any text output from them.\
+\
+The first thing to note is the title: this will indicate one of two forms of 
+\b command "shell"
+\b0 :\
+\
+
+\b bash\
+tcsh\
+\
+
+\b0 The difference between these is only of concern to advanced users experienced in using Unix tools.  However, the syntax for some commands is different, and the private initialization files are different, so it is important to know which shell you are using.  On all modern Mac systems, Bash is the default shell.\
+	\
+Open a Terminal session: you will see a command prompt comprising the computer name and your user name, for example:\
+\
+
+\b bash shell:
+\b0 \
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 cdpmac:~ fred$
+\f2\b0 \
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 \
+
+\b tcsh shell:
+\b0 \
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 [cdpmac:~] fred$
+\f2\b0 \
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab432\ql\qnatural\pardirnatural
+\cf0 At this stage, you are "in" your 
+\b home directory)
+\b0 . The following instructions assume that you stay in this directory. 
+\f2 \
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 \
+A standard Unix shorthand for "my home directory" is the tilde character: 
+\b ~
+\b0  which as shown above forms part of the initial shell prompt.\
+\
+ \
+The CDP system, including the multi-Channel Toolkit, comprises a large number of programs that are 
+\b not
+\b0  full Applications that one can double-click on from the Finder, 
+\b but rather are command-line tools
+\b0 . Front-end applications such as 
+\i Sound Loom
+\i0  run them behind the scenes; but they are actually designed to be run directly from the command-line, i.e. from within a Terminal session.  To access them, Terminal needs to know where they are \'96 what their "
+\b path
+\b0 " is \'96 i.e. what directory they are in. This in turn means that we may want to create a directory in which to put such programs.  The natural procedure of course is to use the Finder to do this \'96 e.g. to create a folder called "bin" in your home directory. It is equally possible to do this directly from the Terminal.\
+\
+All commands comprise a (usually) short command name followed by any further arguments (separated by spaces), and completed by pressing the Enter key, which initiates the command. In the examples below, all text typed by the user is shown in a monospaced font.\
+\
+Some basic unix commands:\
+\
+List directory:\
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 ls
+\f2\b0 \
+\
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 List Directory in a "long" format that displays the size and modification date of each file (or directory), and the permissions setting for each:
+\f2 \
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 ls -l
+\f0\b0 		\
+		\
+Make Directory "dirname":\
+
+\f1\b mkdir dirname
+\f2\b0 \
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 \
+Change into Directory "dirname":\
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 cd dirname
+\f2\b0 \
+\
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 Change to your home Directory:\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f1\b \cf0 cd ~
+\f2\b0 \
+\pard\pardeftab432\ql\qnatural
+\cf0 \
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 Read environment variables:\
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 env
+\f2\b0 \
+\
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 Note especially the 
+\b PATH
+\b0  string reported by this command
+\f3 \
+\pard\pardeftab432\ql\qnatural
+
+\f2 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f0 \cf0 To set up Terminal to run the Toolkit programs we must place them in a convenient directory, and then add the full path name of that directory to the user's PATH as shown by the 
+\f1\b env
+\f0\b0  command. \
+\
+A conventional name for a directory to contain executable programs (also termed "binary" files in unix-speak) is  simply 
+\f1\b bin
+\f0\b0 . You will find that some system directories on the system already have this name. These directories are not visible in the OS X finder (nor from any GUI application), but are accessible from a Terminal session. For  example: type the command 
+\f1\b ls
+\f0\b0  followed by a space and a forward slash:\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f1\b \cf0 ls /
+\f0\b0 \
+\
+This asks the shell to list all the directories from the root of the whole system: these directories will include all the standard system directories familiar to any unix user. Similarly, to see the contents of the directory called 
+\f2 /usr
+\f0  type:\
+\
+
+\f1\b ls /usr
+\f0\b0 \
+\
+A typical output would be:\
+\
+
+\f1\b X11R6           include         libexec         sbin            standalone\
+bin             lib             local           share\
+\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f0\b0 \cf0 In principle, the Toolkit programs could be placed in any of the available system bin folders, with \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f1\b \cf0 /usr/bin
+\f0\b0  or 
+\b /usr/local/bin
+\b0  the most likely locations. Writing to any of the system folders requires the use of the administrator password (and shell commands must be prefixed with the special command 
+\f1\b sudo
+\f0\b0 ). This is not recommended for users inexperienced in the command-line environment.\
+\
+Instead, we will see how to create a new 
+\f1\b bin
+\f0\b0  folder inside the home directory, and how to add its path to the list searched by the shell. Each shell checks a special hidden initialisation file when it starts up - the name of this file is particular to each of the available shells. These files are not present by default in a new OSX system \'96 we will need to crate them ourselves.\shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+\cf0 \shad0 \
+Open a new Terminal session, and note whether you are using the 
+\f1\b bash
+\f0\b0  or 
+\f1\b tcsh
+\f0\b0  shells; currently 
+\f1\b bash
+\f0\b0  seems to be the default. At the command prompt, type the following command to create the new directory:\
+\shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f1\b \cf0 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 mkdir bin
+\f2\b0 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f0 \cf0 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\shad0 It is easiest at this stage to use the finder to copy the unpacked Toolkit programs to the new directory. \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\b\fs28 \cf0 To create the bash initialisation file
+\b0 :
+\fs24 \
+\
+1. If you do not have a file called 
+\f2 .bash_profile
+\f0 .\
+\
+this is a file read by the Bash shell when a new terminal session is started. It is not visible in Finder because the leading dot character marks it as a "hidden" file. So how do we find out?\
+ Make sure you are in your home directory, as described above (symbolised by the ~ character). \
+Then type the command:\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f1\b \cf0 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 ls -a
+\f2\b0 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f0 \cf0 \shad0 \
+This prints a directory listing including the "dot" files - there may be several (the -a flag asks 
+\f2 ls
+\f0  to display 
+\i all
+\i0  files). The following instructions assume that 
+\f2 .bash_profile
+\f0  is not present, so we have to create one.\
+\
+Open the OS X application TextEdit to create a new text file. Write the following text exactly as shown:\
+\shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f1\b \cf0 \shad0 PATH=$PATH:~/bin\shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f0\b0 \cf0 \shad0 Use File->Save As to save the file with the name 
+\f2 .bash_profile
+\f0   in your home directory.   In the Save As dialog, uncheck "If no extension is provided, use .txt". When you click Save, a further dialog will appear with a warning about using the dot name - click "use .".\
+\
+To confirm that the file has been correctly named and saved, go back to your Terminal window and type the list command again:\
+\shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f1\b \cf0 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 ls -a
+\f0\b0 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+\cf0 \shad0 \
+2. If you do have 
+\f2 .bash_profile
+\f0 .\
+\
+This will have been created by some other program or library that you installed. It may or may not already have a PATH definition. You do not want to overwrite this file, or you will lose important configuration setting for whatever software created the file. This now includes the CDP system! \
+\
+You can open a file from Terminal in the default text editor (e.g. TextEdit.app) simply by typing:\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f1\b \cf0 open .bash_profile
+\f0\b0 \
+\
+Or, if you are comfortable with the 
+\i emacs
+\i0  editor, open the file in that directly:\
+\
+
+\f1\b emacs .bash_profile
+\f0\b0 \
+\
+All we have to do is add our path to any existing one. In fact, exactly the same line can be used as shown above:\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+\cf0 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f1\b \cf0 \shad0 PATH=$PATH:~/bin\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f4\b0 \cf0 as this appends our path to the existing one; \shad\shadx21\shady-22\shadr0\shado85 \shadc0 or you can add the new path directly to the end of the existing PATH string, remembering to use the separator character, here a colon. \shad0 Note that the system defines a default PATH early on in the boot process, inherited by each user. It is always essential to use an "update" PATH command as shown above; otherwise we will lose the paths to all the commands upon which Bash itself depends!
+\f1\b  
+\f0\b0 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+\cf0 \shad0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\b\fs28 \cf0 To create the tcsh initialisation file
+\b0 :
+\fs24 \
+\
+Create a new file in TextEdit, entering the text below, exactly:\
+\
+\pard\pardeftab432\fi432\ql\qnatural
+
+\f1\b \cf0 setenv PATH $\{PATH\}:$\{HOME\}/bin
+\f0\b0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+\cf0 \
+Again, you will need to confirm that the file 
+\f2 .tcshrc
+\f0  does not already exist - use the same procedure as described above. Assuming it does not, save this file with the hidden name  
+\f1\b .tcshrc
+\f0\b0 . Otherwise, edit the file to add the new path at the end of any existing PATH statement.\
+\
+ The different text in the two files reflects the differences of language between the two shells. However, the action is the same - to read the existing PATH string (as shown by the 
+\f2 env
+\f0  command), and append the new path. \
+\pard\pardeftab432\ql\qnatural
+\cf0 \
+
+\b NB:
+\b0   As their name suggests, these initialisation files are only read when a Terminal session is launched, so 
+\b to activate them 
+\b0 you will need to close all Terminal Sessions (you can have more than one running at the same time!).\
+\
+It is also possible to run one shell from another, simply by typing the name of the required shell. If you do this, you return to the previous shell by typing 
+\f1\b exit
+\f0\b0 .\
+\
+\pard\pardeftab432\ql\qnatural
+
+\b\fs28 \cf0 Using the command line to run Toolkit and programs.
+\b0\fs24 \
+\
+To test the installation it will be useful first to change to a folder containing some soundfiles. Assuming you have a folder "
+\b sounds
+\b0 " in your home directory, use the 
+\b Change Directory
+\b0  command "
+\b cd
+\b0 " to change to it:\
+\
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 cd sounds
+\f2\b0 \
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 \
+The directory sounds is now your "current directory". all commands operate relative to the current directory.\
+\
+
+\b A trick with cd
+\b0 \
+You can obtain a directory or file path by dragging it from the Finder into the open Terminal window - the path will then appear at the prompt line. The trick is to type 
+\f2 cd
+\f0  and a space first, then do the drag; the command is then ready to be invoked. This is especially useful for paths to some deeply nested directory - saves typing and avoids those typing mistokes!\
+\
+\
+Now run some programs, firstly by themselves:\
+\
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 sfprops
+\f2\b0 \
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 \
+This will list the properties of a soundfile.  Used without a filename it will print a usage message. Read this, and then run sfprops again, giving it the name of a soundfile:\
+\
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 sfprops testfile.aiff
+\f2\b0 \
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 \
+Other programs take one or more command-line arguments, separated by spaces. To play the soundfile 
+\i testfile.aiff
+\i0 , use the Toolkit program
+\f1\b  paplay
+\f0\b0 :\
+\
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 paplay testfile.aiff
+\f0\b0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab432\ql\qnatural\pardirnatural
+\cf0 if the file is mono, you could create a surround  version panned around the listener using 
+\f1\b abfpan 
+\f2\b0 or
+\f1\b  abfpan2
+\f0\b0 . Type the name of the program by itself to obtain the usage message. To rotate the file two times around the listener, type the following:\
+\pard\pardeftab432\ql\qnatural
+\cf0 \
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 abfpan testfile.aiff  testpan.aiff 0 2
+\f0\b0 \
+\
+To play such a multi-channel file using 
+\f1\b paplay
+\f0\b0 , it will of course be necessary to have an audio device that can render to the required number of channels.\
+\
+Alternatively, you can try out the AMB file format using the 
+\f2 -b
+\f0  flag, and giving the output file the 
+\i .amb
+\i0  extension:\
+\
+
+\f1\b abfpan -b testfile.aiff  testpan.amb 0 2
+\f0\b0 \
+\
+Note that the new program 
+\b abfpan2
+\b0  only outputs a (second-order)  AMB file, it does not decode. Use the new program 
+\b fmdcode
+\b0  for this (or 
+\b paplay
+\b0 ).\
+\
+\pard\pardeftab432\ql\qnatural
+
+\b\fs28 \cf0 Some standard command-line operations.
+\b0\fs24 \
+\
+To copy files from the current directory to a sub-directory called "aiffsamples", use the command 
+\f1\b cp
+\f0 :
+\b0 \
+\
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 cp *.aiff aiffsamples
+\f2\b0 \
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 \
+The '
+\b wildcard
+\b0 ' character 
+\b *
+\b0  means "anything", so this says copy 
+\b all
+\b0  files with names ending with 
+\b .aiff
+\b0  to the folder 
+\b aiffsamples
+\b0 . If you have a set of piano samples will a common root name (e.g. 
+\i pianoA1.aiff
+\i0 , 
+\i pianoA#1.aiff
+\i0 , 
+\i pianoB1.aiff
+\i0   etc.) , you can use the wildcard mechanism to copy just those files to a new subdirectory 
+\f1\b piano
+\f0\b0 :\
+\
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 mkdir piano\
+cp piano*.aiff  piano\
+cd piano\
+paplay pianoA1.aiff
+\f2\b0 \
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 \
+You may be impressed how speedily these operations are performed, compared to the manoeuvres required to do it from the finder!\
+\
+The move command is similarly simple. This moves all files whose names start with "piano" to the new directory:\
+\
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 mv piano*.aiff piano
+\f0\b0 \
+\
+The 
+\f2 mv
+\f0  command is also used to rename files:\
+\
+
+\f1\b mv verylongfilename.aiff  vname.aiff
+\f2\b0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f0 \cf0 Or in combination, to move the file to the new folder:\
+\
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 mv verylongfilename.aiff  piano/vname.aiff
+\f2\b0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f0 \cf0 Note however that these commands will not work quite so conveniently with file or directory names containing spaces. Such names have to be enclosed in quotation marks:\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab432\ql\qnatural\pardirnatural
+
+\f1\b \cf0 mkdir "Tenor Sax"\
+mv "sax A 1.aiff" "Tenor Sax"/saxA1.aiff
+\f0\b0 \
+\
+Such filenames are really somewhat inimical to fluent command-line work, simply because spaces are universally interpreted as string separators. Users likely to make extensive use of the command-line will find it  expedient to rename such files to names replacing spaces with, say, the underscore character. An adept unix programmer would create a shell script ( a text program run by the shell itself)  to perform this task for a large number of files; at this stage it will be safer to perform the task by hand in the Finder. Worst of all are names containing multiple spaces; it is all but impossible to work with these from the command-line (at least, without investigating each filename individually from the finder first!).\
+\
+To delete a file (or files), use the 
+\f1\b rm
+\f0\b0  command:\
+\
+
+\f1\b rm testfile.aiff
+\f0\b0 \
+\
+Wild-cards can be used:\
+\
+
+\f1\b rm piano*.aiff
+\f0\b0 \
+\
+But take care! The command:\
+\
+
+\f1\b rm *
+\f0\b0 \
+\
+will remove 
+\i every file
+\i0  in the current directory, with no possibility of recovery, and with no helpful warning message! \
+\
+Finally, note that all such commands have 
+\b online help
+\b0  available in the form of the "man" command.\
+Typing: \
+\
+
+\f1\b man mv
+\f0\b0 \
+\
+will print a stream of text information to the console (press the spacebar to read the next page, enter to move down a single line, and type q  to return to the shell prompt).\
+\
+To see just how comprehensive this documentation can be, try typing:\
+\pard\pardeftab432\ql\qnatural
+\cf0 \
+\pard\pardeftab432\ql\qnatural
+
+\f1\b \cf0 man bash
+\f2\b0 \
+\pard\pardeftab432\ql\qnatural
+
+\f0 \cf0 \
+This will print the full documentation on the bash shell, including the syntax and keywords used for advanced shell programming.  \
+\
+Needless to say, this document only scratches the surface of what is possible from the command line. OS X users are encouraged to research further, perhaps by buying one of the many books available on how to use a unix system (some are specific to OS X), how to write shell scripts, and how to use other scripting languages such as perl or Python, both supplied as standard with OS X.\
+\
+ \
+Richard Dobson, July 2006, updated November 2010\
+\
+\
+\
+\
+\
+\
+}

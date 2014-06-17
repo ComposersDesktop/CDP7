@@ -1,0 +1,263 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		052C64160BF1E12C003FC6AD /* ap_extend.c in Sources */ = {isa = PBXBuildFile; fileRef = 052C640F0BF1E12C003FC6AD /* ap_extend.c */; };
+		052C64170BF1E12C003FC6AD /* drunk.c in Sources */ = {isa = PBXBuildFile; fileRef = 052C64100BF1E12C003FC6AD /* drunk.c */; };
+		052C64190BF1E12C003FC6AD /* extprepro.c in Sources */ = {isa = PBXBuildFile; fileRef = 052C64120BF1E12C003FC6AD /* extprepro.c */; };
+		052C641A0BF1E12C003FC6AD /* iterate.c in Sources */ = {isa = PBXBuildFile; fileRef = 052C64130BF1E12C003FC6AD /* iterate.c */; };
+		052C641B0BF1E12C003FC6AD /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 052C64140BF1E12C003FC6AD /* main.c */; };
+		052C641C0BF1E12C003FC6AD /* zigzag.c in Sources */ = {isa = PBXBuildFile; fileRef = 052C64150BF1E12C003FC6AD /* zigzag.c */; };
+		8369630318902120009098DF /* libsfsys.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8369630218902120009098DF /* libsfsys.a */; };
+		83D6FCF611E75ABE009360EF /* libcdp2k.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83D6FCF511E75ABE009360EF /* libcdp2k.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8DD76FAF0486AB0100D96B5E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		052C640F0BF1E12C003FC6AD /* ap_extend.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = ap_extend.c; sourceTree = "<group>"; };
+		052C64100BF1E12C003FC6AD /* drunk.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = drunk.c; sourceTree = "<group>"; };
+		052C64120BF1E12C003FC6AD /* extprepro.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = extprepro.c; sourceTree = "<group>"; };
+		052C64130BF1E12C003FC6AD /* iterate.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = iterate.c; sourceTree = "<group>"; };
+		052C64140BF1E12C003FC6AD /* main.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		052C64150BF1E12C003FC6AD /* zigzag.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = zigzag.c; sourceTree = "<group>"; };
+		8369630218902120009098DF /* libsfsys.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsfsys.a; path = ../../lib/libsfsys.a; sourceTree = SOURCE_ROOT; };
+		83D6FCF511E75ABE009360EF /* libcdp2k.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcdp2k.a; path = ../../lib/libcdp2k.a; sourceTree = SOURCE_ROOT; };
+		8DD76FB20486AB0100D96B5E /* extend */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = extend; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8DD76FAD0486AB0100D96B5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83D6FCF611E75ABE009360EF /* libcdp2k.a in Frameworks */,
+				8369630318902120009098DF /* libsfsys.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* extend */ = {
+			isa = PBXGroup;
+			children = (
+				8369630218902120009098DF /* libsfsys.a */,
+				052C640F0BF1E12C003FC6AD /* ap_extend.c */,
+				052C64100BF1E12C003FC6AD /* drunk.c */,
+				052C64120BF1E12C003FC6AD /* extprepro.c */,
+				83D6FCF511E75ABE009360EF /* libcdp2k.a */,
+				052C64130BF1E12C003FC6AD /* iterate.c */,
+				052C64140BF1E12C003FC6AD /* main.c */,
+				052C64150BF1E12C003FC6AD /* zigzag.c */,
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = extend;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DD76FB20486AB0100D96B5E /* extend */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8DD76FA90486AB0100D96B5E /* extend */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "extend" */;
+			buildPhases = (
+				8DD76FAB0486AB0100D96B5E /* Sources */,
+				8DD76FAD0486AB0100D96B5E /* Frameworks */,
+				8DD76FAF0486AB0100D96B5E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = extend;
+			productInstallPath = "$(HOME)/bin";
+			productName = extend;
+			productReference = 8DD76FB20486AB0100D96B5E /* extend */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "extend" */;
+			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 08FB7794FE84155DC02AAC07 /* extend */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8DD76FA90486AB0100D96B5E /* extend */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DD76FAB0486AB0100D96B5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				052C64160BF1E12C003FC6AD /* ap_extend.c in Sources */,
+				052C64170BF1E12C003FC6AD /* drunk.c in Sources */,
+				052C64190BF1E12C003FC6AD /* extprepro.c in Sources */,
+				052C641A0BF1E12C003FC6AD /* iterate.c in Sources */,
+				052C641B0BF1E12C003FC6AD /* main.c in Sources */,
+				052C641C0BF1E12C003FC6AD /* zigzag.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB928608733DD80010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_2)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../lib/build\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/../../../../sfsys2007\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../lib\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../lib\"";
+				PRODUCT_NAME = extend;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		1DEB928708733DD80010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_2)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../lib/build\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/../../../../sfsys2007\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../lib\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../lib\"";
+				PRODUCT_NAME = extend;
+			};
+			name = Release;
+		};
+		1DEB928A08733DD80010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					unix,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				USER_HEADER_SEARCH_PATHS = "../include ../../include $(inherited)";
+			};
+			name = Debug;
+		};
+		1DEB928B08733DD80010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH)";
+				GCC_PREPROCESSOR_DEFINITIONS = unix;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				USER_HEADER_SEARCH_PATHS = "../include ../../include $(inherited)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "extend" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB928608733DD80010E9CD /* Debug */,
+				1DEB928708733DD80010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "extend" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB928A08733DD80010E9CD /* Debug */,
+				1DEB928B08733DD80010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

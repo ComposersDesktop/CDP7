@@ -1,0 +1,178 @@
+.TH "aaio.h" 3 "22 Sep 2005" "Version 0.3.1" "AAIO Advanced I/O Library" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+aaio.h \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBgetch\fP (void)"
+.br
+.ti -1c
+.RI "int \fBgetche\fP (void)"
+.br
+.ti -1c
+.RI "int \fBkbhit\fP (void)"
+.br
+.ti -1c
+.RI "int \fBaaio_hard_reset\fP (void)"
+.br
+.ti -1c
+.RI "int \fBaaio_reset\fP (void)"
+.br
+.ti -1c
+.RI "int \fBaaio_grant_tty_lock\fP (void)"
+.br
+.ti -1c
+.RI "int \fBaaio_flush\fP (void)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+AAIO Advanced I/O
+.PP
+Many people moving from Windows programming to UNIX program have problems with the missing non-blocking \fBgetch()\fP and \fBgetche()\fP functions provided by conio.h. This library provides the functionality of \fBgetch()\fP, \fBgetche()\fP and \fBkbhit()\fP. It does not require an initialization (like curses) and does not abuse the terminal (i.e. whenever the mode of the terminal is changed its state is stored so it can be restored). For increased efficiency there exists funcionality to allow abuse of the terminal as well as functions to restore or reset the terminal when the application exits.
+.PP
+\fBAuthor:\fP
+.RS 4
+Daniel Aarno 
+.RE
+.PP
+\fBVersion:\fP
+.RS 4
+0.3.0
+.RE
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "int aaio_flush (void)"
+.PP
+Flush any remaining characters from the stdandard input.
+.PP
+\fBReturns:\fP
+.RS 4
+The number of charactes removed. 
+.RE
+.PP
+
+.SS "int aaio_grant_tty_lock (void)"
+.PP
+Allow the aaio functions (getch, getche and kbhit) to 'abuse' the terminal (i.e. change the terminal settings without resetting them. This gives a boost to performance that can be usefull in some cases. Most often, however, it is not necessary or recomended to grant the tty lock to aaio.
+.PP
+If the lock has been granted aaio_reset must be called before program exit to reset the terminal to its original state.
+.PP
+\fBDeprecated\fP
+.RS 4
+There is no need to use the aaio_grant_tty_lock and aaio_reset functions as of version 0.2.0 an later. The speedup thay can achieve is reduced to an insignificant level. The functionality may be removed in later versions of the library. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+-1 on error, 0 on success. 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+The aaio library does not really get a lock on the tty, others may change the tty settings, however this will corrupt the aaio library and can cause undefined results. 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBaaio_reset\fP 
+.RE
+.PP
+
+.SS "int aaio_hard_reset (void)"
+.PP
+Perform a hard reset of the terminal to cause it to go back to its original state.
+.PP
+\fBReturns:\fP
+.RS 4
+-1 on error, 0 on success. 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+reset(1) 
+.PP
+\fBaaio_reset\fP 
+.RE
+.PP
+
+.SS "int aaio_reset (void)"
+.PP
+Reset the terminal to the state it was in when aaio_grant_tty_lock was called.
+.PP
+\fBDeprecated\fP
+.RS 4
+There is no need to use the aaio_grant_tty_lock and aaio_reset functions as of version 0.2.0 an later. The speedup thay can achieve is reduced to an insignificant level. The functionality may be removed in later versions of the library. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+-1 on error, 0 on success. 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBaaio_hard_reset\fP 
+.PP
+\fBaaio_grant_tty_lock\fP 
+.RE
+.PP
+
+.SS "int getch (void)"
+.PP
+Get a character from stdin. Block until a character is available but does not wait for a new line. Characters are not echoed on to screen.
+.PP
+\fBReturns:\fP
+.RS 4
+The first character available cast to an int or -1 on error. 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBgetche\fP 
+.RE
+.PP
+
+.SS "int getche (void)"
+.PP
+Get a character from stdin. Block until a character is available but does not wait for a new line. Characters are echoed on to screen.
+.PP
+\fBReturns:\fP
+.RS 4
+The first character available cast to an int or -1 on error. 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBgetch\fP 
+.RE
+.PP
+
+.SS "int kbhit (void)"
+.PP
+Get the number of characters available on stdin.
+.PP
+\fBReturns:\fP
+.RS 4
+The number of characters that can be read from stdin without blocking, -1 on error. 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBgetch\fP 
+.PP
+\fBgetche\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for AAIO Advanced I/O Library from the source code.

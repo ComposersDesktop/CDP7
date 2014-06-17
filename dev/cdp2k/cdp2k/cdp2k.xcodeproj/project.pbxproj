@@ -1,0 +1,281 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		83C4BA52112EBE4A00C09344 /* writedata.c in Sources */ = {isa = PBXBuildFile; fileRef = 83C4BA48112EBE4A00C09344 /* writedata.c */; };
+		83C4BA53112EBE4A00C09344 /* validate.c in Sources */ = {isa = PBXBuildFile; fileRef = 83C4BA49112EBE4A00C09344 /* validate.c */; };
+		83C4BA54112EBE4A00C09344 /* tklib3.c in Sources */ = {isa = PBXBuildFile; fileRef = 83C4BA4A112EBE4A00C09344 /* tklib3.c */; };
+		83C4BA55112EBE4A00C09344 /* tklib1.c in Sources */ = {isa = PBXBuildFile; fileRef = 83C4BA4B112EBE4A00C09344 /* tklib1.c */; };
+		83C4BA56112EBE4A00C09344 /* tkinput.c in Sources */ = {isa = PBXBuildFile; fileRef = 83C4BA4C112EBE4A00C09344 /* tkinput.c */; };
+		83C4BA57112EBE4A00C09344 /* special.c in Sources */ = {isa = PBXBuildFile; fileRef = 83C4BA4D112EBE4A00C09344 /* special.c */; };
+		83C4BA58112EBE4A00C09344 /* readfiles.c in Sources */ = {isa = PBXBuildFile; fileRef = 83C4BA4E112EBE4A00C09344 /* readfiles.c */; };
+		83C4BA59112EBE4A00C09344 /* readdata.c in Sources */ = {isa = PBXBuildFile; fileRef = 83C4BA4F112EBE4A00C09344 /* readdata.c */; };
+		83C4BA5A112EBE4A00C09344 /* parstruct.c in Sources */ = {isa = PBXBuildFile; fileRef = 83C4BA50112EBE4A00C09344 /* parstruct.c */; };
+		83C4BA60112EBE5A00C09344 /* mainfuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = 83C4BA5D112EBE5A00C09344 /* mainfuncs.c */; };
+		83C4BA61112EBE5A00C09344 /* formantsg.c in Sources */ = {isa = PBXBuildFile; fileRef = 83C4BA5E112EBE5A00C09344 /* formantsg.c */; };
+		83C4BA62112EBE5A00C09344 /* dzsetup.c in Sources */ = {isa = PBXBuildFile; fileRef = 83C4BA5F112EBE5A00C09344 /* dzsetup.c */; };
+		83C4BA66112EBE7400C09344 /* cdparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 83C4BA65112EBE7400C09344 /* cdparse.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		83C4BA48112EBE4A00C09344 /* writedata.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = writedata.c; path = ../writedata.c; sourceTree = SOURCE_ROOT; };
+		83C4BA49112EBE4A00C09344 /* validate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = validate.c; path = ../validate.c; sourceTree = SOURCE_ROOT; };
+		83C4BA4A112EBE4A00C09344 /* tklib3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tklib3.c; path = ../tklib3.c; sourceTree = SOURCE_ROOT; };
+		83C4BA4B112EBE4A00C09344 /* tklib1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tklib1.c; path = ../tklib1.c; sourceTree = SOURCE_ROOT; };
+		83C4BA4C112EBE4A00C09344 /* tkinput.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tkinput.c; path = ../tkinput.c; sourceTree = SOURCE_ROOT; };
+		83C4BA4D112EBE4A00C09344 /* special.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = special.c; path = ../special.c; sourceTree = SOURCE_ROOT; };
+		83C4BA4E112EBE4A00C09344 /* readfiles.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = readfiles.c; path = ../readfiles.c; sourceTree = SOURCE_ROOT; };
+		83C4BA4F112EBE4A00C09344 /* readdata.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = readdata.c; path = ../readdata.c; sourceTree = SOURCE_ROOT; };
+		83C4BA50112EBE4A00C09344 /* parstruct.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = parstruct.c; path = ../parstruct.c; sourceTree = SOURCE_ROOT; };
+		83C4BA5D112EBE5A00C09344 /* mainfuncs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mainfuncs.c; path = ../mainfuncs.c; sourceTree = SOURCE_ROOT; };
+		83C4BA5E112EBE5A00C09344 /* formantsg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = formantsg.c; path = ../formantsg.c; sourceTree = SOURCE_ROOT; };
+		83C4BA5F112EBE5A00C09344 /* dzsetup.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dzsetup.c; path = ../dzsetup.c; sourceTree = SOURCE_ROOT; };
+		83C4BA65112EBE7400C09344 /* cdparse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cdparse.c; path = ../../cdparse/cdparse.c; sourceTree = SOURCE_ROOT; };
+		D2AAC046055464E500DB518D /* libcdp2k.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcdp2k.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D289987405E68DCB004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* cdp2k */ = {
+			isa = PBXGroup;
+			children = (
+				83C4BA65112EBE7400C09344 /* cdparse.c */,
+				83C4BA5D112EBE5A00C09344 /* mainfuncs.c */,
+				83C4BA5E112EBE5A00C09344 /* formantsg.c */,
+				83C4BA5F112EBE5A00C09344 /* dzsetup.c */,
+				83C4BA48112EBE4A00C09344 /* writedata.c */,
+				83C4BA49112EBE4A00C09344 /* validate.c */,
+				83C4BA4A112EBE4A00C09344 /* tklib3.c */,
+				83C4BA4B112EBE4A00C09344 /* tklib1.c */,
+				83C4BA4C112EBE4A00C09344 /* tkinput.c */,
+				83C4BA4D112EBE4A00C09344 /* special.c */,
+				83C4BA4E112EBE4A00C09344 /* readfiles.c */,
+				83C4BA4F112EBE4A00C09344 /* readdata.c */,
+				83C4BA50112EBE4A00C09344 /* parstruct.c */,
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = cdp2k;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC046055464E500DB518D /* libcdp2k.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC043055464E500DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC045055464E500DB518D /* cdp2k */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "cdp2k" */;
+			buildPhases = (
+				D2AAC043055464E500DB518D /* Headers */,
+				D2AAC044055464E500DB518D /* Sources */,
+				D289987405E68DCB004EDB86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = cdp2k;
+			productName = cdp2k;
+			productReference = D2AAC046055464E500DB518D /* libcdp2k.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "cdp2k" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* cdp2k */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC045055464E500DB518D /* cdp2k */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC044055464E500DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83C4BA52112EBE4A00C09344 /* writedata.c in Sources */,
+				83C4BA53112EBE4A00C09344 /* validate.c in Sources */,
+				83C4BA54112EBE4A00C09344 /* tklib3.c in Sources */,
+				83C4BA55112EBE4A00C09344 /* tklib1.c in Sources */,
+				83C4BA56112EBE4A00C09344 /* tkinput.c in Sources */,
+				83C4BA57112EBE4A00C09344 /* special.c in Sources */,
+				83C4BA58112EBE4A00C09344 /* readfiles.c in Sources */,
+				83C4BA59112EBE4A00C09344 /* readdata.c in Sources */,
+				83C4BA5A112EBE4A00C09344 /* parstruct.c in Sources */,
+				83C4BA60112EBE5A00C09344 /* mainfuncs.c in Sources */,
+				83C4BA61112EBE5A00C09344 /* formantsg.c in Sources */,
+				83C4BA62112EBE5A00C09344 /* dzsetup.c in Sources */,
+				83C4BA66112EBE7400C09344 /* cdparse.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91EC08733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../include,
+					"$(HOME)/cdp/dev/include\n\n../../include",
+					"$(HOME)/cdp/dev/include",
+				);
+				INSTALL_PATH = /usr/local/lib;
+				LD_OPENMP_FLAGS = "";
+				PRODUCT_NAME = cdp2k;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
+			};
+			name = Debug;
+		};
+		1DEB91ED08733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = (
+					../../include,
+					"$(HOME)/cdp/dev/include\n\n../../include",
+					"$(HOME)/cdp/dev/include",
+				);
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = cdp2k;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
+			};
+			name = Release;
+		};
+		1DEB91F008733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_FAST_OBJC_DISPATCH = NO;
+				GCC_LINK_WITH_DYNAMIC_LIBRARIES = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-Dunix";
+				PREBINDING = NO;
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				SDKROOT = macosx10.4;
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;
+				USER_HEADER_SEARCH_PATHS = "$(HOME)/cdp/dev/include ../../include\n";
+			};
+			name = Debug;
+		};
+		1DEB91F108733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_FAST_OBJC_DISPATCH = NO;
+				GCC_LINK_WITH_DYNAMIC_LIBRARIES = NO;
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-Dunix";
+				PREBINDING = NO;
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				SDKROOT = macosx10.4;
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;
+				USER_HEADER_SEARCH_PATHS = "$(HOME)/cdp/dev/include ../../include\n";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "cdp2k" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91EC08733DB70010E9CD /* Debug */,
+				1DEB91ED08733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "cdp2k" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91F008733DB70010E9CD /* Debug */,
+				1DEB91F108733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

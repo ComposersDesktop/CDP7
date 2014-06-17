@@ -1,0 +1,2 @@
+synthesis.c CREATES newsynth.exe
+spectrum.c MODE 1 is not currently useful (it operates in a suite of other programs for data analysis)
