@@ -1,6 +1,5 @@
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.5  -arch i386
-  -Dunix  -DMAC  -DPA_USE_COREAUDIO -fomit-frame-pointer
+  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.5  -arch i386 -Dunix  -DMAC  -DPA_USE_COREAUDIO -fomit-frame-pointer
   -funroll-loops")
   set(EXTRA_LIBRARIES1 CoreAudio AudioToolbox AudioUnit Carbon m ${EXTRA_LIBARIES})
 else()

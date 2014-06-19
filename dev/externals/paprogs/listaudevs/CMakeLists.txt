@@ -1,6 +1,5 @@
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.5  -arch i386
-                     -Dunix -fomit-frame-pointer -funroll-loops")
+  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.5  -arch i386 -Dunix -fomit-frame-pointer -funroll-loops")
   set(EXTRA_LIBRARIES1 jack asound portsf pthread ${EXTRA_LIBRARIES})
 else()
   if(MINGW)
