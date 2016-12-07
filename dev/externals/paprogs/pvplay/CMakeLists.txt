@@ -16,7 +16,7 @@ else()
     set(EXTRA_LIBRARIES1 winmm dsound winspool ${EXTRA_LIBRARIES})
   else()
     set(CMAKE_C_FLAGS "-O3 -Wall -Dlinux -Dunix -fomit-frame-pointer -funroll-loops")
-    set(EXTRA_LIBRARIES1 asound jack pthread ${EXTRA_LIBRARIES})
+    set(EXTRA_LIBRARIES1 asound jack pthread aaio ${EXTRA_LIBRARIES})
   endif()
 endif()
 

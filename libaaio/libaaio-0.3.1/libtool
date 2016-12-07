@@ -38,7 +38,7 @@ if test "X${CDPATH+set}" = Xset; then CDPATH=:; export CDPATH; fi
 
 # ### BEGIN LIBTOOL CONFIG
 
-# Libtool was configured on host harvey:
+# Libtool was configured on host birtwistle:
 
 # Shell to use when invoking shell scripts.
 SHELL="/bin/sh"
@@ -56,7 +56,7 @@ build_libtool_need_lc=no
 fast_install=yes
 
 # The host system.
-host_alias=x86_64-unknown-linux-gnu
+host_alias=
 host=x86_64-unknown-linux-gnu
 
 # An echo program that does not interpret backslashes.
@@ -147,7 +147,7 @@ dlopen_self_static=unknown
 link_static_flag=""
 
 # Compiler flag to turn off builtin functions.
-no_builtin_flag=" -fno-builtin -fno-rtti -fno-exceptions"
+no_builtin_flag=" -fno-builtin"
 
 # Compiler flag to allow reflexive dlopens.
 export_dynamic_flag_spec="\${wl}--export-dynamic"
