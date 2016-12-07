@@ -15031,7 +15031,7 @@ if ac_fn_c_try_compile "$LINENO"; then :
 	for ac_word in $CC $CFLAGS $CPPFLAGS $LDFLAGS; do
 	 if test -n "$ac_prev"; then
 	   case $ac_word in
-	     i?86 | x86_64 | ppc | ppc64)
+	     i?86 | x86_64)
 	       if test -z "$ac_arch" || test "$ac_arch" = "$ac_word"; then
 		 ac_arch=$ac_word
 	       else
@@ -15825,7 +15825,7 @@ case "${host_os}" in
            esac
 
                                  mac_arches=""
-           for arch in i386 x86_64 ppc ppc64
+           for arch in i386 x86_64
            do
               save_CFLAGS="$CFLAGS"
               CFLAGS="$CFLAGS -arch $arch"

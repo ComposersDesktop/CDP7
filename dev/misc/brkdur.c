@@ -44,7 +44,7 @@ int 	sizeq(double f1,double f2);
 int  	get_float_from_within_string(char **str,double *val);
 double 	round(double a);
 int 	flteq(double a,double b);
-const char* cdp_version = "5.0.1";
+const char* cdp_version = "7.1.0";
 
 int main(int argc,char * argv [])
 {

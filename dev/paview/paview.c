@@ -66,7 +66,7 @@ int buflen;				/* buffer length in samps			*/
 int  ifd;					/* input soundfile descriptor		*/
 int  channels, expanded;	/* number of channels of input		*/
 int startwin, endwin, startchan, endchan;
-const char* cdp_version = "5.0.1";
+const char* cdp_version = "7.1.0";
 
 int main(int argc,char *argv[])
 {

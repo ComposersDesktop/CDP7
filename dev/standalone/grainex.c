@@ -61,7 +61,7 @@ char errstr[2400];
 /*extern*/ int sloombatch = 0;	/*TW may 2001 */
 /*extern*/ int anal_infiles = 0;
 /*extern*/ int is_converted_to_stereo = -1;
-const char* cdp_version = "6.1.0";
+const char* cdp_version = "7.1.0";
 
 static int get_the_process_no(char *prog_identifier_from_cmdline,dataptr dz);
 static int setup_grextend_application(dataptr dz);

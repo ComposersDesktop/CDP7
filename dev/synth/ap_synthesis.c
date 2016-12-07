@@ -518,7 +518,7 @@ int usage2(char *str)
 	} else if(!strcmp(str,"chord")) {
     	sprintf(errstr,
     	"GENERATE CHORD ON SIMPLE WAVEFORM\n\n"
-		"USAGE: synth wave mode datafile outfile sr chans dur  [-aamp] [-ttabsize]\n\n"
+		"USAGE: synth chord mode outfile datafile sr chans dur  [-aamp] [-ttabsize]\n\n"
 		"MODES ARE\n"
 		"1) DATAFILE has list of midi data\n"
 		"2) DATAFILE has list of frequency data\n"

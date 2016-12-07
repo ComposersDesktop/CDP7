@@ -84,7 +84,7 @@ int anal_infiles = 1;
 int	sloom = 0;
 int sloombatch = 0;
 
-const char* cdp_version = "6.1.0";
+const char* cdp_version = "7.1.0";
 
 static int get_the_process_no(char *prog_identifier_from_cmdline,dataptr dz);
 static int get_the_mode_from_cmdline(char *str,dataptr dz);

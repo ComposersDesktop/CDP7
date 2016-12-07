@@ -73,7 +73,7 @@ int sloombatch = 0;
 
 #define MINFADE	2		// minimum fade of element in MS
 
-const char* cdp_version = "7.0.0";
+const char* cdp_version = "7.1.0";
 
 //CDP LIB REPLACEMENTS
 static int setup_iterfof_application(dataptr dz);

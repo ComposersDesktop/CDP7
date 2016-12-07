@@ -35,7 +35,7 @@
 #define SUCCEEDED	(0)
 
 static int readfhead(int ifd);
-const char* cdp_version = "5.0.2";
+const char* cdp_version = "7.1.0";
 
 int main(int argc, char *argv[])
 {

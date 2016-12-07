@@ -52,7 +52,7 @@ int 	sloombatch = 0;
 int		ignore_s_and_e = 0, ignore_c = 0;
 
 char	errstr[400];
-const char* cdp_version = "5.0.1";
+const char* cdp_version = "7.1.0";
 
 int main(int argc,char *argv[])
 {

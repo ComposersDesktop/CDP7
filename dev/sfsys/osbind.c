@@ -98,7 +98,7 @@ Mfree(void *ptr)
 /************** WINDOWS ************************/
 
 #ifdef _WIN32
-unsigned long
+unsigned int
 hz200()
 {
 	unsigned long secs, ticks;
@@ -108,7 +108,7 @@ hz200()
 	ticks = st.wMilliseconds/(1000/200);
 	secs = (st.wHour*60 + st.wMinute) * 60 + st.wSecond;
 
-	return secs*200 + ticks;
+	return (unsigned int)(secs*200 + ticks);
 }
 /*TW*/
 unsigned int

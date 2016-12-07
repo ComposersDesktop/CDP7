@@ -406,7 +406,7 @@ int main(int argc,char **argv)
     
     /* CDP version number; now set for release 7 */
     if(argc==2 && (stricmp(argv[1],"--version")==0)){
-        printf("7.0.0\n");
+        printf("7.1.0\n");
         return 0;
     }
     
@@ -420,6 +420,7 @@ int main(int argc,char **argv)
 	sfdata.ringbufData = NULL;
 	sfdata.outbuf_l = NULL;
 	sfdata.outbuf_r = NULL;
+    sfdata.pvfile = -1;
     
 	printf("PvPlay: play multi-channel PCM and analysis files (.ana, .pvx). V7.0.0 RWD,CDP 2014\n");
 	file_playing = 0;
@@ -1286,23 +1287,32 @@ error:
 #endif
     if( sfdata.ringbufData )       
         PaUtil_FreeMemory(sfdata.ringbufData);
+    
     if(sfdata.inbuf)
         PaUtil_FreeMemory(sfdata.inbuf);
+    
     if(sfdata.membuf)
         PaUtil_FreeMemory(sfdata.membuf);
+    
     if(sfdata.outbuf_l)
         PaUtil_FreeMemory(sfdata.outbuf_l);
+    
     if(sfdata.outbuf_r)
-        PaUtil_FreeMemory(sfdata.outbuf_r);    
+        PaUtil_FreeMemory(sfdata.outbuf_r); 
+    
 	if(sfdata.ifd >= 0)
 		sndcloseEx(sfdata.ifd);
+    
 	if(sfdata.pvfile >= 0)
 	    pvoc_closefile(sfdata.pvfile);
 	    
 	if(fpeaks)
 		free(fpeaks);
+    
 	sffinish();
+    
 	pvsys_release();
+    
 	if(err != paNoError){
 		fprintf( stderr, "An error occured while using the portaudio stream\n" ); 
 		fprintf( stderr, "Error number: %d\n", err );

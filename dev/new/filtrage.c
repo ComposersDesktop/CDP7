@@ -56,7 +56,7 @@ int anal_infiles = 0;
 int	sloom = 0;
 int sloombatch = 0;
 
-const char* cdp_version = "7.0.0";
+const char* cdp_version = "7.1.0";
 
 static int check_filtrage_param_validity_and_consistency(dataptr dz);
 static int setup_filtrage_application(dataptr dz);

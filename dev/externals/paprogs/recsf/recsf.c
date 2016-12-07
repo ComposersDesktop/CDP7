@@ -334,7 +334,7 @@ static PaError startThread( psfdata* pdata, threadfunc fn )
 #endif   
     return paNoError;
 }
-
+// for sake of completion - curently NOT USED 
 static int stopThread( psfdata* pdata )
 {
     // RWD: just called when all data played; must be called before StopStream

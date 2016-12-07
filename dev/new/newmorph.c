@@ -57,7 +57,7 @@
 #endif
 
 char errstr[2400];
-const char* cdp_version = "7.0.0";
+const char* cdp_version = "7.1.0";
 
 /* extern */ int sloom = 0;
 /* extern */ int	sloombatch = 0;

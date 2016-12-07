@@ -57,7 +57,7 @@ int anal_infiles = 1;
 int	sloom = 0;
 int sloombatch = 0;
 
-const char* cdp_version = "6.1.0";
+const char* cdp_version = "7.1.0";
 
 //CDP LIB REPLACEMENTS
 static int check_manysil_param_validity_and_consistency(dataptr dz);

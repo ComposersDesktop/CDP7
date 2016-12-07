@@ -30,7 +30,7 @@
 #include <osbind.h>
 #include <time.h>
 #define ENDOFSTR ('\0')
-const char* cdp_version = "5.0.1";
+const char* cdp_version = "7.1.0";
 
 int main(int argc, char *argv[]) {
 //TW UPDATE

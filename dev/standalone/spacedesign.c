@@ -69,7 +69,7 @@ static int rotate(char *fnam1,char *fnam2,char *fnam3,float starttime,float endt
 static int read_value_from_brktable(float *val,float *brk, int brksize, float thistime,int init);
 static int flteq(double f1,double f2);
 static int isnumeric(char *str);
-const char* cdp_version = "5.0.1";
+const char* cdp_version = "7.1.0";
 
 int main(int argc, char *argv[])
 {

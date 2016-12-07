@@ -35,7 +35,7 @@
 #include <math.h>
 #include "sfsys.h"
 				   
-const char* cdp_version = "6.0.0";
+const char* cdp_version = "7.1.0";
 
 #define	PROG "STRETCHA"
 

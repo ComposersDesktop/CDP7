@@ -54,7 +54,7 @@ static int specvolve(dataptr dz);
 static int spec_sphinx(float* inbuf1,float* inbuf2,float* ampval,int* amploc,float* frqval,int* frqloc,dataptr dz);
 
 char errstr[2400];
-const char* cdp_version = "7.0.0";
+const char* cdp_version = "7.1.0";
 
 /* extern */ int sloom = 0;
 /* extern */ int	sloombatch = 0;

@@ -50,7 +50,7 @@ int sloombatch = 0;
 
 int anal_infiles = 0;
 int is_converted_to_stereo = -1;
-const char* cdp_version = "6.1.0";
+const char* cdp_version = "7.1.0";
 
 /**************************************** MAIN *********************************************/
 

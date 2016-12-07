@@ -110,7 +110,7 @@ char	errstr[400];
 int convert_filetype_to_bit(int filetype);
 int flteq(double f1,double f2);
 unsigned int hz1000();
-const char* cdp_version = "5.0.1";
+const char* cdp_version = "7.1.0";
 
 int main(int argc, char *argv[])
 {

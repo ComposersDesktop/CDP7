@@ -27,6 +27,12 @@ target_link_libraries(constrict cdp2k sfsys ${EXTRA_LIBRARIES})
 
 my_install(constrict)
 
+
+add_executable(dshift dshift.c)
+target_link_libraries(dshift ${EXTRA_LIBRARIES})
+
+my_install(dshift)
+
 add_executable(envnu envnu.c)
 target_link_libraries(envnu cdp2k sfsys ${EXTRA_LIBRARIES})
 

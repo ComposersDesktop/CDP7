@@ -40,7 +40,7 @@ int 	getvalandskipspace(char **q,int *ival);
 int 	getwordandskipspace(char **q,char *j);
 void 	get_modename(int progno,int modeno,char *p);
 void 	to_ucase(char *str);
-const char* cdp_version = "5.0.1";
+const char* cdp_version = "7.1.0";
 
 int main(int argc,char *argv[])
 {

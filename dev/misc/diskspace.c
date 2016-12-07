@@ -40,7 +40,7 @@ char errstr[2400];
 #define LEAVESPACE	(10*1024)
 
 void splice_multiline_string(char *str,char *prefix);
-const char* cdp_version = "6.0.0";
+const char* cdp_version = "7.1.0";
 /*RWD Jan 2014 updated getdrivefreespace(), corrected INFO output format for unsigned long */
 /************************************ CHECK_AVAILABLE_DISKSPACE ********************************/
 

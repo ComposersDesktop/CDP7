@@ -55,7 +55,7 @@ char errstr[2400];
 	
 /*extern*/ int anal_infiles = 0;
 /*extern*/ int is_converted_to_stereo = -1;
-const char* cdp_version = "6.0.0";
+const char* cdp_version = "7.1.0";
 
 /**************************************** MAIN *********************************************/
 

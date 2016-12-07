@@ -1,30 +1,28 @@
+#include <stdio.h>
 /*
  * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
  This file is part of the CDP System.
-
-    The CDP System is free software; you can redistribute it
-    and/or modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-    The CDP System is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with the CDP System; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-    02111-1307 USA
+ 
+ The CDP System is free software; you can redistribute it
+ and/or modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ 
+ The CDP System is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public
+ License along with the CDP System; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+ 02111-1307 USA
  *
  */
 
-
-
-#include <stdio.h>
 #include <stdlib.h>
 #include <structures.h>
 #include <tkglobals.h>
@@ -49,11 +47,8 @@
 #include <modicon.h>
 #include <arrays.h>
 
-#if defined unix || defined __GNUC__
+#ifdef unix
 #define round(x) lround((x))
-#endif
-#ifndef HUGE
-#define HUGE 3.40282347e+38F
 #endif
 
 char errstr[2400];
@@ -62,7 +57,7 @@ int anal_infiles = 1;
 int	sloom = 0;
 int sloombatch = 0;
 
-const char* cdp_version = "6.1.0";
+const char* cdp_version = "7.1.0";
 
 #define MININC 	(0.002)		/* rwd - black hole avoidance */
 
@@ -88,23 +83,23 @@ static int strans_preprocess(dataptr dz);
 static int process_varispeed(dataptr dz);
 static int convert_brkpnts(dataptr dz);
 static int change_frame(dataptr dz);
-static int inv_cntevents(int dur,double s0,double s1);
+static long inv_cntevents(long dur,double s0,double s1);
 static int force_value_at_end_time(int paramno,dataptr dz);
 static int read_samps_for_strans(dataptr dz);
-static int samesize(int *obufcnt,int intime0,double insize0,double insize1,int duration,dataptr dz);
-static int getetime(int *obufcnt,int t0,int t1,double s0,double s1,int number,dataptr dz);
-static double cntevents(int dur,double s0,double s1);
-static int timevents(int *obufcnt,int intime0,int intime1,double insize0,double insize1,dataptr dz);
+static int samesize(long *obufcnt,long intime0,double insize0,double insize1,long duration,dataptr dz);
+static int getetime(long *obufcnt,long t0,long t1,double s0,double s1,long number,dataptr dz);
+static double cntevents(long dur,double s0,double s1);
+static int timevents(long *obufcnt,long intime0,long intime1,double insize0,double insize1,dataptr dz);
 static int write_samps_with_intime_display(float *buf,int samps_to_write,dataptr dz);
-static void splice_end(int obufcnt,dataptr dz);		/* A kludge to avoid clicks at end */
+static void splice_end(long obufcnt,dataptr dz);		/* A kludge to avoid clicks at end */
 static int sizeq(double f1,double f2);
-static int putval(int *obufcnt,double pos,dataptr dz);
+static int putval(long *obufcnt,double pos,dataptr dz);
 static void dz2props(dataptr dz, SFPROPS* props);
 static int create_stransbufs(dataptr dz);
-static double refinesize(double hibound,double lobound,double fnumber,int duration,double error,double insize0);
-static int integral_times(int *obufcnt,int intime0,int isize,int number,dataptr dz);
-static int unvarying_times(int *obufcnt,int intime0,double size,int number,dataptr dz);
-static int putintval(int *obufcnt,int i,dataptr dz);
+static double refinesize(double hibound,double lobound,double fnumber,long duration,double error,double insize0);
+static int integral_times(long *obufcnt,long intime0,long isize,long number,dataptr dz);
+static int unvarying_times(long *obufcnt,long intime0,double size,long number,dataptr dz);
+static int putintval(long *obufcnt,long i,dataptr dz);
 static int do_acceleration(dataptr dz);
 static int do_vibrato(dataptr dz);
 static double interp_read_sintable(double *sintab,double sfindex);
@@ -118,7 +113,7 @@ int main(int argc,char *argv[])
 	dataptr dz = NULL;
 	char **cmdline;
 	int  cmdlinecnt;
-	int n;
+	long n;
 	aplptr ap;
 	int is_launched = FALSE;
 	if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
@@ -603,6 +598,10 @@ int setup_strans_application(dataptr dz)
 			return(FAILED);
 		break;
 	}
+// TW April 2015 -->
+	if((exit_status = set_legal_internalparam_structure(dz->process,dz->mode,ap))<0)
+		return(exit_status);										/* LIBRARY */
+// <-- TW April 2015
 	// set_legal_infile_structure -->
 	dz->has_otherfile = FALSE;
 	// assign_process_logic -->
@@ -1187,7 +1186,7 @@ int usage3(char *str1,char *str2)
 int strans_preprocess(dataptr dz)
 {
 	double acceltime, tabratio, *p, *pend;
-	int n;
+	long n;
 	switch(dz->mode) {
 	case(0):
 	case(1):
@@ -1206,6 +1205,10 @@ int strans_preprocess(dataptr dz)
 		round(dz->param[ACCEL_STARTTIME] * (double)dz->infile->srate) * dz->infile->channels;
 		break;
 	case(3):
+// TW : Mar 2015 NB (integer) iparam[1 = UNITSIZE] but (in mode 3) (float) param[1 = VIB_DEPTH] : NO CONFLICT
+		dz->iparam[UNITSIZE] = dz->insams[0]/dz->infile->channels;
+		dz->param[VTRANS_SR] = (double)dz->infile->srate;
+// <-- TW : Mar 2015 
 		tabratio = (double)VIB_TABSIZE/(double)dz->infile->srate;  	/* converts frq to sintable step */
 		if(dz->brksize[VIB_FRQ]) {
 			p    = dz->brk[VIB_FRQ] + 1;
@@ -1258,10 +1261,10 @@ int set_legal_internalparam_structure(int process,int mode,aplptr ap)
 int process_varispeed(dataptr dz)
 {
 	int exit_status, chans = dz->infile->channels;
-	int n, m, chunksread, place, thispos;
+	long n, m, chunksread, place, thispos;
 	double *dbrk, flplace = 0.0, fracsamp, step, interp;
 	float *ibuf = dz->sampbuf[0], *obuf = dz->sampbuf[1], *obufend = dz->sampbuf[2], *obufptr;
-	int obufcnt = 0;
+	long obufcnt = 0;
 	if(dz->brksize[VTRANS_TRANS]) {
 		if((exit_status = convert_brkpnts(dz))<0)
 			return(exit_status);
@@ -1279,7 +1282,7 @@ int process_varispeed(dataptr dz)
 		dbrk = dz->brk[VTRANS_TRANS];
 		for(n=1,m=2;n<dz->brksize[VTRANS_TRANS];n++,m+=2) {
 			if((exit_status = 
-				timevents(&obufcnt,(int)round(dbrk[m-2]),(int)round(dbrk[m]),dbrk[m-1],dbrk[m+1],dz))!=CONTINUE)
+				timevents(&obufcnt,(long)round(dbrk[m-2]),(long)round(dbrk[m]),dbrk[m-1],dbrk[m+1],dz))!=CONTINUE)
 	    		break;
 		}
 		if(exit_status < 0)
@@ -1324,7 +1327,7 @@ int read_samps_for_strans(dataptr dz)
 {
 //TW MUST READ EXTRA SAMPLE FOR EACH CHANNEL to get wrap-around value
 	float *buffer = dz->sampbuf[0];
-	int samps_read, samps_to_read = dz->buflen + dz->infile->channels;
+	long samps_read, samps_to_read = dz->buflen + dz->infile->channels;
 	dz->iparam[UNITS_RD_PRE_THISBUF] = dz->iparam[TOTAL_UNITS_READ];
 	if((samps_read = fgetfbufEx(buffer, samps_to_read,dz->ifd[0],0)) < 0) {
 		sprintf(errstr, "Can't read from input soundfile.\n");
@@ -1332,7 +1335,7 @@ int read_samps_for_strans(dataptr dz)
 	}
 	dz->samps_left -= samps_read;
 	if(samps_read == samps_to_read) {
-		if((sndseekEx(dz->ifd[0],-(int)dz->infile->channels,1))<0) { /* WE'VE READ EXTRA SECTOR,for wrap-around */
+		if((sndseekEx(dz->ifd[0],-(long)dz->infile->channels,1))<0) { /* WE'VE READ EXTRA SECTOR,for wrap-around */
 			sprintf(errstr,"sndseekEx() failed.\n");
 			return(SYSTEM_ERROR);
 		}
@@ -1356,7 +1359,6 @@ int convert_brkpnts(dataptr dz)
 		return(exit_status);
 	if((exit_status= force_value_at_end_time(VTRANS_TRANS,dz))<0)
 		return(exit_status);
-
 	p    = dz->brk[VTRANS_TRANS];
 	pend = p + (dz->brksize[VTRANS_TRANS] * 2);
 
@@ -1378,11 +1380,11 @@ int convert_brkpnts(dataptr dz)
 
 int change_frame(dataptr dz)
 {
-	int n, m;
-	int *newtime;
+	long n, m;
+	long *newtime;
 	double *dbrk, lasttime, lastval, thistime, thisval; 
 	dbrk = dz->brk[VTRANS_TRANS];
-	if((newtime = (int *)malloc(dz->brksize[VTRANS_TRANS] * 2 * sizeof(double)))==NULL) {
+	if((newtime = (long *)malloc(dz->brksize[VTRANS_TRANS] * 2 * sizeof(double)))==NULL) {
 		sprintf(errstr,"INSUFFICIENT MEMORY to create transformed brktable.\n");
 		return(MEMORY_ERROR);
 	}
@@ -1393,7 +1395,7 @@ int change_frame(dataptr dz)
 		thistime = dbrk[m]; 
 		thisval  = dbrk[m+1]; 
 		newtime[n] = newtime[n-1] + 
-				 inv_cntevents((int)round(thistime - lasttime),lastval,thisval);
+				 inv_cntevents((long)round(thistime - lasttime),lastval,thisval);
 		lasttime = thistime;
 		lastval  = thisval;
 	}
@@ -1423,10 +1425,10 @@ int change_frame(dataptr dz)
  *	Except where S1==S0, when (T1-T0) = S * N
  */
 
-int inv_cntevents(int dur,double s0,double s1)
+long inv_cntevents(long dur,double s0,double s1)
 {   
 	double ftime;
-	int time;
+	long time;
 	if(sizeq(s1,s0))
 		ftime = (double)dur * s0;
 	else
@@ -1496,10 +1498,10 @@ int force_value_at_end_time(int paramno,dataptr dz)
 
 /****************************** PUTVAL ******************************/
 
-int putval(int *obufcnt,double pos,dataptr dz)
+int putval(long *obufcnt,double pos,dataptr dz)
 {
 	int exit_status;
-	int i = (int)pos;	/* TRUNCATE */
+	long i = (long)pos;	/* TRUNCATE */
 	double frac = pos - (double)i, diff; 
 	float val1, val2;
 	float *buffer = dz->sampbuf[0];
@@ -1539,7 +1541,7 @@ int sizeq(double f1,double f2)
 
 /*************************** SPLICE_END *****************************/
 
-void splice_end(int obufcnt,dataptr dz)		/* A kludge to avoid clicks at end */
+void splice_end(long obufcnt,dataptr dz)		/* A kludge to avoid clicks at end */
 {
 
 #define VTRANS_SPLICELEN (5.0)
@@ -1548,7 +1550,7 @@ void splice_end(int obufcnt,dataptr dz)		/* A kludge to avoid clicks at end */
 	int chans = dz->infile->channels;
 	int splicelen = round(VTRANS_SPLICELEN * MS_TO_SECS * dz->infile->srate) * dz->infile->channels;
 	int n, m, k = min(obufcnt,splicelen);
-	int startsamp = obufcnt - k;
+	long startsamp = obufcnt - k;
 	double inv_k;
 	k /= chans;
 	inv_k = 1.0/(double)k;
@@ -1607,13 +1609,13 @@ int write_samps_with_intime_display(float *buf,int samps_to_write,dataptr dz)
  * and generates the times of these events.
  */
 
-int timevents(int *obufcnt,int intime0,int intime1,double insize0,double insize1,dataptr dz)
+int timevents(long *obufcnt,long intime0,long intime1,double insize0,double insize1,dataptr dz)
 {
 	int exit_status;
-	int   number;
+	long   number;
 	double fnum, fnumber, error, pos;
 	double lobound, hibound;
-	int duration;
+	long duration;
 	if(flteq(insize0,0.0) || flteq(insize1,0.0)) {
 		sprintf(errstr,"Event size of zero encountered in pair %lf %lf at time %lf\n",
 		insize0,insize1,(double)intime0/dz->param[VTRANS_SR]);
@@ -1659,7 +1661,7 @@ int timevents(int *obufcnt,int intime0,int intime1,double insize0,double insize1
 
 /*************************** CNTEVENTS *****************************/
 
-double cntevents(int dur,double s0,double s1)
+double cntevents(long dur,double s0,double s1)
 {   
 	double f1 = (double)dur,f2;
 	if(sizeq(s1,s0))
@@ -1681,10 +1683,10 @@ double cntevents(int dur,double s0,double s1)
  *(3)	Recalculate size, and thence event times.
  */
 
-int samesize(int *obufcnt,int intime0,double insize0,double insize1,int duration,dataptr dz)
+int samesize(long *obufcnt,long intime0,double insize0,double insize1,long duration,dataptr dz)
 {   
 	int exit_status;
-	int number, isize;
+	long number, isize;
 	double size, pos;					/* 1 */
 	size     = (insize0+insize1)/2;
 	number   = round((double)duration/size);
@@ -1702,7 +1704,7 @@ int samesize(int *obufcnt,int intime0,double insize0,double insize1,int duration
 		return(CONTINUE);
 	}
 	size = (double)duration/(double)number;
-	if(flteq((double)(isize = (int)round(size)),size))
+	if(flteq((double)(isize = (long)round(size)),size))
 		return integral_times(obufcnt,intime0,isize,number,dz);
 	return unvarying_times(obufcnt,intime0,size,number,dz);
 }
@@ -1713,10 +1715,10 @@ int samesize(int *obufcnt,int intime0,double insize0,double insize1,int duration
  * NB We need to invert the time order, if s1 < s0.
  */
 
-int getetime(int *obufcnt,int t0,int t1,double s0,double s1,int number,dataptr dz)
+int getetime(long *obufcnt,long t0,long t1,double s0,double s1,long number,dataptr dz)
 {   
 	int exit_status;
-	int n;
+	long n;
 	double sdiff = s1-s0, tdiff = (double)(t1-t0), d1, d2, d3, pos;
  /***** TW n=0 NOT 1 ********/
 	for(n=1;n<number;n++)   {
@@ -1790,22 +1792,21 @@ void dz2props(dataptr dz, SFPROPS* props)
 
 int create_stransbufs(dataptr dz)
 {
-	size_t bigbufsize;
-    int xs;
+	long bigbufsize, xs;
 	if(dz->sbufptr == 0 || dz->sampbuf==0) {
 		sprintf(errstr,"buffer pointers not allocated: create_sndbufs()\n");
 		return(PROGRAM_ERROR);
 	}
-	bigbufsize = (size_t) Malloc(-1);
+	bigbufsize = (long)Malloc(-1);
 	bigbufsize /= dz->bufcnt;
 	if(bigbufsize <=0) {
 		bigbufsize  =  F_SECSIZE * sizeof(float);	  	  /* RWD keep ths for now */
 
 	}
-	dz->buflen = (int)(bigbufsize / sizeof(float));	
+	dz->buflen = bigbufsize / sizeof(float);	
 	/*RWD also cover n-channels usage */
 	dz->buflen = (dz->buflen / dz->infile->channels)  * dz->infile->channels;
-	bigbufsize = (size_t)(dz->buflen * sizeof(float));
+	bigbufsize = dz->buflen * sizeof(float);
 	xs = dz->infile->channels * sizeof(float); /* wraparound points */
 	if((dz->bigbuf = (float *)malloc((bigbufsize * dz->bufcnt) + xs)) == NULL) {
 		sprintf(errstr,"INSUFFICIENT MEMORY to create sound buffers.\n");
@@ -1814,7 +1815,10 @@ int create_stransbufs(dataptr dz)
 	dz->sampbuf[0] = dz->sbufptr[0] = dz->bigbuf;
 	dz->sampbuf[1] = dz->sbufptr[1] = dz->bigbuf + dz->buflen + dz->infile->channels;
 	dz->sampbuf[2] = dz->sampbuf[1] + dz->buflen;
-	dz->iparam[UNIT_BUFLEN] = dz->buflen/dz->infile->channels;
+// TW : Mar 2015: iparam[2 = UNIT_BUFLEN] SET BELOW, but in Mode 2, iparam[2 = ACCEL_STARTTIME in samples] : CONFLICT
+// TW : Mar 2015: BUT: UNIT_BUFLEN not used in Mode 2 SO THIS RESOLVES CONFLICT
+	if(dz->mode != 2)
+		dz->iparam[UNIT_BUFLEN] = dz->buflen/dz->infile->channels;
 	return(FINISHED);
 }
 
@@ -1823,7 +1827,7 @@ int create_stransbufs(dataptr dz)
  * refine size of final event to reduce error within bounds.
  */
 
-double refinesize(double hibound,double lobound,double fnumber,int duration,double error,double insize0)
+double refinesize(double hibound,double lobound,double fnumber,long duration,double error,double insize0)
 {   
 	double size, fnum, lasterror;
 	double flterr_squared = FLTERR * FLTERR;
@@ -1849,10 +1853,10 @@ double refinesize(double hibound,double lobound,double fnumber,int duration,doub
  * GENERATE vals for equally spaced events, spaced by whole nos. of samps.
  */
 
-int integral_times(int *obufcnt,int intime0,int isize,int number,dataptr dz)
+int integral_times(long *obufcnt,long intime0,long isize,long number,dataptr dz)
 {
 	int exit_status;
-	int k, pos = intime0 - dz->iparam[UNITS_RD_PRE_THISBUF];
+	long k, pos = intime0 - dz->iparam[UNITS_RD_PRE_THISBUF];
 	for(k=0;k<number;k++) {
 		if(pos >= dz->iparam[UNITS_READ]) {
 			if(dz->samps_left <= 0)
@@ -1870,7 +1874,7 @@ int integral_times(int *obufcnt,int intime0,int isize,int number,dataptr dz)
 
 /****************************** PUTINTVAL ******************************/
 
-int putintval(int *obufcnt,int i,dataptr dz)
+int putintval(long *obufcnt,long i,dataptr dz)
 {  
 	int exit_status;
 	int n;
@@ -1894,10 +1898,10 @@ int putintval(int *obufcnt,int i,dataptr dz)
  * GENERATE vals for equally spaced events.
  */
 
-int unvarying_times(int *obufcnt,int intime0,double size,int number,dataptr dz)
+int unvarying_times(long *obufcnt,long intime0,double size,long number,dataptr dz)
 {   
 	int exit_status;
-	int k; 
+	long k; 
 	double pos = (double)(intime0 - dz->iparam[UNITS_RD_PRE_THISBUF]);
 	for(k=0;k<number;k++) {
 		if(pos >= (double)dz->iparam[UNITS_READ]) {
@@ -1919,15 +1923,15 @@ int unvarying_times(int *obufcnt,int intime0,double size,int number,dataptr dz)
 int do_acceleration(dataptr dz)
 {	
 	int exit_status;
-	int place, chunksread, n, thisplace, nextplace;
+	long place, chunksread, n, thisplace, nextplace;
 	double flplace, fracsamp, step;
 	int OK = 1, chans = dz->infile->channels;
 	double interp;
 	float *ibuf = dz->sampbuf[0];
 	float *obuf = dz->sampbuf[1], *obufptr, *obufend = obuf + dz->buflen;
 	double place_inc = 1.0;
-	int   startsamp = dz->iparam[ACCEL_STARTTIME];
-	int   previous_total_ssampsread = 0;
+	long   startsamp = dz->iparam[ACCEL_STARTTIME];
+	long   previous_total_ssampsread = 0;
 	double accel     = dz->param[ACCEL_ACCEL];
 	dz->total_samps_read = 0;
 	display_virtual_time(0L,dz);
@@ -2008,7 +2012,7 @@ int do_vibrato(dataptr dz)
 	double thistime = 0.0;
 	double time_incr = bloksize/sr;	/* timestep  between param reads */
 	int    effective_buflen = dz->buflen/chans;
-	int   place   = 0;				/* integer position in sndfile   */
+	long   place   = 0;				/* integer position in sndfile   */
 	double flplace = 0.0;			/* float position in sndfile     */
 	double incr;					/* incr of position in sndfile   */
 	double sfindex = 0.0;			/* float position in sintable    */
@@ -2020,7 +2024,7 @@ int do_vibrato(dataptr dz)
 	double interp;					/* part of sampstep to use   	 */
 	int    blokcnt = 0;				/* distance through blokd params */
 	float  *obufptr = obuf;
-	int chunksread, thisplace, nextplace, n;
+	long chunksread, thisplace, nextplace, n;
 	if(dz->brksize[VIB_FRQ]) {
 		if((exit_status = read_value_from_brktable(thistime,VIB_FRQ,dz))<0)
 			return(exit_status);
@@ -2073,7 +2077,7 @@ int do_vibrato(dataptr dz)
 				return(exit_status);
 			flplace -= effective_buflen;
 		}
-		place 	   = (int)flplace; 	/* TRUNCATE */	   /* read sndfile by interpolation */
+		place 	   = (long)flplace; 	/* TRUNCATE */	   /* read sndfile by interpolation */
 		fracsamp   = flplace - (double)place;
 		for(n=0;n<chans;n++) {
 			thisplace = (place * chans) + n;

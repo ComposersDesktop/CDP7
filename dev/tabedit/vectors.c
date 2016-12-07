@@ -94,7 +94,7 @@ char 	flag = 0, errstr[400];
 int	ro = 0;
 int sloom = 0;
 int sloombatch = 0;
-const char* cdp_version = "6.1.0";
+const char* cdp_version = "7.1.0";
 
 int main(int argc,char *argv[])
 {

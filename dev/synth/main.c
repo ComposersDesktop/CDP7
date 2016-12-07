@@ -54,7 +54,7 @@ int is_converted_to_stereo = -1;
 /* RWD N0v 2011: removed bad call to sndsetbuf, caused synth spectra to fail */
 /* TODO: fix malloc of dz->ifd array - default is one channel, but this code tries to use two. */
 
-const char* cdp_version = "5.0.1b";
+const char* cdp_version = "7.1.0";
 
 int main(int argc,char *argv[])
 {

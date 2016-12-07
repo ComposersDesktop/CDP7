@@ -53,7 +53,7 @@ char errstr[2400];
 /*extern*/ int is_converted_to_stereo = -1;
 //const char* cdp_version = "9.0.0";
 /* Added midrise bitreduce mode 2013 */
-const char* cdp_version = "6.2.0";
+const char* cdp_version = "7.1.0";
 
 
 /**************************************** MAIN *********************************************/

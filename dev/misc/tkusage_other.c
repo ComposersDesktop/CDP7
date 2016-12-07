@@ -29,7 +29,7 @@
 #include <string.h>
 
 static void RoomReverbFormat(void);
-const char* cdp_version = "6.1.0";
+const char* cdp_version = "7.1.0";
 
 /******************************** TKUSAGE_OTHER ********************************/
 

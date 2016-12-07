@@ -2,7 +2,8 @@ How to buld Portaudio static library for Windows, using MinGW.
 
 This is required by the audio programs (paplay, pvplay, recsf, listaudevs)
 
-This assumes MinGW is already installed. This has been developed using the standard MinGW distribution; it has not been tested with the 
+This assumes MinGW is already installed. This has been developed using the standard MinGW distribution; 
+it has not been tested with the Mingw-64 system.
 Either or both ASIO and Directx support is needed for building the programs.
 
 An unpacked portaudio folder is provided, based on the latest release
@@ -42,9 +43,8 @@ $ ./configure --with-host_os=mingw --with-winapi=directx --without-jack --enable
 
 Both (recommended):
 
-$ ./configure --with-host_os=mingw --with-winapi=directx,asio --without-jack --enable-shared=no --enable-debug-output=no --with-dxdir=/home/Richard/dx9mgw --with-asiodir=./ASIOSDK2
-
-Thjis generates the Makefile which we will use to build portaudio
+$  
+This generates the Makefile which we will use to build portaudio
 
 3. Modify the Makefile
 

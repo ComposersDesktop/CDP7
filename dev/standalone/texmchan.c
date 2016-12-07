@@ -61,7 +61,7 @@ int anal_infiles = 0;
 int	sloom = 0;
 int sloombatch = 0;
 
-const char* cdp_version = "7.0.0";
+const char* cdp_version = "7.1.0";
 
 extern int make_texture(dataptr dz);
 extern int produce_texture_sound(dataptr dz);

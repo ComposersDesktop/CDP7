@@ -40,7 +40,7 @@
 #include <float.h>
 #include <sfsys.h>
 #include <cdplib.h>
-const char* cdp_version = "7.0.0";
+const char* cdp_version = "7.1.0";
 
 int main(int argc,char *argv[])
 {

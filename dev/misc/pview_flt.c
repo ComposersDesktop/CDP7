@@ -64,7 +64,7 @@ int  ifd;					/* input soundfile descriptor		*/
 int srate;					/* sampling rate of input			*/
 int  channels;				/* number of channels of input		*/
 int startsamp, endsamp;
-const char* cdp_version = "5.0.0";
+const char* cdp_version = "7.1.0";
 
 int main(int argc,char *argv[])
 {

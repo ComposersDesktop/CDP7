@@ -62,7 +62,7 @@ int anal_infiles = 1;
 int	sloom = 0;
 int sloombatch = 0;
 
-const char* cdp_version = "5.0.2";
+const char* cdp_version = "7.1.0";
 
 #define WINDIV (6.0)
 #define BUMZEROCNT (20)		/* No of zeros that can occur WITHIN a genuine signal */
@@ -782,7 +782,7 @@ int setup_psow_application(dataptr dz)
 			return(FAILED);
 		break;
 	case(PSOW_LOCATE): 
-		if((exit_status = exit_status = set_param_data(ap,0 ,2,2,"Dd"))<0)
+		if((exit_status = set_param_data(ap,0 ,2,2,"Dd"))<0)
 			return(FAILED);
 		if((exit_status = set_vflgs(ap,"",0,"","",0,0,"0"))<0)
 			return(FAILED);

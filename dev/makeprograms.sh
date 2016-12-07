@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 lowercase(){
@@ -35,7 +34,7 @@ do
     cd ${target}
     echo in folder ${target}
     if [ -e $MAKE ]; then 
-        make install -f $MAKE;
+        make install -f $MAKE; 
     fi
     cd ..
 done

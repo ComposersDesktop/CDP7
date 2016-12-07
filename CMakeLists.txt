@@ -109,7 +109,7 @@ if(WIN32)
         user32
         ole32
         winspool
-        lodbc32
+        odbc32
         gdi32
         comdlg32
         advapi32
@@ -240,13 +240,13 @@ endif()
 
 if(APPLE)
     message(STATUS "Building on OSX")
-    add_definitions(-mmacosx-version-min=10.5 -arch i386 -arch x86_64 -DCDP97 -Dunix -D__MAC__  -DFILE_AMB_SUPPORT)
+    add_definitions(-mmacosx-version-min=10.5 -arch i386 -Dunix)
     list(APPEND LIBCDP_LIBS m)
 endif()
 
 if(WIN32)
     message(STATUS "Building on Windows")
-    add_definitions(-DCDP97 -DCDP99 -DFILE64_WIN -D_X86_ -DWIN32 -D_WIN32 -D__GNUWIN32__ -DFILE_AMB_SUPPORT)
+    add_definitions(-DWIN32 -D_WIN32)
 endif()
 
 #add_compiler_flags(${LIBCDP_CFLAGS} TARGETS ${CDPLIB})

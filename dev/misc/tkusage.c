@@ -66,7 +66,7 @@
 #define TE_29	-29
 #define TE_30	-30
 #define TE_31	-31
-const char* cdp_version = "6.1.0";
+const char* cdp_version = "7.1.0";
 
 /******************************** TKUSAGE ********************************/
 

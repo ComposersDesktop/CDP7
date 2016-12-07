@@ -46,7 +46,7 @@ void 	usage(void), logo(void);
 int		ignore_s_and_e = 0, ignore_c = 0;
 int		sloom = 0;
 int		sloombatch = 0;
-const char* cdp_version = "5.0.3";
+const char* cdp_version = "7.1.0";
 
 int main(int argc,char *argv[])
 {   

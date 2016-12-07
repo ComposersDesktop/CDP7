@@ -1,23 +1,30 @@
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.5  -arch i386 -Dunix -DMAC -DPA_USE_COREAUDIO -fomit-frame-pointer
-  -funroll-loops")
-  set(EXTRA_LIBRARIES1 CoreAudio AudioToolbox AudioUnit Carbon ${EXTRA_LIBRARIES})
+  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.5  -arch i386 -Dunix  -fomit-frame-pointer -funroll-loops")
+  set(CMAKE_CXX_FLAGS "-O2 -Wall -mmacosx-version-min=10.5  -arch i386 -Dunix -fomit-frame-pointer -funroll-loops")
+  include_directories ( /Developer/Headers/FlatCarbon )
+  find_library(COREAUDIOLIB CoreAudio)
+  find_library(AUDIOTOOLBOX AudioToolbox)
+  find_library(AULIB AudioUnit)
+  find_library(CARBONLIB Carbon)
+  #RWD only need this for APPLE?
+  find_library(AAIOLIB names libaaio.a paths /usr/local/lib)
+  set(EXTRA_LIBRARIES1 pthread ${AAIOLIB} ${COREAUDIOLIB} ${AUDIOTOOLBOX} ${AULIB} ${CARBONLIB} ${EXTRA_LIBRARIES})
 else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O3 -DWIN32 -D_WIN32 -DUSE_ASIO -fomit-frame-pointer -funroll-loops")
-    set(EXTRA_LIBRARIES1 ${EXTRA_LIBRARIES})
+    set(CMAKE_CXX_FLAGS "-O3 -DWIN32 -D_WIN32 -DUSE_ASIO -fomit-frame-pointer -funroll-loops -static-libgcc -static-libstdc++")
+    set(EXTRA_LIBRARIES1 winmm dsound winspool ${EXTRA_LIBRARIES})
   else()
     set(CMAKE_C_FLAGS "-O3 -Wall -Dlinux -Dunix -fomit-frame-pointer -funroll-loops")
     set(EXTRA_LIBRARIES1 asound jack pthread ${EXTRA_LIBRARIES})
   endif()
 endif()
 
-link_directories(../lib ../portaudio/lib/.libs)
+link_directories(../../lib ../portaudio/lib/.libs ../../../sfsys)
 
-include_directories(../../../include ../include ../portaudio/include
-                    ../portaudio/src/common)
+include_directories(../../../include ../include ../portaudio/include ../portaudio/src/common /usr/local/include)
 
 add_executable(pvplay pvplay.cpp pvoc2.cpp fmhfuncs.c pvthreads.cpp pvfileio.c mxfft.c)
-target_link_libraries(pvplay aaio portaudio.a sfsys ${EXTRA_LIBRARIES1})
+target_link_libraries(pvplay portaudio.a sfsys ${EXTRA_LIBRARIES1})
 
 my_install(pvplay)

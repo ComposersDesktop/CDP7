@@ -510,7 +510,7 @@ int make_initial_cmdline_check(int *argc,char **argv[])
 	int exit_status;
 	if(*argc<4) { 	 	/* INITIAL CHECK OF CMDLINE OR PRE-CMDLINE DATA */
 		/*RWD May 2005*/
-		fprintf(stdout,"CDP Release 7 2014\n");
+		fprintf(stdout,"CDP Release 7.1 2016\n");
 		if((exit_status = usage(*argc,*argv))<0)
 			return(exit_status);
 	}
@@ -1470,7 +1470,6 @@ int create_sized_outfile(char *filename,dataptr dz)
 	case(PVOC_SYNTH):	case(PVOC_EXTRACT):
 		if(dz->floatsam_output != 1)
 			stype = dz->outfile->stype;
-			stype = SAMP_SHORT;
 //NOV 2005: proposed RWD fix, changes above line to PVOC
 //			stype = dz->outfile->stype;
 		dz->true_outfile_stype = stype;

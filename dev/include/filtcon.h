@@ -35,7 +35,8 @@
 #define FLT_MAXGAIN	  	(10000.0)
 #define MINMIDI			(0.0)
 #define MAXMIDI			(127.0)
-#define FLT_MINFRQ		(10.0)
+//RWD was a whopping 10Hz!
+#define FLT_MINFRQ		(0.1)
 #define FLT_MAXFRQ		((double)srate/2.0)
 
 #define FLT_MAX_FILTERS	(2000)

@@ -79,7 +79,7 @@ char srcfile[2000],goalfile[2000];
 
 #define TOO_BIG_ARRAY (100000)
 void reorganise_extra_params(char *agv,int argc,char *argv[]);
-const char* cdp_version = "6.1.0";
+const char* cdp_version = "7.1.0";
 
 int main(int argc,char *argv[])
 {

@@ -96,12 +96,12 @@ typedef struct sfprops
 	int		origsize;		/*RWD 3:2000 needs UPDATING in pvoc to register all new sample types */
 	int		origrate;
 	int		origchans;		/* pitch, formant,transpos only */
-	int			specenvcnt;		/* formants only */	
-	float		arate;
-	int			winlen;					/*aka Mlen*/
-	int			decfac;					/* aka Dfac*/
+	int		specenvcnt;		/* formants only */
+	float	arate;
+	int		winlen;					/*aka Mlen*/
+	int		decfac;					/* aka Dfac*/
 	/*RWD.6.99 for envelope files*/
-	float		window_size;	
+	float	window_size;
 } SFPROPS;
 
 
@@ -111,7 +111,6 @@ typedef struct sfprops
 typedef struct chpeak {
 	float value;			/* absolute value: 0dBFS = 1.0	*/
 	unsigned int position;	/* in (muti-channel)sample frames */
-
 } CHPEAK;
 
 

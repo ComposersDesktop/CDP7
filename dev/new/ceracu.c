@@ -59,7 +59,7 @@ int anal_infiles = 1;
 int	sloom = 0;
 int sloombatch = 0;
 
-const char* cdp_version = "7.0.0";
+const char* cdp_version = "7.1.0";
 
 //CDP LIB REPLACEMENTS
 static int setup_ceracu_application(dataptr dz);

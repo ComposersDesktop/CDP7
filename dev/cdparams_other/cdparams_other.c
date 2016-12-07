@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2015 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -112,7 +112,7 @@ char paramstr[6000];
 
 int sloom = 1;
 int sloombatch = 0;
-const char* cdp_version = "6.2.0";
+const char* cdp_version = "7.1.0";
 
 /******************************* MAIN/CDPARAMS *******************************/
 
@@ -253,8 +253,8 @@ void initialise_application_vals2(aplptr ap)
 	ap->accepts_conflicting_srates = FALSE;
 	ap->param_name			  = NULL;
 	ap->flagname			  = NULL;
-	ap->special_data_name	  = (char)0;		
-	ap->special_data_name2	  = (char)0;		
+	ap->special_data_name	  = /* (char)0 */ NULL;	 //RWD 06-16	
+	ap->special_data_name2	  = /* (char)0 */ NULL;		
 	ap->param_cnt			  = (char)0;		
 	ap->option_cnt			  = (char)0;		
 	ap->vflag_cnt			  = (char)0;		
@@ -6215,7 +6215,7 @@ int initialise_param_values2(int process,int mode,int channels,double nyquist,fl
 		default_val[PS_TIME] = 0.0;		/* time */
 		break;
 	case(ONEFORM_GET):
-		default_val[0]  = duration/2,0;
+		default_val[0]  = duration/2.0;
 		break;
 	case(ONEFORM_PUT):
 		default_val[FORM_FTOP] = nyquist;
@@ -6266,7 +6266,7 @@ int initialise_param_values2(int process,int mode,int channels,double nyquist,fl
 		default_val[0] = CONCERT_A;
 		default_val[1] = 0.01;
 		if(mode > 1)
-			default_val[2] = duration/2,0;
+			default_val[2] = duration/2.0;
 		break;
 	case(SPECROSS):  
 		default_val[PICH_RNGE]	 = 1.0;

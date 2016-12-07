@@ -88,7 +88,7 @@ int anal_infiles = 1;
 int	sloom = 0;
 int sloombatch = 0;
 
-const char* cdp_version = "6.1.0";
+const char* cdp_version = "7.1.0";
 
 static int check_the_param_validity_and_consistency(dataptr dz);
 static int setup_the_application(dataptr dz);

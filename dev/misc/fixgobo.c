@@ -49,7 +49,7 @@ static int count_gobo_array_elements(char *gobo_line);
 int deleter = 0;
 int substitute = 0;
 char pretext[] = "int ";	/* text occuring before goboname, on gobo defining lines in gobo.c */
-const char* cdp_version = "5.0.1";
+const char* cdp_version = "7.1.0";
 
 int main(int argc, char *argv[])
 {

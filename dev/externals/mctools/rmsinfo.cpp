@@ -26,7 +26,7 @@
 #include <math.h>
 #include <signal.h>
 #ifdef WIN32
-# if _MSC_VER <= 1200
+# if _MSC_VER && _MSC_VER <= 1200
 # include <new.h>
 # endif
 #endif
@@ -83,7 +83,7 @@ void usage(){
            );
 }
 #ifdef WIN32
-#if _MSC_VER <= 1200
+#if _MSC_VER && _MSC_VER <= 1200
 
  int newhandler(size_t size);
  class bad_alloc{};
@@ -120,7 +120,7 @@ int main(int argc, char**argv)  {
         return 0;
     }
 #ifdef WIN32    
-# if _MSC_VER <= 1200
+# if _MSC_VER && _MSC_VER <= 1200
      _set_new_handler( newhandler );
 # endif
 #endif

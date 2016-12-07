@@ -58,7 +58,7 @@ int anal_infiles = 1;
 int	sloom = 0;
 int sloombatch = 0;
 
-const char* cdp_version = "6.1.0";
+const char* cdp_version = "7.1.0";
 
 /* CDP LIBRARY FUNCTIONS TRANSFERRED HERE */
 

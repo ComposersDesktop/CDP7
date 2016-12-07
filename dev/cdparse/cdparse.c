@@ -162,7 +162,7 @@ static int IsNumeric(char *str);
 
 int sloom = 1;
 int sloombatch = 0;
-const char* cdp_version = "6.1.0";
+const char* cdp_version = "7.1.0";
 
 int main(int argc,char *argv[])
 {

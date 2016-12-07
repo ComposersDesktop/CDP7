@@ -81,7 +81,7 @@ unsigned int maxnloc, maxploc;
 unsigned int *maxcnloc, *maxcploc;
 double *maxcpdamp, *maxcndamp;
 int *posreps, *negreps;
-const char* cdp_version = "6.0.1";
+const char* cdp_version = "7.1.0";
 
 int open_in(char *name,int force_read)		/* opens input soundfile and gets header */
 {

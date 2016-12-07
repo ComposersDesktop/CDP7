@@ -48,8 +48,10 @@
 /* PS: and also even more dastardly PT plain wave files with 40byte fmt chunk! */
 /* RWD Jan 2013 fixed bug in getsfsysadtl, return correct padded size */ 
 /* RWD Nov 2013 RELEASE 7: added MC_SURR_6_1 */
-/* still TODO: replace tmpnam with mkstemp for CDP temporary files for GUI progs (see below) */
+/* still TODO: replace tmpnam with mkstemp for CDP temporary files for GUI progs (see below)
+ * Or: leave it to the GUI progs to sort out! */
 /* RWD Feb 2014: converted to ints for x64 building */
+/* RWD MAR 2015 finished (?) adoption of default value for CDP_SOUND_EXT, eliminated various compiler warnings */
 #ifdef __GNUC__
 # if (defined(__LP64__) || defined(_LP64))
 # define CDPLONG64
@@ -70,7 +72,7 @@ static const char aifc_notcompressed[16] = {0x0e,'n','o','t',0x20,'c','o','m','p
 /*
  *	global state
  */
-int _sfverno = 0x0700;			   //RWD: remember to update this!
+int _sfverno = 0x0710;			   //RWD: remember to update this!
 
 /* NB: private flag! */
 #define SFILE_ANAL  (3)     /* RWD Nov 2009: no PEAK,CLUE chunk for analysis files */
@@ -192,7 +194,7 @@ static char *sfsys_h_rcsid = SFSYS_H_RCSID;
 #define _MAX_PATH (PATH_MAX)
 #endif
 
-#if defined MAC || defined linux
+#if defined MAC || defined __MAC__ || defined linux
 int getAliasName(char *filename,char *newpath)
 {
     return 1;
@@ -1341,7 +1343,7 @@ rdwavhdr(struct sf_file *f)
                     if(cbSize==0){
                         int wordstoskip = (size-18) / sizeof(WORD);
                         int skip;
-                        short dummy;
+                        unsigned short dummy;
                         for(skip = 0; skip < wordstoskip; skip++){
                             if(read_w_lsf(&dummy,f))
                                 goto ioerror;
@@ -2334,11 +2336,14 @@ rdaiffhdr(struct sf_file *f)
             f->fmtchunkoffset = bytepos;    
 #endif
             /*RWD Trevor uses srate of zero for envel files! */
+            /* nSamples... is unsigned anyway, so dont bother with this one any more... */
+#ifdef NOTDEF
 			if(f->fmtchunkEx.Format.nSamplesPerSec < 0) {
 				rsferrno = ESFNOTFOUND;
 				rsferrstr = "Unknown AIFF sample rate";
 				return 1;
 			}
+#endif
 			/*RWD.7.99 we now read 32bit in standard AIFF as LONGS
 			* we rely on the extra properties to tell if it's an analysis file */			
 			f->fmtchunkEx.Format.wFormatTag = WAVE_FORMAT_PCM;
@@ -2427,7 +2432,8 @@ rdaiffhdr(struct sf_file *f)
             
 #endif
             remain -= 2 * sizeof(DWORD); /* RWD Apr 2011 need this */
-			if(ssnd_offset < 0 || ssnd_offset > ssnd_blocksize) {
+            /* RWD MAR 2015 eliminate warning, ssnd_offset is unsigned */
+			if(/* ssnd_offset < 0 || */ ssnd_offset > ssnd_blocksize) {
 				rsferrno = ESFNOTFOUND;
 				rsferrstr = "Funny offset in AIFF SSND chunk";
 				return 1;
@@ -2476,12 +2482,14 @@ rdaiffhdr(struct sf_file *f)
 			/* FALLTHROUGH */
 
 		default:
+/* RWD MAR 2015: size is unsigned, eliminate warning! */
+#ifdef NOTDEF
 			if(size < 0  /* || size > 100*1024 */) {  /* RWD Apr 2011 */
 				rsferrno = ESFNOTFOUND;
 				rsferrstr = "Silly size for unknown AIFF chunk";
 				return 1;
 			}
-
+#endif
 			if(ssndseen) {
 				struct aiffchunk **cpp, *cp;
 
@@ -2665,12 +2673,14 @@ rdaifchdr(struct sf_file *f)
             f->fmtchunkoffset = bytepos;    
 #endif
             /*RWD: Trevor uses srate of zero for envel files! */
+/* RWD MAR 2015: so elimianet code to avoid warning, as above */
+#ifdef NOTDEF
 			if(f->fmtchunkEx.Format.nSamplesPerSec < 0) {
 				rsferrno = ESFNOTFOUND;
 				rsferrstr = "Unknown AIFC sample rate";
 				return 1;
 			}
-
+#endif
 			if(read_dw_msf(&ID_compression,f))
 				goto ioerror;
 			if( !(
@@ -2703,7 +2713,7 @@ rdaifchdr(struct sf_file *f)
 			
 			
             /* RWD 06/01/09  precautionary, to validate 'in24'  24bit files  */
-            if((ID_compression== TAG('i','n','2','4'))){
+            if(ID_compression == TAG('i','n','2','4')) {
 				if(f->fmtchunkEx.Format.wBitsPerSample != 24){
 					rsferrstr = "error in AIFC header: sample size not 24bit in <in24> file ";
 					return 1;
@@ -2809,8 +2819,8 @@ rdaifchdr(struct sf_file *f)
             POS64(bytepos) = ((size+1)&~1) - 2 *sizeof(DWORD);
             if(fseeko(f->fileno,POS64(bytepos), SEEK_CUR) < 0)
 				goto ioerror;
-			
-			if(ssnd_offset < 0 || ssnd_offset > ssnd_blocksize) {
+			/* RWD MAR 2015 ssnd_offset unsigned, eliminate compiler warning */
+			if(/* ssnd_offset < 0 || */ ssnd_offset > ssnd_blocksize) {
 				rsferrno = ESFNOTFOUND;
 				rsferrstr = "Funny offset in AIFC SSND chunk";
 				return 1;
@@ -2860,7 +2870,8 @@ rdaifchdr(struct sf_file *f)
 			/* FALLTHROUGH */
 
 		default:
-			if(size < 0 || size > 100*1024) {
+            /* RWD MAR 2015 eliminate compiler warning; bit of an arbitrary exclusion anyway? */
+			if(/* size < 0 || */ size > 100*1024) {
 				rsferrno = ESFNOTFOUND;
 				rsferrstr = "Silly size for unknown AIFC chunk";
 				return 1;
@@ -2976,7 +2987,7 @@ wraiffhdr(struct sf_file *f)
 	 	goto ioerror;
 
 	f->fmtchunkEx.Format.nChannels = 1;
-	f->fmtchunkEx.Format.nSamplesPerSec;
+	f->fmtchunkEx.Format.nSamplesPerSec = 44100;
 	f->fmtchunkEx.Format.wBitsPerSample = 16;
 	f->aiffchunks = 0;
 
@@ -3711,6 +3722,7 @@ mksfpath(const char *name)
 {
 	char *errormsg;
 	char *path = _fullpath(NULL, name, 0);
+    enum sndfiletype filetype = unknown_wave; //RWD 2015
 
 	if(path == NULL) {
 		rsferrno = ESFBADPARAM;
@@ -3732,15 +3744,20 @@ mksfpath(const char *name)
 			path[len-4] = '\0';
 	}
 #endif
-
-	if(gettypefromname98(path) == unknown_wave) {
+/* RWD March 2014 make this optional! */
+    filetype = gettypefromname98(path);
+    
+	if( filetype == unknown_wave) {
 		char *newpath;
 		char *ext;
-		if((ext = getenv("CDP_SOUND_EXT")) == NULL) {
-			rsferrno = ESFBADPARAM;
-			rsferrstr = "unknown sound file type - extension not set";
-			free(path);
-			return NULL;
+        char *ext_default = "wav";
+// RWD MAR 2015 we may have unset CDP_SOUND_EXT, but not removed it completely!
+		if((ext = getenv("CDP_SOUND_EXT")) == NULL || strlen(ext) == 0 ) {
+            //rsferrno = ESFBADPARAM;
+			//rsferrstr = "unknown sound file type - extension not set";
+			//free(path);
+			//return NULL;
+            ext = ext_default;
 		}
 		if(_stricmp(ext, "wav") != 0
 		 &&_stricmp(ext, "aif") != 0
@@ -4220,8 +4237,12 @@ static FILE* doopen(const char *name, const char *origname,cdp_create_mode mode)
 	}
 #else
 /* TODO: replace with mkstemp, maybe use origname as part of template? */
-	if(mode==CDP_CREATE_TEMPORARY)
-		name = tmpnam(NULL);
+    /* RWD MAR 2015, need to eliminate call to tmpnam, 
+     * without having to alloc new memory for modifiable name for mkstemp() */
+    /* only the old GUI programs (GrainMill) ask for a temporary filename, anyway... */
+	//if(mode==CDP_CREATE_TEMPORARY)
+	//	name = tmpnam(NULL);
+    
 #endif
 	if(mode==CDP_CREATE_RDONLY){
 	    exclmode = (_O_BINARY|_O_RDONLY|_O_CREAT|_O_EXCL );
@@ -4256,6 +4277,7 @@ sfcreat(const char *name, int size, int *outsize)
 	int i, rc;
 	struct sf_file *f;
 	char *sfpath;
+    char *ext_default = "wav";
 #if defined CDP99 && defined _WIN32
 	DWORD w_errno;
 #endif
@@ -4366,11 +4388,12 @@ sfcreat(const char *name, int size, int *outsize)
 		return -1;
 		break;
 	case cdpfile:
-		
-		if((ext = getenv("CDP_SOUND_EXT")) == NULL) {
-			rsferrno = ESFBADPARAM;
-			rsferrstr = "unknown sound file type - extension not set";			
-			return -1;
+            /* RWD MAR 2015 added test for empty string */
+		if((ext = getenv("CDP_SOUND_EXT")) == NULL || strlen(ext) == 0) {
+			//rsferrno = ESFBADPARAM;
+			//rsferrstr = "unknown sound file type - extension not set";			
+			//return -1;
+            ext = ext_default;
 		}
 		if(_stricmp(ext, "wav") == 0){
 			rc=wrwavhdr(f);
@@ -4425,6 +4448,8 @@ int sfcreat_formatted(const char *name,  __int64 size,  __int64 *outsize,int cha
 	int i, rc;
 	struct sf_file *f;
 	char *sfpath;
+/* RWD March 2014 */
+    char *ext_default = "wav";
 /*RWD 2007 */
 #ifdef FILE64_WIN
 	/*unsigned long*/__int64 freespace = getdrivefreespace(name) - LEAVESPACE;
@@ -4570,19 +4595,20 @@ int sfcreat_formatted(const char *name,  __int64 size,  __int64 *outsize,int cha
 		rc = wraifchdr(f,channels,srate,stype);
 		break;
 	case cdpfile:
-		
-		if((ext = getenv("CDP_SOUND_EXT")) == NULL) {
-			rsferrno = ESFBADPARAM;
-			rsferrstr = "unknown sound file type - extension not set";
+            /* RWD MAR 2015 as above */
+		if((ext = getenv("CDP_SOUND_EXT")) == NULL || strlen(ext) == 0) {
+			//rsferrno = ESFBADPARAM;
+			//rsferrstr = "unknown sound file type - extension not set";
 //RWD.7.99
-#if defined CDP99 && defined _WIN32
-			CloseHandle(f->fileno);
-			DeleteFile(f->filename);
-#else
-			fclose(f->fileno);
-			remove(f->filename);
-#endif
-			return -1;
+//#if defined CD/P99 && defined _WIN32
+//			CloseHandle(f->fileno);
+//			DeleteFile(f->filename);
+//#else
+//			fclose(f->fileno);
+//			remove(f->filename);
+//#endif
+//			return -1;
+            ext = ext_default;
 		}
         f->min_header = SFILE_ANAL; /*RWD Nov 2009: but we don't want PEAK, CUE for analysis files! */
         if(f->peaks){
@@ -4673,6 +4699,7 @@ sfcreat_ex(const char *name, __int64 size, __int64 *outsize,SFPROPS *props,int m
 	int stype = -1;
 	struct sf_file *f;
 	char *sfpath;
+    char *ext_default = "wav"; /* RWD March 2014 */
 	unsigned long freespace = getdrivefreespace(name) - LEAVESPACE;
 
 	if((sfpath = mksfpath(name)) == NULL)
@@ -4874,20 +4901,20 @@ sfcreat_ex(const char *name, __int64 size, __int64 *outsize,SFPROPS *props,int m
 		rc = wraifchdr(f,props->chans,props->srate,stype);
 		break;
 	case cdpfile:
-		
-		if((ext = getenv("CDP_SOUND_EXT")) == NULL) {
-			rsferrno = ESFBADPARAM;
-			rsferrstr = "unknown sound file type - extension not set";
+            /* RWD MAR 2015 as above */
+		if((ext = getenv("CDP_SOUND_EXT")) == NULL || strlen(ext) == 0) {
+//			rsferrno = ESFBADPARAM;
+//			rsferrstr = "unknown sound file type - extension not set";
 //RWD.7.99
-#if defined CDP99 && defined _WIN32
-			CloseHandle(f->fileno);
-			DeleteFile(f->filename);
-#else
-			fclose(f->fileno);
-			remove(f->filename);
-#endif
-			
-			return -1;
+//#if defined CDP99 && defined _WIN32
+//			CloseHandle(f->fileno);
+//			DeleteFile(f->filename);
+//#else
+//			fclose(f->fileno);
+//			remove(f->filename);
+//#endif		
+//			return -1;
+            ext = ext_default;
 		}
 
 		if(_stricmp(ext, "wav") == 0){
@@ -5014,7 +5041,8 @@ sfrecreat_formatted(int sfd, __int64 size, __int64 *outsize,int channels,
 #endif
 {
 	int rc;
-	struct sf_file *f;	
+	struct sf_file *f;
+    char *ext_default = "wav";
 	__int64 freespace; 
     
 	//might as well validate the params
@@ -5106,11 +5134,12 @@ sfrecreat_formatted(int sfd, __int64 size, __int64 *outsize,int channels,
 		rc = wraifchdr(f,channels,srate,stype);
 		break;
 	case cdpfile:
-		
-		if((ext = getenv("CDP_SOUND_EXT")) == NULL) {
-			rsferrno = ESFBADPARAM;
-			rsferrstr = "unknown sound file type - extension not set";			
-			rc = 1;
+            /* RWD MAR 2015 as above */
+		if((ext = getenv("CDP_SOUND_EXT")) == NULL || strlen(ext) == 0) {
+//			rsferrno = ESFBADPARAM;
+//			rsferrstr = "unknown sound file type - extension not set";			
+//			rc = 1;
+            ext = ext_default;
 		}
 		if(_stricmp(ext, "wav") == 0){
 			rc = wrwavhdr98(f,channels,srate,stype);
@@ -5374,6 +5403,7 @@ sfwrite(int sfd, char *outbuf, int cnt)
 	return cnt;
 }
 
+/* RWD: OBSOLETE - NOT IN USE NOW! */
 int                                
 sfseek(int sfd, int dist, int whence)
 {
@@ -5401,8 +5431,9 @@ sfseek(int sfd, int dist, int whence)
 		rsferrstr = "illegal whence value in sfseek";
 		break;
 	}
-	if(newpos < 0)
-		newpos = 0;
+    /* RWD MAR 2015 just to eliminate compiler warning */
+	//if(newpos < 0)
+	//	newpos = 0;
 	if(newpos > size)
 		newpos = size;
 
@@ -6255,8 +6286,8 @@ aiffupdate98(time_t thistime,struct sf_file *f)
 			return -1;
 		}
 	}
-	/*RWD: NB if we have these, they will start correctly after a pad byte,
-	/* and we will just trust that these chunks are kosher!*/
+	/* RWD: NB if we have these, they will start correctly after a pad byte,
+	 * and we will just trust that these chunks are kosher!*/
 	if(ap){
 		for(; ap != 0; ap = ap->next) {
 			if(POS64(ap->offset) < POS64(f->datachunkoffset))

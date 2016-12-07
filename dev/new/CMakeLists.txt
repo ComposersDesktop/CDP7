@@ -1,16 +1,20 @@
-if(APPLE)
+ if(APPLE)
   set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.5  -arch i386 -Dunix")
+  
 else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O2 -Wall -DWIN32")
   else()
     set(CMAKE_C_FLAGS "-O2 -Wall -Dlinux -Dunix")
+	find_library(AAIOLIB names libaaio.a paths /usr/local/lib)
   endif()
 endif()
+#RWD only need this for APPLE, Linux
+#find_library(AAIOLIB names libaaio.a paths /usr/local/lib)
 
 link_directories(../cdp2k ../sfsys)
 
-include_directories(../../include)
+include_directories(../../include /usr/local/include)
 
 add_executable(cantor cantor.c)
 target_link_libraries(cantor cdp2k sfsys ${EXTRA_LIBRARIES})
@@ -38,7 +42,11 @@ target_link_libraries(filtrage cdp2k sfsys ${EXTRA_LIBRARIES})
 my_install(filtrage)
 
 add_executable(fracture fracture.c)
-target_link_libraries(fracture aaio cdp2k sfsys ${EXTRA_LIBRARIES})
+if( NOT (MINGW) )
+	target_link_libraries(fracture cdp2k sfsys ${AAIOLIB} ${EXTRA_LIBRARIES})
+else()
+	target_link_libraries(fracture cdp2k sfsys ${EXTRA_LIBRARIES})
+endif()
 
 my_install(fracture)
 
@@ -53,7 +61,11 @@ target_link_libraries(isolate cdp2k sfsys ${EXTRA_LIBRARIES})
 my_install(isolate)
 
 add_executable(iterfof iterfof.c)
-target_link_libraries(iterfof aaio cdp2k sfsys ${EXTRA_LIBRARIES})
+if( NOT (MINGW) )
+	target_link_libraries(iterfof ${AAIOLIB} cdp2k sfsys ${EXTRA_LIBRARIES})
+else()
+	target_link_libraries(iterfof cdp2k sfsys ${EXTRA_LIBRARIES})
+endif()
 
 my_install(iterfof)
 
@@ -83,12 +95,20 @@ target_link_libraries(newmorph cdp2k sfsys ${EXTRA_LIBRARIES})
 my_install(newmorph)
 
 add_executable(newsynth synthesis.c)
-target_link_libraries(newsynth aaio cdp2k sfsys ${EXTRA_LIBRARIES})
+if( NOT (MINGW) )
+	target_link_libraries(newsynth ${AAIOLIB} cdp2k sfsys ${EXTRA_LIBRARIES})
+else()
+	target_link_libraries(newsynth cdp2k sfsys ${EXTRA_LIBRARIES})
+endif()
 
 my_install(newsynth)
 
 add_executable(newtex newtex.c)
-target_link_libraries(newtex aaio cdp2k sfsys ${EXTRA_LIBRARIES})
+if( NOT (MINGW) )
+	target_link_libraries(newtex ${AAIOLIB} cdp2k sfsys ${EXTRA_LIBRARIES})
+else()
+	target_link_libraries(newtex cdp2k sfsys ${EXTRA_LIBRARIES})
+endif()
 
 my_install(newtex)
 

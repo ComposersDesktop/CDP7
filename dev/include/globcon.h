@@ -77,7 +77,9 @@ extern int is_converted_to_stereo;
 /* RWD this is unix version */
 /* defined in math.h on unix platforms */
 #if defined _MSC_VER || defined __GNUC__
-#define	MAXFLOAT	((float)3.40282346638528860e+38)
+# ifndef MAXFLOAT
+# define	MAXFLOAT	((float)3.40282346638528860e+38)
+# endif
 #endif
 #define FLTERR 		 	(0.000002)
 

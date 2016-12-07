@@ -78,7 +78,7 @@ static int amplitude_scaling(int atk_window,dataptr dz);
 static int last_window_in_peak(int peak);
 
 char errstr[2400];
-const char* cdp_version = "6.1.0";
+const char* cdp_version = "7.1.0";
 
 /* extern */ int sloom = 0;
 /* extern */ int	sloombatch = 0;

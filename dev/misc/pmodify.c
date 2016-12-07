@@ -41,7 +41,7 @@
 #include <cdplib.h>
 
 static int headwrite(int ofd,int origchans,int origstype,int origrate,float arate,int Mlen,int Dfac);
-const char* cdp_version = "5.0.1";
+const char* cdp_version = "7.1.0";
 
 int main(int argc,char *argv[])
 {
