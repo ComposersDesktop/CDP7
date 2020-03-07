@@ -1,6 +1,6 @@
- if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.5  -arch i386 -Dunix")
-  
+if(APPLE)
+  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.7  -arch x86_64 -Dunix")
+  set(AAIOLIB "/usr/local/lib/libaaio.a")
 else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O2 -Wall -DWIN32")

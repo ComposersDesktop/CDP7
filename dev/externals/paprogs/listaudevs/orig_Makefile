@@ -1,4 +1,4 @@
-# OSX makefile for listaudevs © Richard Dobson Feb 1 2014
+# OSX makefile for listaudevs ï¿½ Richard Dobson Feb 1 2014
 
 CC = gcc
 OPT = -O3
@@ -9,7 +9,7 @@ PAINC = $(PADIR)/include
 PACOM = $(PADIR)/src/common
 
 PALIB = $(PADIR)/lib/libportaudio.a
-CFLAGS = $(OPT)  -g -mmacosx-version-min=10.5 -arch i386 -Dunix -DMAC  -DPA_USE_COREAUDIO -I$(PAINC)
+CFLAGS = $(OPT)  -g -mmacosx-version-min=10.7 -arch x86_64 -Dunix -DMAC  -DPA_USE_COREAUDIO -I$(PAINC)
 IOLINK =  -framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework Carbon
 PROG=listaudevs  
 

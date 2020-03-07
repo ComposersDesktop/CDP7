@@ -1,6 +1,6 @@
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.5  -arch i386 -Dunix -fomit-frame-pointer -funroll-loops")
-  set(CMAKE_CXX_FLAGS "-O2 -Wall -mmacosx-version-min=10.5  -arch i386 -Dunix -fomit-frame-pointer -funroll-loops")
+  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.7  -arch x86_64 -Dunix -fomit-frame-pointer -funroll-loops -stdlib=libc++")
+  set(CMAKE_CXX_FLAGS "-O2 -Wall -mmacosx-version-min=10.7  -arch x86_64 -Dunix -fomit-frame-pointer -funroll-loops -stdlib=libc++")
 else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O3 -DWIN32 -D_WIN32 -fomit-frame-pointer  -funroll-loops")

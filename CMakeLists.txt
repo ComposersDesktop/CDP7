@@ -72,7 +72,7 @@ endfunction(check_deps)
 
 ### COMPILER OPTIMIZATION FLAGS
 option(USE_COMPILER_OPTIMIZATIONS "Use the default CDP compiler optimization flags" ON)
-if(USE_COMPILER_OPTIMIZATIONS)
+if(NOT APPLE AND USE_COMPILER_OPTIMIZATIONS)
   include(cmake/CompilerOptimizations.cmake)
 endif()
 
@@ -187,7 +187,12 @@ SET(BUILD_SHARED_LIBS OFF)
 
 ## HEADER/LIBRARY/OTHER CHECKS ##
 
-option(USE_LOCAL_PORTAUDIO "Build and use PA programs" ON)
+if(APPLE)
+    option(USE_LOCAL_PORTAUDIO "Build and use PA programs" OFF)
+else()
+    option(USE_LOCAL_PORTAUDIO "Build and use PA programs" ON)
+endif()
+
 
 if(USE_LOCAL_PORTAUDIO)
   message(STATUS "paprogs to be built")
@@ -195,11 +200,19 @@ else()
   message(STATUS "paprogs not built")
 endif()
   
-set(HEADERS_TO_CHECK
-    unistd.h io.h fcntl.h stdint.h
-    sys/time.h sys/types.h termios.h
-    values.h winsock.h sys/socket.h
-    dirent.h )
+if(APPLE)
+    set(HEADERS_TO_CHECK
+        unistd.h fcntl.h stdint.h
+        sys/time.h sys/types.h termios.h
+        sys/socket.h
+        dirent.h )
+else()
+    set(HEADERS_TO_CHECK
+        unistd.h io.h fcntl.h stdint.h
+        sys/time.h sys/types.h termios.h
+        values.h winsock.h sys/socket.h
+        dirent.h )
+endif()
 
 foreach(header ${HEADERS_TO_CHECK})
     # Convert to uppercase and replace [./] with _
@@ -240,7 +253,7 @@ endif()
 
 if(APPLE)
     message(STATUS "Building on OSX")
-    add_definitions(-mmacosx-version-min=10.5 -arch i386 -Dunix)
+    add_definitions(-mmacosx-version-min=10.7 -arch x86_64 -Dunix)
     list(APPEND LIBCDP_LIBS m)
 endif()
 
