@@ -1,5 +1,5 @@
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O -Wall -mmacosx-version-min=10.5 -arch i386 -Dunix")
+  set(CMAKE_C_FLAGS "-O -Wall -mmacosx-version-min=10.5 -Dunix")
 else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O2 -Wall -DWIN32 -D_WIN32")
