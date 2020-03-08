@@ -33,6 +33,7 @@
  *	All Rights Reserved.
  */
 /* RWD: old sfsys functions DEPRECATED and emptied */
+/* RWD Dec 2019  fixed SndTellEx for int64 comps */
 #ifdef _DEBUG
 #include <stdio.h>
 #endif
@@ -755,7 +756,8 @@ sndcloseEx(int fd)
 
 	if(sf->flags&SNDFLG_TRUNC) {
 		length = sfsize(sf->fd);
-		pos = sndtellEx(fd+SNDFDBASE) * sampsize[sf->samptype];
+		pos = sndtellEx(fd + SNDFDBASE); //RWD 12-12-19 make sure of 64bit ints in calcs
+		pos *= sampsize[sf->samptype];
 		if(sf->flags  & SNDFLG_WRITTEN )	/* should never exec */
 			sndflsbufEx(sf);		/* rsfsize does it!  */		
 		if((rc = sfadjust(sf->fd,pos-length)) < 0) {
