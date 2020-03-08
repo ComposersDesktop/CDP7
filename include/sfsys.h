@@ -392,14 +392,16 @@ extern long cdp_round(double val);
 #ifdef unix
 #define cdp_round(x) lround((x))
 #endif
+
+#ifndef __cplusplus
 /* unix math.h does not include these macros */
+# ifndef min
+# define min(x,y)	( ((x)>(y)) ? (y) : (x) )
+# endif
 
-#ifndef min
-#define min(x,y)	( ((x)>(y)) ? (y) : (x) )
-#endif
-
-#ifndef max
-#define max(x,y)	( ((x)>(y)) ? (x) : (y) )
+# ifndef max
+# define max(x,y)	( ((x)>(y)) ? (x) : (y) )
+# endif
 #endif
 
 /*
