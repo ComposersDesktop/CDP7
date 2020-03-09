@@ -142,15 +142,21 @@ int establish_special_data_type(int process,int mode,aplptr ap)
 			/*************************** GROUCHO ****************************/
 
 	case(DISTORT_ENV):	
-		if(mode==DISTORTE_USERDEF)	ap->special_data = DISTORT_ENVELOPE;				break;
+		if(mode==DISTORTE_USERDEF)	ap->special_data = DISTORT_ENVELOPE;
+                break;
 	case(ENVSYN):
-		if(mode==ENVSYN_USERDEF)	ap->special_data = ENVSYN_ENVELOPE;					break;
-	case(DISTORT_HRM):				ap->special_data = HARMONIC_DISTORT;				break;
-	case(DISTORT_SHUF):				ap->special_data = SHUFFLE_DATA;					break;
+		if(mode==ENVSYN_USERDEF)	ap->special_data = ENVSYN_ENVELOPE;
+                break;
+	case(DISTORT_HRM):			ap->special_data = HARMONIC_DISTORT;
+         	 break;
+	case(DISTORT_SHUF):			ap->special_data = SHUFFLE_DATA;
+          	break;
 //TW NEW CASE
-	case(DISTORT_PULSED):			ap->special_data = PULSE_ENVELOPE;					break;
+	case(DISTORT_PULSED):			ap->special_data = PULSE_ENVELOPE;
+                break;
 	case(ZIGZAG):		
-		if(mode==ZIGZAG_USER)		ap->special_data = ZIGDATA;							break;
+		if(mode==ZIGZAG_USER)		ap->special_data = ZIGDATA;
+                break;
 
 	case(SIMPLE_TEX):  		
 	case(GROUPS):	   		
@@ -165,13 +171,25 @@ int establish_special_data_type(int process,int mode,aplptr ap)
 	case(TIMED):	   		
 	case(TGROUPS):	   		
 	case(TMOTIFS): 
-	case(TMOTIFSIN):				ap->special_data = TEX_NOTEDATA;					break;
+	case(TMOTIFSIN):
+                ap->special_data = TEX_NOTEDATA;
+                break;
 
-	case(GRAIN_REORDER):			ap->special_data = GRAIN_REORDER_STRING;			break;
-	case(GRAIN_REPITCH):   			ap->special_data = GRAIN_PITCH_RATIOS;				break;
-	case(GRAIN_RERHYTHM):  			ap->special_data = GRAIN_TIME_RATIOS;				break;
-	case(GRAIN_REMOTIF):   			ap->special_data = GRAIN_TWO_RATIOS;				break;
-	case(GRAIN_POSITION):  			ap->special_data = GRAIN_TIMINGS;					break;
+	case(GRAIN_REORDER):
+         	 ap->special_data = GRAIN_REORDER_STRING;
+	         break;
+	case(GRAIN_REPITCH):
+		ap->special_data = GRAIN_PITCH_RATIOS;
+		break;
+	case(GRAIN_RERHYTHM):
+		ap->special_data = GRAIN_TIME_RATIOS;
+		break;
+	case(GRAIN_REMOTIF):
+		ap->special_data = GRAIN_TWO_RATIOS;
+          	break;
+	case(GRAIN_POSITION):
+          	ap->special_data = GRAIN_TIMINGS;
+		break;
 	case(GREV):
 		if(mode==GREV_PUT)
 			ap->special_data = GRAIN_TIMINGS;					
@@ -193,17 +211,20 @@ int establish_special_data_type(int process,int mode,aplptr ap)
 	case(FLTBANKU):	   
 	case(FLTITER):		   			ap->special_data = FILTERBANK;						break;
 
-	case(FLTBANKV):		   			ap->special_data = TIMEVARYING_FILTERBANK;			break;
+	case(FLTBANKV):		   ap->special_data = TIMEVARYING_FILTERBANK;
+                                    break;
 	case(FLTBANKV2):		   		ap->special_data = TIMEVARY2_FILTERBANK;			break;
 	case(INSERTSIL_MANY):
-	case(EDIT_EXCISEMANY):		   	ap->special_data = EXCISE_TIMES;					break;
+	case(EDIT_EXCISEMANY):		ap->special_data = EXCISE_TIMES;					break;
 	case(INFO_MUSUNITS):
 		if(mode==MU_NOTE_TO_FRQ
 		|| mode==MU_NOTE_TO_MIDI)	ap->special_data = NOTE_REPRESENTATION;
 		else if(mode==MU_INTVL_TO_TSTRETCH
 			 || mode==MU_INTVL_TO_FRQRATIO)	
-									ap->special_data = INTERVAL_REPRESENTATION;			break;
-	case(HOUSE_DEL):				ap->special_data = SNDFILENAME;						break;
+						ap->special_data = INTERVAL_REPRESENTATION;
+		break;
+	case(HOUSE_DEL):			ap->special_data = SNDFILENAME;
+          	break;
 	case(HOUSE_EXTRACT):
 		if(mode==HOUSE_BYHAND)	
 									ap->special_data = BY_HAND;							break;
@@ -225,8 +246,9 @@ int establish_special_data_type(int process,int mode,aplptr ap)
 	case(BATCH_EXPAND):				ap->special_data = BATCH;							break;
 	case(MOD_LOUDNESS):
 		if(mode == LOUD_PROPOR || mode == LOUD_DB_PROPOR)
-									ap->special_data = LOUDNESS;						break;
-	case(MULTI_SYN):				ap->special_data = CHORD_SYN;						break;
+			ap->special_data = LOUDNESS;
+                break;
+	case(MULTI_SYN):		ap->special_data = CHORD_SYN;						break;
 	}
 	return(FINISHED);
 }
