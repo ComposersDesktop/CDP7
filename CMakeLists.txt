@@ -247,7 +247,7 @@ endif()
 
 if(LINUX)
     message(STATUS "Building on Linux")
-    add_definitions(-DCDP97 -Dunix -Dlinux -D_X86_  -DFILE_AMB_SUPPORT)
+    add_definitions(-Wall -Werror -DCDP97 -Dunix -Dlinux -D_X86_  -DFILE_AMB_SUPPORT)
     list(APPEND LIBCDP_LIBS m)
 endif()
 
