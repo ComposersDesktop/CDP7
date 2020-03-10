@@ -31,6 +31,11 @@ target_link_libraries(chanphase cdp2k sfsys ${EXTRA_LIBRARIES})
 
 my_install(chanphase)
 
+add_executable(dshift dshift.c)
+target_link_libraries(dshift ${EXTRA_LIBRARIES})
+
+my_install(dshift)
+
 add_executable(sfecho echo.c)
 target_link_libraries(sfecho cdp2k sfsys ${EXTRA_LIBRARIES})
 
