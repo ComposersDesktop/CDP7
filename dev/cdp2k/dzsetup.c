@@ -113,7 +113,7 @@ void pointer_initialisation(dataptr dz)
 /* OTHER FILE PONTERS */
 	dz->ofd		 			= -1;		
 	dz->other_file	 		= -1;
-	dz->extra_word   		= -1L;
+	dz->extra_word   		= -1;    /* RWD, 2020, was -1L */
 	dz->extrabrkno   		= -1;
 	dz->deal_with_chan_data = RECTIFY_CHANNEL_FRQ_ORDER;
 	dz->is_sharp		 	= EIGHTH_TONE;		/* default */
@@ -139,13 +139,13 @@ void pointer_initialisation(dataptr dz)
 
 void initialise_file_property_struct(fileptr fp)
 {
-	fp->filetype	= -1;
-	fp->srate 	   	= 0L;		 		
-	fp->stype 	    = -1L;
-	fp->origstype  	= -1L;
-	fp->origrate   	= 0L;
-	fp->channels   	= 0L;
-	fp->origchans  	= 0L;
+	fp->filetype	= -1;     /* RWD 2020, previouslay all with L suffix */
+	fp->srate 	   	= 0;		 		
+	fp->stype 	    = -1;
+	fp->origstype  	= -1;
+	fp->origrate   	= 0;
+	fp->channels   	= 0;
+	fp->origchans  	= 0;
 	fp->specenvcnt 	= 0;
 	fp->Mlen 	   	= 0;
 	fp->Dfac 	   	= 0;
@@ -208,7 +208,7 @@ int superfree(dataptr dz)
 					free(dz->lparray[n]);							
 			}
 		}	
-		/* RWD 4:2002 lfarray shadows lparray for sumbix syncatt and distort*/
+		/* RWD 4:2002 lfarray shadows lparray for submix syncatt and distort*/
 		if((dz->larray_cnt > 0) && (dz->lfarray!=NULL)) {
 			for(n = 0;n< dz->larray_cnt; n++) {	
 				if(dz->lfarray[n]!=NULL) 
