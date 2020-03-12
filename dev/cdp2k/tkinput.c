@@ -95,7 +95,7 @@ int parse_tk_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,dataptr 
 	int filesize, insams, inbrksize;
 	double dummy;
 	int true_cnt = 0;
-	aplptr ap;
+	//aplptr ap;
 
 	while(cnt<=PRE_CMDLINE_DATACNT) {
 		if(cnt > argc) {
@@ -119,7 +119,7 @@ int parse_tk_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,dataptr 
 				dz->mode--;
 			if((exit_status = setup_particular_application(dz))<0)
 				return(exit_status);
-			ap = dz->application;
+			//ap = dz->application;
 			break;
 
 		case(3):	

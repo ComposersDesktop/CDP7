@@ -44,7 +44,7 @@ typedef struct hhead *headptr;
    /* ELEMENTS IN PLAYLIST FOR MAKING TEXTURE */
    /*******************************************/
 
-struct soundout {		   
+struct soundout {
 float *inbuf;
 unsigned int ibufcnt;
 unsigned int st_sstttime;

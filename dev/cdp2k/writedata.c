@@ -123,12 +123,11 @@ int truncate_outfile(dataptr dz)
 /***************************** HEADWRITE *******************************/
 
 int headwrite(int ofd,dataptr dz)
-{   
-    int   exit_status;
-    int   isenv = 1;
-    int  property_marker = 1;
-    int  samptype, srate, channels;
-    float window_size = 0.0f;
+{	
+	int   exit_status;
+	int   isenv = 1;
+	int  property_marker = 1;
+	float window_size = 0.0f;
 
     if(!(dz->process == PVOC_ANAL || dz->process == PVOC_EXTRACT || dz->process == PVOC_SYNTH)) {
         if((exit_status = set_output_header_properties(dz))<0)
@@ -171,17 +170,17 @@ int headwrite(int ofd,dataptr dz)
         }
         /* drop through */
     case(SNDFILE_OUT):
-//TW these properties can either be created at the outset (sndcreat_formatted() 
-//  in which case they are not alterable here.
-//  or they can be left open (sndcreat e.g. for PITCH, or CUT for dz->otherfile)
-        sndputprop(ofd,"sample rate", (char *)&(dz->outfile->srate), sizeof(int));
-        sndputprop(ofd,"channels", (char *)&(dz->outfile->channels), sizeof(int));
-        break;
-    case(ENVFILE_OUT):  
-        samptype = SAMP_FLOAT;
-        srate = round(SECS_TO_MS/dz->outfile->window_size);
-        channels = 1;
-        window_size = dz->outfile->window_size;
+//TW these properties can either be created at the outset (sndcreat_formatted()
+//	in which case they are not alterable here.
+//	or they can be left open (sndcreat e.g. for PITCH, or CUT for dz->otherfile)
+		sndputprop(ofd,"sample rate", (char *)&(dz->outfile->srate), sizeof(int));
+		sndputprop(ofd,"channels", (char *)&(dz->outfile->channels), sizeof(int));
+		break;
+	case(ENVFILE_OUT):  
+        //samptype = SAMP_FLOAT;
+		//srate = round(SECS_TO_MS/dz->outfile->window_size);
+		//channels = 1;
+		window_size = dz->outfile->window_size;
 /* JUNE 2004
         if(sndputprop(ofd,"sample rate", (char *)&srate, sizeof(int)) < 0){
             sprintf(errstr,"Failure to write sample rate. headwrite()\n");

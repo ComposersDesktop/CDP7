@@ -92,21 +92,21 @@ static int  read_numeric_value_from_weavefile_text(char **str,int n,dataptr dz);
 
 int establish_bufptrs_and_extra_buffers(dataptr dz)
 {
-	int is_spec = FALSE;
+    //int is_spec = FALSE;
 	dz->extra_bufcnt = -1;	/* ENSURE EVERY CASE HAS A PAIR OF ENTRIES !! */
 	dz->bptrcnt = 0;
 	dz->bufcnt  = 0;
 	switch(dz->process) {
-	case(AVRG):       		dz->extra_bufcnt =  0; dz->bptrcnt = 1; 	is_spec = TRUE;		break;
-	case(BLUR):       		dz->extra_bufcnt =  0; dz->bptrcnt = 4; 	is_spec = TRUE;		break;
-	case(SUPR):       		dz->extra_bufcnt =  0; dz->bptrcnt = 1; 	is_spec = TRUE;		break;
-	case(CHORUS):     		dz->extra_bufcnt =  1; dz->bptrcnt = 1; 	is_spec = TRUE;		break;
-	case(DRUNK):      		dz->extra_bufcnt =  0; dz->bptrcnt = 4; 	is_spec = TRUE;		break;
-	case(SHUFFLE):    		dz->extra_bufcnt =  0; dz->bptrcnt = 5; 	is_spec = TRUE;		break;
-	case(WEAVE):      		dz->extra_bufcnt =  0; dz->bptrcnt = 5; 	is_spec = TRUE;		break;
-	case(NOISE):      		dz->extra_bufcnt =  0; dz->bptrcnt = 1; 	is_spec = TRUE;		break;
-	case(SCAT):       		dz->extra_bufcnt =  0; dz->bptrcnt = 1; 	is_spec = TRUE;		break;
-	case(SPREAD):     		dz->extra_bufcnt =  0; dz->bptrcnt = 1; 	is_spec = TRUE;		break;
+	case(AVRG):       		dz->extra_bufcnt =  0; dz->bptrcnt = 1; 	/*is_spec = TRUE;*/		break;
+	case(BLUR):       		dz->extra_bufcnt =  0; dz->bptrcnt = 4; 	/*is_spec = TRUE;*/		break;
+	case(SUPR):       		dz->extra_bufcnt =  0; dz->bptrcnt = 1; 	/*is_spec = TRUE;*/		break;
+	case(CHORUS):     		dz->extra_bufcnt =  1; dz->bptrcnt = 1; 	/*is_spec = TRUE;*/		break;
+	case(DRUNK):      		dz->extra_bufcnt =  0; dz->bptrcnt = 4; 	/*is_spec = TRUE;*/		break;
+	case(SHUFFLE):    		dz->extra_bufcnt =  0; dz->bptrcnt = 5; 	/*is_spec = TRUE;*/		break;
+	case(WEAVE):      		dz->extra_bufcnt =  0; dz->bptrcnt = 5; 	/*is_spec = TRUE;*/		break;
+	case(NOISE):      		dz->extra_bufcnt =  0; dz->bptrcnt = 1; 	/*is_spec = TRUE;*/		break;
+	case(SCAT):       		dz->extra_bufcnt =  0; dz->bptrcnt = 1; 	/*is_spec = TRUE;*/		break;
+	case(SPREAD):     		dz->extra_bufcnt =  0; dz->bptrcnt = 1; 	/*is_spec = TRUE;*/		break;
 	default:
 		sprintf(errstr,"Unknown program type [%d] in establish_bufptrs_and_extra_buffers()\n",dz->process);
 		return(PROGRAM_ERROR);

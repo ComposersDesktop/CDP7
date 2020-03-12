@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 	int gobo_array_element, gobo_array_element_index, gobo_element_mask, first_gobostring = 1;
 	int existing_element_cnt = 0, new_element_cnt, make_new_array_element = 0;
 	int system_update = 0;
-		
+
 	if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
 		fprintf(stdout,"%s\n",cdp_version);
 		fflush(stdout);
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
 int count_gobo_array_elements(char *gobo_line)
 {
 	char *p;
-	int existing_element_cnt = 0, OK = 0;	
+	int existing_element_cnt = 0, OK = 0;
 
 	p = gobo_line;
 	while(*p != '{') {				/* search for start of array */
@@ -174,7 +174,7 @@ int count_gobo_array_elements(char *gobo_line)
 			fflush(stdout);
 			return(0);
 		}
-	}		
+	}
 	p++;
 	while(isspace(*p))
 		p++;	 					/* check for inappropriate end of array */
@@ -245,7 +245,7 @@ int gobo_array_element,int gobo_element_mask,int substitute, int setval)
 		goboval = 0;				/* PRESET NEW ARRAY ELEMENT TO 0 */
 //TW UPDATE
 		if(!deleter && (setval==1))	/* put in value 1, only if flag set */
-			goboval |= gobo_element_mask;		
+			goboval |= gobo_element_mask;
 									/* & store the new value in a string */
 		sprintf(gobo_string,"%d",goboval);
 
@@ -266,7 +266,7 @@ int gobo_array_element,int gobo_element_mask,int substitute, int setval)
 		} else
 			p++;
 		gobo_pointer = p;			/* point to the start of the array element wanted */
-								
+
 		if(gobo_array_element == existing_element_cnt-1) {
 			while(*p != '}') {		/* if we're working on the last element in the array */
 				p++;				/* look for the array end */
@@ -297,8 +297,8 @@ int gobo_array_element,int gobo_element_mask,int substitute, int setval)
 		*gobo_pointer = ENDOFSTR;
 									/* If existing value to be changed */
 		if(substitute) {			/* zero the value at gobo_element_mask position */
-			zero_mask = ~gobo_element_mask;		
-			goboval &= zero_mask;	
+			zero_mask = ~gobo_element_mask;
+			goboval &= zero_mask;
 		}							/* put in value 1, only if flag set */
 		if(!deleter && (setval==1))	/* & store the new value in a string */
 			goboval |= gobo_element_mask;
@@ -337,9 +337,9 @@ int count_gobo_array_elements_in_first_gobo(char *gobo_line, char *comp, int pro
 			return(0);
 		}
 	} else if(new_element_cnt < existing_element_cnt) {
-		fprintf(stdout, 
+		fprintf(stdout,
 		"ERROR: new_element_cnt %d existing_element_cnt %d\n",new_element_cnt,existing_element_cnt);
-		fprintf(stdout, 
+		fprintf(stdout,
 		"ERROR: MAX_PROCESS_NO is TOO LOW to tally with the existing gobo count in gobo %s.\n",comp);
 		fflush(stdout);
 		return(0);
@@ -366,7 +366,7 @@ int make_next_gobo_name_and_number(int *gobo_number, int *goboname_len, char **c
 		finished_fixing_gobos = 1;
 	} else {
 		if(*gobo_number == 10)
-			(*goboname_len)++;	
+			(*goboname_len)++;
 		sprintf(num,"%d",*gobo_number);
 		strcat(*comp,num);
 	}
@@ -377,98 +377,97 @@ int make_next_gobo_name_and_number(int *gobo_number, int *goboname_len, char **c
 
 int check_progno(int *progno, int system_update)
 {
-	int is_new = 0;
-	if(system_update) {
+    //int is_new = 0;
+    if(system_update) {
 
-/* TEST */
-		if(*progno == 0) {
-			*progno = MAX_PROCESS_NO;
-//TW UPDATES
-			fprintf(stdout,"INFO: using the value %d for the MAX_PROCESS_NO: If this is incorrect, recompile fixgobo, and start again.\n",MAX_PROCESS_NO);
-			fprintf(stdout,"INFO: If you do not do this, the gobo data for program %d will be overwritten!!\n",MAX_PROCESS_NO);
-			fflush(stdout);
+        /* TEST */
+        if(*progno == 0) {
+            *progno = MAX_PROCESS_NO;
+            //TW UPDATES
+            fprintf(stdout,"INFO: using the value %d for the MAX_PROCESS_NO: If this is incorrect, recompile fixgobo, and start again.\n",MAX_PROCESS_NO);
+            fprintf(stdout,"INFO: If you do not do this, the gobo data for program %d will be overwritten!!\n",MAX_PROCESS_NO);
+            fflush(stdout);
 
-			is_new = 1;
-		}
-//		if((*progno >= MIN_TEMPROC_AREA) && (*progno <= MAX_TEMPROC_AREA)) {
-//			if(is_new)
-//				fprintf(stdout,"ERROR: Invalid MAX_PROCESS_NO for new system processes.\n");
-//			else
-//				fprintf(stdout,"ERROR: Invalid process number for new system processes.\n");
-//			fprintf(stdout,"Cannot be between %d  and %d inclusive\n",MIN_TEMPROC_AREA,MAX_TEMPROC_AREA);
-//			fprintf(stdout,"as these are reserved for private user processes.\n");
-//			fflush(stdout);
-//			return(-1);
-//		} else 
-		if(*progno > MAX_PROCESS_NO) {
-			fprintf(stdout,"ERROR: The process number entered is above MAX_PROCESS_NO\n");
-			fflush(stdout);
-			return(-1);
-//TW UPDATE
-		} else if(*progno <= MAX_PROCESS_NO) {
-			fprintf(stdout,"WARNING: REDEFINING THE GOBO FOR AN EXISTING PROCESS.\n");
-			fflush(stdout);
-			return(1);
-		}
-	} else {
-		if(*progno == 0) {
-			*progno = MAX_TEMP_PROCESS_NO;
-			is_new = 1;
-		}
-//		if((*progno > MAX_TEMPROC_AREA) || (*progno < MIN_TEMPROC_AREA)) {
-//			if(is_new)
-//				fprintf(stdout,"ERROR: Invalid MAX_TEMP_PROCESS_NO for new processes.\n");
-//			else
-//				fprintf(stdout,"ERROR: Invalid process number for new processes.\n");
-//			fprintf(stdout,"Private user processes must lie between %d and %d\n",MIN_TEMPROC_AREA,MAX_TEMPROC_AREA);
-//			fprintf(stdout,"If you have run out of space for new processes,\n");
-//			fprintf(stdout,"perhaps you should install some of them as common CDP system processes\n");
-//			fprintf(stdout,"by contacting the CDP.\n");
-//			fflush(stdout);
-//			return(-1);
-//		} else 
-		if(*progno < MAX_TEMP_PROCESS_NO) {
-			fprintf(stdout,"WARNING: OVERWRITING AN EXISTING PROCESS.\n");
-			fflush(stdout);
-			return(1);
-		}
-	}
-	return(0);
+            //is_new = 1;
+        }
+        //		if((*progno >= MIN_TEMPROC_AREA) && (*progno <= MAX_TEMPROC_AREA)) {
+        //			if(is_new)
+        //				fprintf(stdout,"ERROR: Invalid MAX_PROCESS_NO for new system processes.\n");
+        //			else
+        //				fprintf(stdout,"ERROR: Invalid process number for new system processes.\n");
+        //			fprintf(stdout,"Cannot be between %d  and %d inclusive\n",MIN_TEMPROC_AREA,MAX_TEMPROC_AREA);
+        //			fprintf(stdout,"as these are reserved for private user processes.\n");
+        //			fflush(stdout);
+        //			return(-1);
+        //		} else
+        if(*progno > MAX_PROCESS_NO) {
+            fprintf(stdout,"ERROR: The process number entered is above MAX_PROCESS_NO\n");
+            fflush(stdout);
+            return(-1);
+            //TW UPDATE
+        } else if(*progno <= MAX_PROCESS_NO) {
+            fprintf(stdout,"WARNING: REDEFINING THE GOBO FOR AN EXISTING PROCESS.\n");
+            fflush(stdout);
+            return(1);
+        }
+    } else {
+        if(*progno == 0) {
+            *progno = MAX_TEMP_PROCESS_NO;
+            //is_new = 1;
+        }
+        //		if((*progno > MAX_TEMPROC_AREA) || (*progno < MIN_TEMPROC_AREA)) {
+        //			if(is_new)
+        //				fprintf(stdout,"ERROR: Invalid MAX_TEMP_PROCESS_NO for new processes.\n");
+        //			else
+        //				fprintf(stdout,"ERROR: Invalid process number for new processes.\n");
+        //			fprintf(stdout,"Private user processes must lie between %d and %d\n",MIN_TEMPROC_AREA,MAX_TEMPROC_AREA);
+        //			fprintf(stdout,"If you have run out of space for new processes,\n");
+        //			fprintf(stdout,"perhaps you should install some of them as common CDP system processes\n");
+        //			fprintf(stdout,"by contacting the CDP.\n");
+        //			fflush(stdout);
+        //			return(-1);
+        //		} else
+        if(*progno < MAX_TEMP_PROCESS_NO) {
+            fprintf(stdout,"WARNING: OVERWRITING AN EXISTING PROCESS.\n");
+            fflush(stdout);
+            return(1);
+        }
+    }
+    return(0);
 }
 
 /******************************** CHECK_FLAGS ******************************/
 
 int check_flags(char *str,int **flags,int max_gobos)
 {
-	char *p;
-	int n;
+    char *p;
+    int n;
 //TW UPDATE
-	if(!strcmp(str,"0")) {
-		deleter = 1;
-	} else if(strlen(str) != (unsigned int)max_gobos) {
-		fprintf(stdout,"ERROR: Bad data string sent to fixgobo.\n");
-		fflush(stdout);
-		return(-1);
-	}
-	if((*flags = malloc((max_gobos+2) * sizeof(int)))==NULL) {
-		fprintf(stdout,"ERROR: Out of memory to store flags, in fixgobo.\n");
-		fflush(stdout);
-		return(-1);
-	}
-	p = str;
-	for(n=1;n<=max_gobos;n++) {
-		switch(*p) {
-		case('0'):	(*flags)[n] = 0;	break;
-		case('1'):	(*flags)[n] = 1;	break;
-		default:
-			fprintf(stdout,"ERROR: Bad character (ascii %d) in gobo-flag string sent to fixgobo.\n",*p);
-			fflush(stdout);
-			return(-1);
-		}
-//TW UPDATE
-		if(!deleter)
-			p++;
-	}
-	return(1);
+    if(!strcmp(str,"0")) {
+        deleter = 1;
+    } else if(strlen(str) != (unsigned int)max_gobos) {
+        fprintf(stdout,"ERROR: Bad data string sent to fixgobo.\n");
+        fflush(stdout);
+        return(-1);
+    }
+    if((*flags = malloc((max_gobos+2) * sizeof(int)))==NULL) {
+        fprintf(stdout,"ERROR: Out of memory to store flags, in fixgobo.\n");
+        fflush(stdout);
+        return(-1);
+    }
+    p = str;
+    for(n=1;n<=max_gobos;n++) {
+        switch(*p) {
+        case('0'):	(*flags)[n] = 0;	break;
+        case('1'):	(*flags)[n] = 1;	break;
+        default:
+            fprintf(stdout,"ERROR: Bad character (ascii %d) in gobo-flag string sent to fixgobo.\n",*p);
+            fflush(stdout);
+            return(-1);
+        }
+        //TW UPDATE
+        if(!deleter)
+            p++;
+    }
+    return(1);
 }
-

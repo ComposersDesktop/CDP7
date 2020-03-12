@@ -327,6 +327,8 @@ legalfilename(char *filename)
 
 /* for both WIN32 and unix! */
 
+#include <time.h>
+
 void
 initrand48()
 {

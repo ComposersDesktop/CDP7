@@ -77,7 +77,7 @@ float *cyclemax,int *no_of_half_cycles,int *startindex,int *startmarker,int *end
 	int exit_status;
 	int crosbuf = FALSE;
 	register int i = *lastzero;
-	int samples, lastmarker, oldbufcnt;
+	int samples, lastmarker; //, oldbufcnt;
 	int phase;
 	float *b = dz->sampbuf[current_buf];
 	if(is_last)
@@ -126,7 +126,7 @@ float *cyclemax,int *no_of_half_cycles,int *startindex,int *startmarker,int *end
 	}
 	if(!is_last) {
 		crosbuf = TRUE;
-		oldbufcnt = dz->buflen - *lastzero;
+		//oldbufcnt = dz->buflen - *lastzero;
 		b = dz->sampbuf[!current_buf];
 		samples = dz->ssampsread;
 		i = 0;

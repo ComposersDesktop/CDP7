@@ -70,7 +70,7 @@ int	nseg,
 		ntot,
 		j, 
 		jj,
-		maxf, maxp;
+		maxf, maxp = 0;
 
 /* work space pointers */
 	float	*at, *ck, *bt, *sk;
@@ -98,7 +98,8 @@ int	nseg,
 	}
 	for (m=0; !(k%16); nfac[++m]=4,k/=16);
 	for (j=3,jj=9; jj<=k; j+=2,jj=j*j)
-		for (; !(k%jj); nfac[++m]=j,k/=jj);
+		for (;
+                     !(k%jj); nfac[++m]=j,k/=jj);
 
       	if (k<=4){
 	      	kt = m;
@@ -178,7 +179,7 @@ int nfac[];
 {	
 	int	i,inc,
 		j,jc,jf, jj,
-		k, k1, k2, k3, k4,
+		k, k1, k2, k3=0, k4,
 		kk,klim,ks,kspan, kspnn,
 		lim,
 		maxf,mm,
