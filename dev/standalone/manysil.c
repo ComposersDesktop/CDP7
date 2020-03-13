@@ -1137,12 +1137,10 @@ int manysil(dataptr dz)
                         splicetype = 1;                                                                                 /* and mark that we are still IN an UPsplice */
                         break;
                     }
-                    for(m=0;m<chans;m++)
-                        // **** FIX THIS *** ??
-                        {
-                            dz->bigbuf[splicpos] = (float)(dz->bigbuf[splicpos] * spliceval);
-                            splicpos++;
-                        }
+                    for(m=0;m<chans;m++) {
+                        dz->bigbuf[splicpos] = (float)(dz->bigbuf[splicpos] * spliceval);
+                        splicpos++;
+                    }
                     spliceval += splicincr;
                 }                                                                                                                               /* write the samples before the silence-insert (includes splice-down) */
                 if((exit_status = write_samps(dz->bigbuf+local_copy_start,samps_to_copy,dz))<0)
