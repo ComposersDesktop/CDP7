@@ -304,6 +304,7 @@ int application_init(dataptr dz)
     int exit_status;
     int storage_cnt;
     int tipc;
+    aplptr ap = dz->application;
     if(ap->vflag_cnt>0)
         initialise_vflags(dz);
     tipc  = ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt;

@@ -885,7 +885,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+    //aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -916,7 +916,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_spectrum_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+            //ap = dz->application;
             break;
 
         case(3):
@@ -2189,7 +2189,7 @@ int spectrum(int *perm,dataptr dz)
                 dz->bigfbuf[FREQ] = (float)fabs(dz->parray[0][vc]);                    //    BUT NB input data is frq/amp ... output data is amp/frq
                 peaked[cc] = 1;
                 pkwidth = 0.0;
-                aspindx = (orig_peakcnt * 2) + 1;
+                //aspindx = (orig_peakcnt * 2) + 1;
                 orig_peakcnt++;
                 peakcnt++;
                 switch(dz->iparam[SPEKTYPE]) {
@@ -2313,7 +2313,7 @@ int spectrum(int *perm,dataptr dz)
                         dz->bigfbuf[AMPP] = (float)(dz->param[SPEKGAIN] * dz->parray[0][vc+1]/dfade);
                         dz->bigfbuf[FREQ] = (float)dz->parray[0][vc];
                         pkwidth = 0.0;
-                        aspindx = (orig_peakcnt * 2) + 1;
+                        //aspindx = (orig_peakcnt * 2) + 1;
                         switch(dz->iparam[SPEKTYPE]) {
                         case(0):    //    Brightness defined by brightness-rolloff param
                             if(dz->iparam[SPEKHARMS] > 1 && dz->param[SPEKBRITE] > 0.0) {
@@ -2413,7 +2413,7 @@ int spectrum(int *perm,dataptr dz)
                 dz->bigfbuf[FREQ] = (float)dz->parray[0][vc];
                 peaked[cc] = 1;
                 pkwidth = 0.0;
-                aspindx = (orig_peakcnt * 2) + 1;
+                //aspindx = (orig_peakcnt * 2) + 1;
                 orig_peakcnt++;
                 peakcnt++;
                 switch(dz->iparam[SPEKTYPE]) {
