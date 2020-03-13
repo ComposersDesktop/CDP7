@@ -90,7 +90,7 @@ int main(int argc,char *argv[])
 	dataptr dz = NULL;
 	char **cmdline;
 	int  cmdlinecnt;
-	aplptr ap;
+	//aplptr ap;
 	int is_launched = FALSE;
 	if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
 		fprintf(stdout,"%s\n",cdp_version);
@@ -154,7 +154,7 @@ int main(int argc,char *argv[])
 			return(exit_status);		 
 		}
 	}
-	ap = dz->application;
+	//ap = dz->application;
 
 	// parse_infile_and_hone_type() = 
 	if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
@@ -291,7 +291,7 @@ int application_init(dataptr dz)
 {
 	int exit_status;
 	int storage_cnt;
-	int tipc, brkcnt;
+	int tipc;
 	aplptr ap = dz->application;
 	if(ap->vflag_cnt>0)
 		initialise_vflags(dz);	  
@@ -305,7 +305,7 @@ int application_init(dataptr dz)
 		if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)	  
 			return(exit_status);
 	}
-	brkcnt = tipc;
+	//brkcnt = tipc;
 	//THERE ARE NO INPUTFILE brktables USED IN THIS PROCESS
 //	if(brkcnt>0) {
 //		if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)			  
@@ -585,7 +585,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 	int filesize, insams, inbrksize;
 	double dummy;
 	int true_cnt = 0;
-	aplptr ap;
+	//aplptr ap;
 
 	while(cnt<=PRE_CMDLINE_DATACNT) {
 		if(cnt > argc) {
@@ -610,7 +610,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 			//setup_particular_application() =
 			if((exit_status = setup_silend_application(dz))<0)
 				return(exit_status);
-			ap = dz->application;
+			//ap = dz->application;
 			break;
 
 		case(3):	
