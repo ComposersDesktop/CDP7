@@ -230,7 +230,6 @@ int main(int argc,char *argv[])
         }
     }
     //ap = dz->application;
-
     // setup_param_ranges_and_defaults() =
     if((exit_status = setup_spectrum_param_ranges_and_defaults(dz))<0) {
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);

@@ -780,9 +780,9 @@ int is_peak_at(double frq,int window_offset,float minamp,dataptr dz)
     int cc, vc, searchtop, searchbot;
     if(window_offset) {                                                             /* BAKTRAK ALONG BIGBUF, IF NESS */
         thisbuf = dz->flbufptr[0] - (window_offset * dz->wanted);
-        if((int)thisbuf < 0 || thisbuf < dz->bigfbuf || thisbuf >= dz->flbufptr[1])
-            return(FALSE);
-    } else
+        /* if((int)thisbuf < 0 || thisbuf < dz->bigfbuf || thisbuf >= dz->flbufptr[1]) */
+        /*     return(FALSE); */
+n    } else
         thisbuf = dz->flbufptr[0];
     cc = (int)((frq + dz->halfchwidth)/dz->chwidth);                 /* TRUNCATE */
     searchtop = min(dz->clength,cc + CHANSCAN + 1);
@@ -886,7 +886,7 @@ int outer_pichpich_loop(dataptr dz)
 {
     int exit_status, valid_pitch_data = FALSE;
     int final_length_in_windows = dz->wlength, n;
-    double lastmidi;
+    double lastmidi = 0.0;
     if(dz->is_transpos) {
         if((dz->transpos = (float *)malloc(dz->wlength * sizeof(float)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for transpositions array.\n");
