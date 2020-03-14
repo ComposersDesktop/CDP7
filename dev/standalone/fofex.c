@@ -1164,7 +1164,7 @@ int setup_internal_arrays_and_array_pointers(dataptr dz)
 
 int check_fofex_param_validity_and_consistency(dataptr dz)
 {
-    int n;
+    //int n;
     //double time, time2;
     if(dz->brksize[0] == 0) {
         sprintf(errstr,"PITCH PARAMETER MUST BE IN A BREAKPOINT FILE.\n");

@@ -56,7 +56,7 @@ fft_(double *a, double *b, int nseg, int n, int nspn, int isn)
   /*    *a,       pointer to array 'anal'  */
   /*    *b;       pointer to array 'banal' */
 {
-    int nfac[16];               /*  These are one bigger than needed   */
+    int nfac[32];               /*  These are one bigger than needed   */
                                 /*  because wish to use Fortran array  */
                                 /* index which runs 1 to n, not 0 to n */
 
@@ -183,6 +183,7 @@ fftmx(double *a, double *b, int ntot, int n, int nspan, int isn, int m,
       sd, s1, s2, s3, s72, s120;
 
     double      xx;     /****** ADDED APRIL 1991 *********/
+    c2 = c3 = s2 = s3 = k3 = 0;
     inc=abs(isn);
     nt = inc*ntot;
     ks = inc*nspan;

@@ -782,7 +782,7 @@ int is_peak_at(double frq,int window_offset,float minamp,dataptr dz)
         thisbuf = dz->flbufptr[0] - (window_offset * dz->wanted);
         /* if((int)thisbuf < 0 || thisbuf < dz->bigfbuf || thisbuf >= dz->flbufptr[1]) */
         /*     return(FALSE); */
-n    } else
+    } else
         thisbuf = dz->flbufptr[0];
     cc = (int)((frq + dz->halfchwidth)/dz->chwidth);                 /* TRUNCATE */
     searchtop = min(dz->clength,cc + CHANSCAN + 1);
@@ -2189,7 +2189,7 @@ int interval_mapping(double *thisint,double thismidi,dataptr dz)
 
 int peak_interp
 (int pitchno,int last_validpitch_no,int *lastmaxpos,double meanpich,
- double minint,double maxint,double *lastmidi=NULL,dataptr dz)
+ double minint,double maxint,double *lastmidi,dataptr dz)
 {
     int exit_status;
     double thispitch, thismidi, variance, mdiff,step;

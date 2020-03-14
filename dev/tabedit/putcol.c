@@ -56,7 +56,7 @@ const char* cdp_version = "7.1.0";
 
 int main(int argc,char *argv[])
 {
-	char temp[400], temp2[400], *p, *q, c;
+	char temp[400], temp2[400], *p, c;
 	int n, skip = 0, column, cnt=0, replace = 0, end_col = 0, keep = 1, outlinecnt, newlen;
 	char **line = (char **)0;
 	if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
@@ -208,7 +208,6 @@ int main(int argc,char *argv[])
 		}
 		cnt++;
 		end_col = 0;
-		q = p;
 		for(n=0;n<column;n++) {
 			if(*p==ENDOFSTR) {
 				fprintf(stdout,"ERROR: Not enough columns in line %d in origfile.\n",cnt);
