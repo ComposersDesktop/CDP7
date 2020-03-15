@@ -1,9 +1,9 @@
 /** @file patest_toomanysines.c
-	@ingroup test_src
-	@brief Play more sine waves than we can handle in real time as a stress test.
+    @ingroup test_src
+    @brief Play more sine waves than we can handle in real time as a stress test.
     @todo This may not be needed now that we have "patest_out_overflow.c".
-	@author Ross Bencina <rossb@audiomulch.com>
-	@author Phil Burk <philburk@softsynth.com>
+    @author Ross Bencina <rossb@audiomulch.com>
+    @author Phil Burk <philburk@softsynth.com>
 */
 /*
  * $Id: patest_toomanysines.c 1609 2011-02-27 00:06:07Z philburk $
@@ -33,13 +33,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -61,7 +61,7 @@ typedef struct paTestData
     int numSines;
     double phases[MAX_SINES];
 }
-paTestData;
+    paTestData;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
@@ -81,26 +81,26 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
     (void) inputBuffer; /* Prevent unused variable warning. */
 
     for( i=0; i<framesPerBuffer; i++ )
-    {
-        float output = 0.0;
-        double phaseInc = 0.02;
-        double phase;
-        for( j=0; j<data->numSines; j++ )
         {
-            /* Advance phase of next oscillator. */
-            phase = data->phases[j];
-            phase += phaseInc;
-            if( phase > TWOPI ) phase -= TWOPI;
+            float output = 0.0;
+            double phaseInc = 0.02;
+            double phase;
+            for( j=0; j<data->numSines; j++ )
+                {
+                    /* Advance phase of next oscillator. */
+                    phase = data->phases[j];
+                    phase += phaseInc;
+                    if( phase > TWOPI ) phase -= TWOPI;
 
-            phaseInc *= 1.02;
-            if( phaseInc > 0.5 ) phaseInc *= 0.5;
+                    phaseInc *= 1.02;
+                    if( phaseInc > 0.5 ) phaseInc *= 0.5;
 
-            /* This is not a very efficient way to calc sines. */
-            output += (float) sin( phase );
-            data->phases[j] = phase;
+                    /* This is not a very efficient way to calc sines. */
+                    output += (float) sin( phase );
+                    data->phases[j] = phase;
+                }
+            *out++ = (float) (output / data->numSines);
         }
-        *out++ = (float) (output / data->numSines);
-    }
     return finished;
 }
 
@@ -116,11 +116,11 @@ int main(void)
     double load;
 
     printf("PortAudio Test: output sine wave. SR = %d, BufSize = %d. MAX_LOAD = %f\n",
-        SAMPLE_RATE, FRAMES_PER_BUFFER, MAX_LOAD );
+           SAMPLE_RATE, FRAMES_PER_BUFFER, MAX_LOAD );
 
     err = Pa_Initialize();
     if( err != paNoError ) goto error;
-    
+
     outputParameters.device = Pa_GetDefaultOutputDevice();  /* default output device */
     if (outputParameters.device == paNoDevice) {
         fprintf(stderr,"Error: No default output device.\n");
@@ -132,66 +132,66 @@ int main(void)
     outputParameters.hostApiSpecificStreamInfo = NULL;
 
     err = Pa_OpenStream(
-              &stream,
-              NULL,         /* no input */
-              &outputParameters,
-              SAMPLE_RATE,
-              FRAMES_PER_BUFFER,
-              paClipOff,    /* we won't output out of range samples so don't bother clipping them */
-              patestCallback,
-              &data );    
+                        &stream,
+                        NULL,         /* no input */
+                        &outputParameters,
+                        SAMPLE_RATE,
+                        FRAMES_PER_BUFFER,
+                        paClipOff,    /* we won't output out of range samples so don't bother clipping them */
+                        patestCallback,
+                        &data );
     if( err != paNoError ) goto error;
     err = Pa_StartStream( stream );
     if( err != paNoError ) goto error;
 
     /* Determine number of sines required to get to 50% */
     do
-    {        Pa_Sleep( 100 );
+        {        Pa_Sleep( 100 );
 
-        load = Pa_GetStreamCpuLoad( stream );
-        printf("numSines = %d, CPU load = %f\n", data.numSines, load );
-		
-		if( load < 0.3 )
-		{
-			data.numSines += 10;
-		}
-		else if( load < 0.4 )
-		{
-			data.numSines += 2;
-		}
-		else
-		{
-			data.numSines += 1;
-		}
-		
-    }
+            load = Pa_GetStreamCpuLoad( stream );
+            printf("numSines = %d, CPU load = %f\n", data.numSines, load );
+
+            if( load < 0.3 )
+                {
+                    data.numSines += 10;
+                }
+            else if( load < 0.4 )
+                {
+                    data.numSines += 2;
+                }
+            else
+                {
+                    data.numSines += 1;
+                }
+
+        }
     while( load < 0.5 );
-    
+
     /* Calculate target stress value then ramp up to that level*/
     numStress = (int) (2.0 * data.numSines * MAX_LOAD );
     if( numStress > MAX_SINES )
-        numStress = MAX_SINES;	
+        numStress = MAX_SINES;
     for( ; data.numSines < numStress; data.numSines+=2 )
-    {
-        Pa_Sleep( 200 );
-        load = Pa_GetStreamCpuLoad( stream );
-        printf("STRESSING: numSines = %d, CPU load = %f\n", data.numSines, load );
-    }
-    
+        {
+            Pa_Sleep( 200 );
+            load = Pa_GetStreamCpuLoad( stream );
+            printf("STRESSING: numSines = %d, CPU load = %f\n", data.numSines, load );
+        }
+
     printf("Suffer for 5 seconds.\n");
     Pa_Sleep( 5000 );
-    
+
     printf("Stop stream.\n");
     err = Pa_StopStream( stream );
     if( err != paNoError ) goto error;
-    
+
     err = Pa_CloseStream( stream );
     if( err != paNoError ) goto error;
-    
+
     Pa_Terminate();
     printf("Test finished.\n");
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

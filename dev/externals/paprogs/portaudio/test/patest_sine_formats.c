@@ -1,7 +1,7 @@
 /** @file patest_sine_formats.c
-	@ingroup test_src
-	@brief Play a sine wave for several seconds. Test various data formats.
-	@author Phil Burk
+    @ingroup test_src
+    @brief Play a sine wave for several seconds. Test various data formats.
+    @author Phil Burk
 */
 /*
  * $Id: patest_sine_formats.c 1097 2006-08-26 08:27:53Z rossb $
@@ -31,13 +31,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 #include <stdio.h>
@@ -97,7 +97,7 @@ typedef struct
     double right_phase;
     unsigned int framesToGo;
 }
-paTestData;
+    paTestData;
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
 ** that could mess up the system like calling malloc() or free().
@@ -117,33 +117,33 @@ static int patestCallback( const void *inputBuffer,
     (void) inputBuffer; /* Prevent unused variable warnings. */
 
     if( data->framesToGo < framesPerBuffer )
-    {
-        framesToCalc = data->framesToGo;
-        data->framesToGo = 0;
-        finished = 1;
-    }
+        {
+            framesToCalc = data->framesToGo;
+            data->framesToGo = 0;
+            finished = 1;
+        }
     else
-    {
-        framesToCalc = framesPerBuffer;
-        data->framesToGo -= framesPerBuffer;
-    }
+        {
+            framesToCalc = framesPerBuffer;
+            data->framesToGo -= framesPerBuffer;
+        }
 
     for( i=0; i<framesToCalc; i++ )
-    {
-        data->left_phase += (LEFT_FREQ / SAMPLE_RATE);
-        if( data->left_phase > 1.0) data->left_phase -= 1.0;
-        *out++ = DOUBLE_TO_SAMPLE( AMPLITUDE * sin( (data->left_phase * M_PI * 2. )));
+        {
+            data->left_phase += (LEFT_FREQ / SAMPLE_RATE);
+            if( data->left_phase > 1.0) data->left_phase -= 1.0;
+            *out++ = DOUBLE_TO_SAMPLE( AMPLITUDE * sin( (data->left_phase * M_PI * 2. )));
 
-        data->right_phase += (RIGHT_FREQ / SAMPLE_RATE);
-        if( data->right_phase > 1.0) data->right_phase -= 1.0;
-        *out++ = DOUBLE_TO_SAMPLE( AMPLITUDE * sin( (data->right_phase * M_PI * 2. )));
-    }
+            data->right_phase += (RIGHT_FREQ / SAMPLE_RATE);
+            if( data->right_phase > 1.0) data->right_phase -= 1.0;
+            *out++ = DOUBLE_TO_SAMPLE( AMPLITUDE * sin( (data->right_phase * M_PI * 2. )));
+        }
     /* zero remainder of final buffer */
     for( ; i<(int)framesPerBuffer; i++ )
-    {
-        *out++ = SAMPLE_ZERO; /* left */
-        *out++ = SAMPLE_ZERO; /* right */
-    }
+        {
+            *out++ = SAMPLE_ZERO; /* left */
+            *out++ = SAMPLE_ZERO; /* right */
+        }
     return finished;
 }
 /*******************************************************************/
@@ -194,7 +194,7 @@ int main(void)
     printf("PortAudio Test Finished: " FORMAT_NAME "\n");
 
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

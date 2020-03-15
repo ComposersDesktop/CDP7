@@ -1,7 +1,7 @@
 /** @file patest_buffer.c
-	@ingroup test_src
-	@brief Test opening streams with different buffer sizes.
-	@author Phil Burk  http://www.softsynth.com
+    @ingroup test_src
+    @brief Test opening streams with different buffer sizes.
+    @author Phil Burk  http://www.softsynth.com
 */
 /*
  * $Id: patest_buffer.c 1368 2008-03-01 00:38:27Z rossb $
@@ -31,13 +31,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -62,7 +62,7 @@ typedef struct
     int right_phase;
     unsigned int sampsToGo;
 }
-paTestData;
+    paTestData;
 PaError TestOnce( int buffersize, PaDeviceIndex );
 
 /* This routine will be called by the PortAudio engine when audio is needed.
@@ -82,40 +82,40 @@ static int patest1Callback( const void *inputBuffer, void *outputBuffer,
     (void) inputBuffer; /* Prevent "unused variable" warnings. */
 
     if( data->sampsToGo < framesPerBuffer )
-    {
-        /* final buffer... */
-
-        for( i=0; i<data->sampsToGo; i++ )
         {
-            *out++ = data->sine[data->left_phase];  /* left */
-            *out++ = data->sine[data->right_phase];  /* right */
-            data->left_phase += 1;
-            if( data->left_phase >= TABLE_SIZE ) data->left_phase -= TABLE_SIZE;
-            data->right_phase += 3; /* higher pitch so we can distinguish left and right. */
-            if( data->right_phase >= TABLE_SIZE ) data->right_phase -= TABLE_SIZE;
-        }
-        /* zero remainder of final buffer */
-        for( ; i<framesPerBuffer; i++ )
-        {
-            *out++ = 0; /* left */
-            *out++ = 0; /* right */
-        }
+            /* final buffer... */
 
-        finished = 1;
-    }
+            for( i=0; i<data->sampsToGo; i++ )
+                {
+                    *out++ = data->sine[data->left_phase];  /* left */
+                    *out++ = data->sine[data->right_phase];  /* right */
+                    data->left_phase += 1;
+                    if( data->left_phase >= TABLE_SIZE ) data->left_phase -= TABLE_SIZE;
+                    data->right_phase += 3; /* higher pitch so we can distinguish left and right. */
+                    if( data->right_phase >= TABLE_SIZE ) data->right_phase -= TABLE_SIZE;
+                }
+            /* zero remainder of final buffer */
+            for( ; i<framesPerBuffer; i++ )
+                {
+                    *out++ = 0; /* left */
+                    *out++ = 0; /* right */
+                }
+
+            finished = 1;
+        }
     else
-    {
-        for( i=0; i<framesPerBuffer; i++ )
         {
-            *out++ = data->sine[data->left_phase];  /* left */
-            *out++ = data->sine[data->right_phase];  /* right */
-            data->left_phase += 1;
-            if( data->left_phase >= TABLE_SIZE ) data->left_phase -= TABLE_SIZE;
-            data->right_phase += 3; /* higher pitch so we can distinguish left and right. */
-            if( data->right_phase >= TABLE_SIZE ) data->right_phase -= TABLE_SIZE;
+            for( i=0; i<framesPerBuffer; i++ )
+                {
+                    *out++ = data->sine[data->left_phase];  /* left */
+                    *out++ = data->sine[data->right_phase];  /* right */
+                    data->left_phase += 1;
+                    if( data->left_phase >= TABLE_SIZE ) data->left_phase -= TABLE_SIZE;
+                    data->right_phase += 3; /* higher pitch so we can distinguish left and right. */
+                    if( data->right_phase >= TABLE_SIZE ) data->right_phase -= TABLE_SIZE;
+                }
+            data->sampsToGo -= framesPerBuffer;
         }
-        data->sampsToGo -= framesPerBuffer;
-    }
     return finished;
 }
 
@@ -128,19 +128,19 @@ int main(int argc, char **args)
     PaError err;
     printf("Test opening streams with different buffer sizes\n");
     if( argc > 1 ) {
-       device=atoi( args[1] );
-       printf("Using device number %d.\n\n", device );
+        device=atoi( args[1] );
+        printf("Using device number %d.\n\n", device );
     } else {
-       printf("Using default device.\n\n" );
+        printf("Using default device.\n\n" );
     }
 
     for (i = 0 ; i < BUFFER_TABLE; i++)
-    {
-        printf("Buffer size %ld\n", buffer_table[i]);
-        err = TestOnce(buffer_table[i], device);
-        if( err < 0 ) return 0;
+        {
+            printf("Buffer size %ld\n", buffer_table[i]);
+            err = TestOnce(buffer_table[i], device);
+            if( err < 0 ) return 0;
 
-    }
+        }
     return 0;
 }
 
@@ -155,22 +155,22 @@ PaError TestOnce( int buffersize, PaDeviceIndex device )
     int totalSamps;
     /* initialise sinusoidal wavetable */
     for( i=0; i<TABLE_SIZE; i++ )
-    {
-        data.sine[i] = (short) (32767.0 * sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. ));
-    }
+        {
+            data.sine[i] = (short) (32767.0 * sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. ));
+        }
     data.left_phase = data.right_phase = 0;
     data.sampsToGo = totalSamps =  NUM_SECONDS * SAMPLE_RATE; /* Play for a few seconds. */
     err = Pa_Initialize();
     if( err != paNoError ) goto error;
-    
+
     if( device == -1 )
         outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
     else
         outputParameters.device = device ;
 
     if (outputParameters.device == paNoDevice) {
-      fprintf(stderr,"Error: No default output device.\n");
-      goto error;
+        fprintf(stderr,"Error: No default output device.\n");
+        goto error;
     }
 
     outputParameters.channelCount = 2;                      /* stereo output */
@@ -178,14 +178,14 @@ PaError TestOnce( int buffersize, PaDeviceIndex device )
     outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
     outputParameters.hostApiSpecificStreamInfo = NULL;
     err = Pa_OpenStream(
-              &stream,
-              NULL,                         /* no input */
-              &outputParameters,
-              SAMPLE_RATE,
-              buffersize,                   /* frames per buffer */
-              (paClipOff | paDitherOff),
-              patest1Callback,
-              &data );
+                        &stream,
+                        NULL,                         /* no input */
+                        &outputParameters,
+                        SAMPLE_RATE,
+                        buffersize,                   /* frames per buffer */
+                        (paClipOff | paDitherOff),
+                        patest1Callback,
+                        &data );
     if( err != paNoError ) goto error;
 
     err = Pa_StartStream( stream );
@@ -196,7 +196,7 @@ PaError TestOnce( int buffersize, PaDeviceIndex device )
     if( err != paNoError ) goto error;
     Pa_Terminate();
     return paNoError;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

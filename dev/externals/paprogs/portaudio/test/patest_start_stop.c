@@ -1,9 +1,9 @@
 /** @file patest_start_stop.c
-	@ingroup test_src
-	@brief Play a sine wave for several seconds. Start and stop the stream multiple times.
-        
-	@author Ross Bencina <rossb@audiomulch.com>
-	@author Phil Burk <philburk@softsynth.com>
+    @ingroup test_src
+    @brief Play a sine wave for several seconds. Start and stop the stream multiple times.
+
+    @author Ross Bencina <rossb@audiomulch.com>
+    @author Phil Burk <philburk@softsynth.com>
 */
 /*
  * $Id: patest_start_stop.c 1447 2010-01-24 12:35:36Z rossb $
@@ -33,13 +33,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 #include <stdio.h>
@@ -64,17 +64,17 @@ typedef struct
     int left_phase;
     int right_phase;
 }
-paTestData;
+    paTestData;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
 ** that could mess up the system like calling malloc() or free().
 */
 static int patestCallback( const void *inputBuffer, void *outputBuffer,
-                            unsigned long framesPerBuffer,
-                            const PaStreamCallbackTimeInfo* timeInfo,
-                            PaStreamCallbackFlags statusFlags,
-                            void *userData )
+                           unsigned long framesPerBuffer,
+                           const PaStreamCallbackTimeInfo* timeInfo,
+                           PaStreamCallbackFlags statusFlags,
+                           void *userData )
 {
     paTestData *data = (paTestData*)userData;
     float *out = (float*)outputBuffer;
@@ -83,17 +83,17 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
     (void) timeInfo; /* Prevent unused variable warnings. */
     (void) statusFlags;
     (void) inputBuffer;
-    
+
     for( i=0; i<framesPerBuffer; i++ )
-    {
-        *out++ = data->sine[data->left_phase];  /* left */
-        *out++ = data->sine[data->right_phase];  /* right */
-        data->left_phase += 1;
-        if( data->left_phase >= TABLE_SIZE ) data->left_phase -= TABLE_SIZE;
-        data->right_phase += 3; /* higher pitch so we can distinguish left and right. */
-        if( data->right_phase >= TABLE_SIZE ) data->right_phase -= TABLE_SIZE;
-    }
-    
+        {
+            *out++ = data->sine[data->left_phase];  /* left */
+            *out++ = data->sine[data->right_phase];  /* right */
+            data->left_phase += 1;
+            if( data->left_phase >= TABLE_SIZE ) data->left_phase -= TABLE_SIZE;
+            data->right_phase += 3; /* higher pitch so we can distinguish left and right. */
+            if( data->right_phase >= TABLE_SIZE ) data->right_phase -= TABLE_SIZE;
+        }
+
     return paContinue;
 }
 
@@ -107,16 +107,16 @@ int main(void)
     paTestData data;
     int i;
 
-    
+
     printf("PortAudio Test: output sine wave. SR = %d, BufSize = %d\n", SAMPLE_RATE, FRAMES_PER_BUFFER);
-    
+
     /* initialise sinusoidal wavetable */
     for( i=0; i<TABLE_SIZE; i++ )
-    {
-        data.sine[i] = (float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. );
-    }
+        {
+            data.sine[i] = (float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. );
+        }
     data.left_phase = data.right_phase = 0;
-    
+
     err = Pa_Initialize();
     if( err != paNoError ) goto error;
 
@@ -131,41 +131,41 @@ int main(void)
     outputParameters.hostApiSpecificStreamInfo = NULL;
 
     err = Pa_OpenStream(
-              &stream,
-              NULL, /* no input */
-              &outputParameters,
-              SAMPLE_RATE,
-              FRAMES_PER_BUFFER,
-              paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-              patestCallback,
-              &data );
+                        &stream,
+                        NULL, /* no input */
+                        &outputParameters,
+                        SAMPLE_RATE,
+                        FRAMES_PER_BUFFER,
+                        paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+                        patestCallback,
+                        &data );
     if( err != paNoError ) goto error;
 
     for( i=0; i<NUM_LOOPS; i++ )
-    {
-        data.left_phase = data.right_phase = 0;
+        {
+            data.left_phase = data.right_phase = 0;
 
-        err = Pa_StartStream( stream );
-        if( err != paNoError ) goto error;
+            err = Pa_StartStream( stream );
+            if( err != paNoError ) goto error;
 
-        printf("Play for %d seconds.\n", NUM_SECONDS );
-        Pa_Sleep( NUM_SECONDS * 1000 );
+            printf("Play for %d seconds.\n", NUM_SECONDS );
+            Pa_Sleep( NUM_SECONDS * 1000 );
 
-        err = Pa_StopStream( stream );
-        if( err != paNoError ) goto error;
+            err = Pa_StopStream( stream );
+            if( err != paNoError ) goto error;
 
-        printf("Stopped.\n" );
-        Pa_Sleep( 1000 );
-    }
+            printf("Stopped.\n" );
+            Pa_Sleep( 1000 );
+        }
 
     err = Pa_CloseStream( stream );
     if( err != paNoError ) goto error;
 
     Pa_Terminate();
     printf("Test finished.\n");
-    
+
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

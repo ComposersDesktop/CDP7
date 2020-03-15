@@ -1,7 +1,7 @@
 /** @file patest1.c
-	@ingroup test_src
-	@brief Ring modulate the audio input with a sine wave for 20 seconds.
-	@author Ross Bencina <rossb@audiomulch.com>
+    @ingroup test_src
+    @brief Ring modulate the audio input with a sine wave for 20 seconds.
+    @author Ross Bencina <rossb@audiomulch.com>
 */
 /*
  * $Id: patest1.c 1368 2008-03-01 00:38:27Z rossb $
@@ -31,13 +31,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -57,7 +57,7 @@ typedef struct
     int phase;
     int sampsToGo;
 }
-patest1data;
+    patest1data;
 
 static int patest1Callback( const void *inputBuffer, void *outputBuffer,
                             unsigned long framesPerBuffer,
@@ -73,32 +73,32 @@ static int patest1Callback( const void *inputBuffer, void *outputBuffer,
     int finished;
 
     if( data->sampsToGo < framesPerBuffer )
-    {
-        framesToCalc = data->sampsToGo;
-        finished = paComplete;
-    }
+        {
+            framesToCalc = data->sampsToGo;
+            finished = paComplete;
+        }
     else
-    {
-        finished = paContinue;
-    }
+        {
+            finished = paContinue;
+        }
 
     for( ; i<framesToCalc; i++ )
-    {
-        *out++ = *in++ * data->sine[data->phase];  /* left */
-        *out++ = *in++ * data->sine[data->phase++];  /* right */
-        if( data->phase >= 100 )
-            data->phase = 0;
-    }
+        {
+            *out++ = *in++ * data->sine[data->phase];  /* left */
+            *out++ = *in++ * data->sine[data->phase++];  /* right */
+            if( data->phase >= 100 )
+                data->phase = 0;
+        }
 
     data->sampsToGo -= framesToCalc;
 
     /* zero remainder of final buffer if not already done */
     for( ; i<framesPerBuffer; i++ )
-    {
-        *out++ = 0; /* left */
-        *out++ = 0; /* right */
-    }
-    
+        {
+            *out++ = 0; /* left */
+            *out++ = 0; /* right */
+        }
+
     return finished;
 }
 
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
 
     printf("patest1.c\n"); fflush(stdout);
     printf("Ring modulate input for 20 seconds.\n"); fflush(stdout);
-    
+
     /* initialise sinusoidal wavetable */
     for( i=0; i<100; i++ )
         data.sine[i] = sin( ((double)i/100.) * M_PI * 2. );
@@ -126,8 +126,8 @@ int main(int argc, char* argv[])
 
     inputParameters.device = Pa_GetDefaultInputDevice();    /* default input device */
     if (inputParameters.device == paNoDevice) {
-      fprintf(stderr,"Error: No input default device.\n");
-      goto done;
+        fprintf(stderr,"Error: No input default device.\n");
+        goto done;
     }
     inputParameters.channelCount = 2;                       /* stereo input */
     inputParameters.sampleFormat = paFloat32;               /* 32 bit floating point input */
@@ -136,8 +136,8 @@ int main(int argc, char* argv[])
 
     outputParameters.device = Pa_GetDefaultOutputDevice();  /* default output device */
     if (outputParameters.device == paNoDevice) {
-      fprintf(stderr,"Error: No default output device.\n");
-      goto done;
+        fprintf(stderr,"Error: No default output device.\n");
+        goto done;
     }
     outputParameters.channelCount = 2;                      /* stereo output */
     outputParameters.sampleFormat = paFloat32;              /* 32 bit floating point output */
@@ -157,14 +157,14 @@ int main(int argc, char* argv[])
 
     err = Pa_StartStream( stream );
     if( err != paNoError ) goto done;
-    
+
     printf( "Press any key to end.\n" ); fflush(stdout);
-         
+
     getc( stdin ); /* wait for input before exiting */
 
     err = Pa_AbortStream( stream );
     if( err != paNoError ) goto done;
-    
+
     printf( "Waiting for stream to complete...\n" );
 
     /* sleep until playback has finished */
@@ -174,33 +174,33 @@ int main(int argc, char* argv[])
     err = Pa_CloseStream( stream );
     if( err != paNoError ) goto done;
 
-done:
+ done:
     Pa_Terminate();
 
     if( err != paNoError )
-    {
-        fprintf( stderr, "An error occured while using portaudio\n" );
-        if( err == paUnanticipatedHostError )
         {
-            fprintf( stderr, " unanticipated host error.\n");
-            herr = Pa_GetLastHostErrorInfo();
-            if (herr)
-            {
-                fprintf( stderr, " Error number: %ld\n", herr->errorCode );
-                if (herr->errorText)
-                    fprintf( stderr, " Error text: %s\n", herr->errorText );
-            }
+            fprintf( stderr, "An error occured while using portaudio\n" );
+            if( err == paUnanticipatedHostError )
+                {
+                    fprintf( stderr, " unanticipated host error.\n");
+                    herr = Pa_GetLastHostErrorInfo();
+                    if (herr)
+                        {
+                            fprintf( stderr, " Error number: %ld\n", herr->errorCode );
+                            if (herr->errorText)
+                                fprintf( stderr, " Error text: %s\n", herr->errorText );
+                        }
+                    else
+                        fprintf( stderr, " Pa_GetLastHostErrorInfo() failed!\n" );
+                }
             else
-                fprintf( stderr, " Pa_GetLastHostErrorInfo() failed!\n" );
-        }
-        else
-        {
-            fprintf( stderr, " Error number: %d\n", err );
-            fprintf( stderr, " Error text: %s\n", Pa_GetErrorText( err ) );
-        }
+                {
+                    fprintf( stderr, " Error number: %d\n", err );
+                    fprintf( stderr, " Error text: %s\n", Pa_GetErrorText( err ) );
+                }
 
-        err = 1;          /* Always return 0 or 1, but no other return codes. */
-    }
+            err = 1;          /* Always return 0 or 1, but no other return codes. */
+        }
 
     printf( "bye\n" );
 

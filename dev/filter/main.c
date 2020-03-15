@@ -49,9 +49,9 @@
 
 char errstr[2400];
 
-/*extern*/ int	sloom = 0;
+/*extern*/ int  sloom = 0;
 /* TW May 2001 */
-/*extern*/ int sloombatch = 0;	/*TW may 2001 */
+/*extern*/ int sloombatch = 0;  /*TW may 2001 */
 /*extern*/ int anal_infiles = 0;
 /*extern*/ int is_converted_to_stereo = -1;
 const char* cdp_version = "7.1.0";
@@ -64,9 +64,9 @@ static int setup_internal_arrays_and_array_pointers_for_lphp(dataptr dz);
 int main(int argc,char *argv[])
 {
     int exit_status;
-    /*	FILE *fp   = NULL;*/
+    /*  FILE *fp   = NULL;*/
     dataptr dz = NULL;
-    /*	char *special_data_string = NULL;*/
+    /*  char *special_data_string = NULL;*/
     char **cmdline;
     int  cmdlinecnt;
     //aplptr ap;
@@ -109,7 +109,7 @@ int main(int argc,char *argv[])
             print_messages_and_close_sndfiles(exit_status,is_launched,dz);
             return(FAILED);
         }
-        cmdline    = argv;	/* GET PRE_DATA, ALLOCATE THE APPLICATION, CHECK FOR EXTRA INFILES */
+        cmdline    = argv;      /* GET PRE_DATA, ALLOCATE THE APPLICATION, CHECK FOR EXTRA INFILES */
         cmdlinecnt = argc;
         if((exit_status = get_process_and_mode_from_cmdline(&cmdlinecnt,&cmdline,dz))<0) {
             print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -124,7 +124,7 @@ int main(int argc,char *argv[])
             return(FAILED);
         }
     } else {
-        if((exit_status = parse_tk_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {  	/* includes setup_particular_application()      */
+        if((exit_status = parse_tk_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {        /* includes setup_particular_application()      */
             exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);/* and cmdlinelength check = sees extra-infiles */
             return(exit_status);
         }

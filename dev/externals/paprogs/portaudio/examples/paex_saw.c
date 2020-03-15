@@ -1,7 +1,7 @@
 /** @file paex_saw.c
-	@ingroup examples_src
-	@brief Play a simple (aliasing) sawtooth wave.
-	@author Phil Burk  http://www.softsynth.com
+    @ingroup examples_src
+    @brief Play a simple (aliasing) sawtooth wave.
+    @author Phil Burk  http://www.softsynth.com
 */
 /*
  * $Id: paex_saw.c 1752 2011-09-08 03:21:55Z philburk $
@@ -31,13 +31,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -52,7 +52,7 @@ typedef struct
     float left_phase;
     float right_phase;
 }
-paTestData;
+    paTestData;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
@@ -71,17 +71,17 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
     (void) inputBuffer; /* Prevent unused variable warning. */
 
     for( i=0; i<framesPerBuffer; i++ )
-    {
-        *out++ = data->left_phase;  /* left */
-        *out++ = data->right_phase;  /* right */
-        /* Generate simple sawtooth phaser that ranges between -1.0 and 1.0. */
-        data->left_phase += 0.01f;
-        /* When signal reaches top, drop back down. */
-        if( data->left_phase >= 1.0f ) data->left_phase -= 2.0f;
-        /* higher pitch so we can distinguish left and right. */
-        data->right_phase += 0.03f;
-        if( data->right_phase >= 1.0f ) data->right_phase -= 2.0f;
-    }
+        {
+            *out++ = data->left_phase;  /* left */
+            *out++ = data->right_phase;  /* right */
+            /* Generate simple sawtooth phaser that ranges between -1.0 and 1.0. */
+            data->left_phase += 0.01f;
+            /* When signal reaches top, drop back down. */
+            if( data->left_phase >= 1.0f ) data->left_phase -= 2.0f;
+            /* higher pitch so we can distinguish left and right. */
+            data->right_phase += 0.03f;
+            if( data->right_phase >= 1.0f ) data->right_phase -= 2.0f;
+        }
     return 0;
 }
 
@@ -92,14 +92,14 @@ int main(void)
 {
     PaStream *stream;
     PaError err;
-    
+
     printf("PortAudio Test: output sawtooth wave.\n");
     /* Initialize our data for use by callback. */
     data.left_phase = data.right_phase = 0.0;
     /* Initialize library before making any other calls. */
     err = Pa_Initialize();
     if( err != paNoError ) goto error;
-    
+
     /* Open an audio I/O stream. */
     err = Pa_OpenDefaultStream( &stream,
                                 0,          /* no input channels */
@@ -124,7 +124,7 @@ int main(void)
     Pa_Terminate();
     printf("Test finished.\n");
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

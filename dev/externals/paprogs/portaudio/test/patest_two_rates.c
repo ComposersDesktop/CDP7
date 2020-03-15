@@ -1,7 +1,7 @@
 /** @file patest_two_rates.c
-	@ingroup test_src
-	@brief Play two streams at different rates to make sure they don't interfere.
-	@author Phil Burk <philburk@softsynth.com>
+    @ingroup test_src
+    @brief Play two streams at different rates to make sure they don't interfere.
+    @author Phil Burk <philburk@softsynth.com>
 */
 /*
  * $Id: patest_two_rates.c 1640 2011-03-07 00:52:47Z philburk $
@@ -33,13 +33,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -64,14 +64,14 @@ typedef struct
 } paTestData;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
- ** It may called at interrupt level on some machines so don't do anything
- ** that could mess up the system like calling malloc() or free().
- */
+** It may called at interrupt level on some machines so don't do anything
+** that could mess up the system like calling malloc() or free().
+*/
 static int patestCallback( const void *inputBuffer, void *outputBuffer,
-						  unsigned long framesPerBuffer,
-						  const PaStreamCallbackTimeInfo* timeInfo,
-						  PaStreamCallbackFlags statusFlags,
-						  void *userData )
+                           unsigned long framesPerBuffer,
+                           const PaStreamCallbackTimeInfo* timeInfo,
+                           PaStreamCallbackFlags statusFlags,
+                           void *userData )
 {
     paTestData *data = (paTestData*)userData;
     float *out = (float*)outputBuffer;
@@ -80,17 +80,17 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
     (void) inputBuffer;
 
     for( frameIndex=0; frameIndex<(int)framesPerBuffer; frameIndex++ )
-    {
-        /* Generate sine wave. */
-        float value = (float) 0.3 * sin(data->phase);
-        /* Stereo - two channels. */
-        *out++ = value;
-        *out++ = value;
+        {
+            /* Generate sine wave. */
+            float value = (float) 0.3 * sin(data->phase);
+            /* Stereo - two channels. */
+            *out++ = value;
+            *out++ = value;
 
-        data->phase += FREQ_INCR;
-        if( data->phase >= (2.0 * M_PI) ) data->phase -= (2.0 * M_PI);
-    }
-	data->numFrames += 1;
+            data->phase += FREQ_INCR;
+            if( data->phase >= (2.0 * M_PI) ) data->phase -= (2.0 * M_PI);
+        }
+    data->numFrames += 1;
     return 0;
 }
 
@@ -108,28 +108,28 @@ int main(void)
 
     err = Pa_Initialize();
     if( err != paNoError ) goto error;
-    
+
     outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
     if (outputParameters.device == paNoDevice) {
-		fprintf(stderr,"Error: No default output device.\n");
-		goto error;
+        fprintf(stderr,"Error: No default output device.\n");
+        goto error;
     }
     outputParameters.channelCount = 2;       /* stereo output */
     outputParameters.sampleFormat = paFloat32; /* 32 bit floating point output */
     outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
     outputParameters.hostApiSpecificStreamInfo = NULL;
 
-    /* Start first stream. **********************/	
+    /* Start first stream. **********************/
     err = Pa_OpenStream(
-						&stream1,
-						NULL, /* no input */
-						&outputParameters,
-						SAMPLE_RATE_1,
-						FRAMES_PER_BUFFER,
-						paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-						patestCallback,
-						&data1 );
-	if( err != paNoError ) goto error;
+                        &stream1,
+                        NULL, /* no input */
+                        &outputParameters,
+                        SAMPLE_RATE_1,
+                        FRAMES_PER_BUFFER,
+                        paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+                        patestCallback,
+                        &data1 );
+    if( err != paNoError ) goto error;
 
     err = Pa_StartStream( stream1 );
     if( err != paNoError ) goto error;
@@ -138,38 +138,38 @@ int main(void)
 
     /* Start second stream. **********************/
     err = Pa_OpenStream(
-						&stream2,
-						NULL, /* no input */
-						&outputParameters,
-						SAMPLE_RATE_2,
-						FRAMES_PER_BUFFER,
-						paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-						patestCallback,
-						&data2 );
+                        &stream2,
+                        NULL, /* no input */
+                        &outputParameters,
+                        SAMPLE_RATE_2,
+                        FRAMES_PER_BUFFER,
+                        paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+                        patestCallback,
+                        &data2 );
     if( err != paNoError ) goto error;
 
     err = Pa_StartStream( stream2 );
     if( err != paNoError ) goto error;
 
     Pa_Sleep( 3 * 1000 );
-    
+
     err = Pa_StopStream( stream2 );
     if( err != paNoError ) goto error;
 
     Pa_Sleep( 3 * 1000 );
-    
+
     err = Pa_StopStream( stream1 );
     if( err != paNoError ) goto error;
 
     Pa_CloseStream( stream2 );
     Pa_CloseStream( stream1 );
-    
+
     Pa_Terminate();
-	
+
     printf("NumFrames = %d on stream1, %d on stream2.\n", data1.numFrames, data2.numFrames );
     printf("Test finished.\n");
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

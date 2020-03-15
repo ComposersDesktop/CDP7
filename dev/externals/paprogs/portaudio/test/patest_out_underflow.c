@@ -1,9 +1,9 @@
 /** @file patest_out_underflow.c
-	@ingroup test_src
-	@brief Count output underflows (using paOutputUnderflow flag) 
-	under overloaded and normal conditions.
-	@author Ross Bencina <rossb@audiomulch.com>
-	@author Phil Burk <philburk@softsynth.com>
+    @ingroup test_src
+    @brief Count output underflows (using paOutputUnderflow flag)
+    under overloaded and normal conditions.
+    @author Ross Bencina <rossb@audiomulch.com>
+    @author Phil Burk <philburk@softsynth.com>
 */
 /*
  * $Id: patest_out_underflow.c 1609 2011-02-27 00:06:07Z philburk $
@@ -33,13 +33,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -63,7 +63,7 @@ typedef struct paTestData
     int countUnderflows;
     int outputUnderflowCount;
 }
-paTestData;
+    paTestData;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
@@ -88,27 +88,27 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
         data->outputUnderflowCount++;
 
     for( i=0; i<framesPerBuffer; i++ )
-    {
-        float output = 0.0;
-        double phaseInc = 0.02;
-        double phase;
-
-        for( j=0; j<data->sineCount; j++ )
         {
-            /* Advance phase of next oscillator. */
-            phase = data->phases[j];
-            phase += phaseInc;
-            if( phase > TWOPI ) phase -= TWOPI;
+            float output = 0.0;
+            double phaseInc = 0.02;
+            double phase;
 
-            phaseInc *= 1.02;
-            if( phaseInc > 0.5 ) phaseInc *= 0.5;
+            for( j=0; j<data->sineCount; j++ )
+                {
+                    /* Advance phase of next oscillator. */
+                    phase = data->phases[j];
+                    phase += phaseInc;
+                    if( phase > TWOPI ) phase -= TWOPI;
 
-            /* This is not a very efficient way to calc sines. */
-            output += (float) sin( phase );
-            data->phases[j] = phase;
+                    phaseInc *= 1.02;
+                    if( phaseInc > 0.5 ) phaseInc *= 0.5;
+
+                    /* This is not a very efficient way to calc sines. */
+                    output += (float) sin( phase );
+                    data->phases[j] = phase;
+                }
+            *out++ = (float) (output / data->sineCount);
         }
-        *out++ = (float) (output / data->sineCount);
-    }
 
     return finished;
 }
@@ -127,15 +127,15 @@ int main(void)
 
 
     printf("PortAudio Test: output sine waves, count underflows. SR = %d, BufSize = %d. MAX_LOAD = %f\n",
-        SAMPLE_RATE, FRAMES_PER_BUFFER, (float)MAX_LOAD );
+           SAMPLE_RATE, FRAMES_PER_BUFFER, (float)MAX_LOAD );
 
     err = Pa_Initialize();
     if( err != paNoError ) goto error;
-    
+
     outputParameters.device = Pa_GetDefaultOutputDevice();  /* default output device */
     if (outputParameters.device == paNoDevice) {
-      fprintf(stderr,"Error: No default output device.\n");
-      goto error;
+        fprintf(stderr,"Error: No default output device.\n");
+        goto error;
     }
     outputParameters.channelCount = 1;                      /* mono output */
     outputParameters.sampleFormat = paFloat32;              /* 32 bit floating point output */
@@ -143,14 +143,14 @@ int main(void)
     outputParameters.hostApiSpecificStreamInfo = NULL;
 
     err = Pa_OpenStream(
-              &stream,
-              NULL,         /* no input */
-              &outputParameters,
-              SAMPLE_RATE,
-              FRAMES_PER_BUFFER,
-              paClipOff,    /* we won't output out of range samples so don't bother clipping them */
-              patestCallback,
-              &data );    
+                        &stream,
+                        NULL,         /* no input */
+                        &outputParameters,
+                        SAMPLE_RATE,
+                        FRAMES_PER_BUFFER,
+                        paClipOff,    /* we won't output out of range samples so don't bother clipping them */
+                        patestCallback,
+                        &data );
     if( err != paNoError ) goto error;
     err = Pa_StartStream( stream );
     if( err != paNoError ) goto error;
@@ -159,26 +159,26 @@ int main(void)
 
     /* Determine number of sines required to get to 50% */
     do
-    {        
-		Pa_Sleep( 100 );
+        {
+            Pa_Sleep( 100 );
 
-        load = Pa_GetStreamCpuLoad( stream );
-        printf("sineCount = %d, CPU load = %f\n", data.sineCount, load );
-		
-		if( load < 0.3 )
-		{
-			data.sineCount += 10;
-		}
-		else if( load < 0.4 )
-		{
-			data.sineCount += 2;
-		}
-		else
-		{
-			data.sineCount += 1;
-		}
-		
-    }
+            load = Pa_GetStreamCpuLoad( stream );
+            printf("sineCount = %d, CPU load = %f\n", data.sineCount, load );
+
+            if( load < 0.3 )
+                {
+                    data.sineCount += 10;
+                }
+            else if( load < 0.4 )
+                {
+                    data.sineCount += 2;
+                }
+            else
+                {
+                    data.sineCount += 1;
+                }
+
+        }
     while( load < 0.5 && data.sineCount < (MAX_SINES-1));
 
     safeSineCount = data.sineCount;
@@ -188,12 +188,12 @@ int main(void)
     if( stressedSineCount > MAX_SINES )
         stressedSineCount = MAX_SINES;
     for( ; data.sineCount < stressedSineCount; data.sineCount+=4 )
-    {
-        Pa_Sleep( 100 );
-        load = Pa_GetStreamCpuLoad( stream );
-        printf("STRESSING: sineCount = %d, CPU load = %f\n", data.sineCount, load );
-    }
-    
+        {
+            Pa_Sleep( 100 );
+            load = Pa_GetStreamCpuLoad( stream );
+            printf("STRESSING: sineCount = %d, CPU load = %f\n", data.sineCount, load );
+        }
+
     printf("Counting underflows for 5 seconds.\n");
     data.countUnderflows = 1;
     Pa_Sleep( 5000 );
@@ -215,14 +215,14 @@ int main(void)
     Pa_Sleep( 5000 );
 
     safeUnderflowCount = data.outputUnderflowCount;
-    
+
     printf("Stop stream.\n");
     err = Pa_StopStream( stream );
     if( err != paNoError ) goto error;
-    
+
     err = Pa_CloseStream( stream );
     if( err != paNoError ) goto error;
-    
+
     Pa_Terminate();
 
     if( stressedUnderflowCount == 0 )
@@ -233,7 +233,7 @@ int main(void)
         printf("Test passed, %d expected output underflows detected under stress, 0 unexpected underflows detected under safe load.\n", stressedUnderflowCount );
 
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

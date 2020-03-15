@@ -100,7 +100,7 @@ int specfilt(dataptr dz)
     int vc;
     double frq_limit, hifrq_limit = 0.0, pre_amptotal, post_amptotal;
     if(dz->brksize[FILT_QQ])
-        dz->param[FILT_QQ] 	 = exp(dz->param[FILT_QQ]);
+        dz->param[FILT_QQ]       = exp(dz->param[FILT_QQ]);
     if(dz->brksize[FILT_FRQ1])
         frq_limit = exp(dz->param[FILT_FRQ1]);
     else
@@ -137,7 +137,7 @@ int specfilt(dataptr dz)
     case(F_HI_GAIN):
     case(F_LO_GAIN):
     case(F_BAND_GAIN):
-    case(F_NOTCH_GAIN):	/*  post-gain */
+    case(F_NOTCH_GAIN): /*  post-gain */
         for(vc = 0; vc < dz->wanted; vc += 2)
             dz->flbufptr[0][AMPP] = (float)(dz->flbufptr[0][AMPP] * dz->param[FILT_PG]);
         break;
@@ -347,12 +347,12 @@ int specsplit(dataptr dz)
     rectify_window(dz->flbufptr[0],dz);
     if((exit_status = get_amp_and_frq(dz->flbufptr[0],dz))<0)
         return(exit_status);
-    cc   = 0;			/* channel counter */
-    while(bno<dz->itemcnt) {		/* For all bands */
+    cc   = 0;                   /* channel counter */
+    while(bno<dz->itemcnt) {            /* For all bands */
         bb      = dz->band[bno];
         bandbot = bb->bfrqlo;
         bandtop = bb->bfrqhi;
-        while(dz->freq[cc]<bandbot) {	/* while chan-frq<bandbot: do nothing */
+        while(dz->freq[cc]<bandbot) {   /* while chan-frq<bandbot: do nothing */
             if(++cc>=dz->clength) {
                 done = 1;
                 break;   /* if all channels<bandbot, we.ve finished pass */
@@ -360,14 +360,14 @@ int specsplit(dataptr dz)
         }
         if(done)
             break;
-        bottom = cc;		/* set bottom channel for inner loop */
+        bottom = cc;            /* set bottom channel for inner loop */
         while(dz->freq[cc]<bandtop) {
             if(++cc>=dz->clength) {
-                done = 1;	/* find channels up to top of band */
+                done = 1;       /* find channels up to top of band */
                 break;
             }
         }
-        top = min(cc,(dz->clength)-1); 	/* set top channel for inner loop */
+        top = min(cc,(dz->clength)-1);  /* set top channel for inner loop */
         if((bb->bdoflag & DO_TRANSPOSITION) && bb->btrans>1.0) {
             for( k = top; k>= bottom; k--) {
                 if((exit_status = process_specsplit_channel(k,bb,dz))<0)
@@ -394,8 +394,8 @@ int process_specsplit_channel(int cc,bandptr bb,dataptr dz)
 {
     int exit_status;
     double thismult;
-    double newamp = dz->amp[cc];	/* DEFAULT */
-    double newfrq = dz->freq[cc];	/* DEFAULT */
+    double newamp = dz->amp[cc];        /* DEFAULT */
+    double newfrq = dz->freq[cc];       /* DEFAULT */
     int newchan;
 
     if(bb->bdoflag & DO_AMPLITUDE_CHANGE) {
@@ -428,7 +428,7 @@ int process_specsplit_channel(int cc,bandptr bb,dataptr dz)
             }
         }
         if(!(bb->bdoflag & DO_ADD_TO_SPECTRUM)) {
-            newamp =   	/* set interpolated value on old amp */
+            newamp =    /* set interpolated value on old amp */
                 (dz->amp[max(cc-1,0)] + dz->amp[min(cc+1,(dz->clength-1))])/2.0;
         }
     }
@@ -442,9 +442,9 @@ int process_specsplit_channel(int cc,bandptr bb,dataptr dz)
 int specarpe(int *in_start_portion,dataptr dz)
 {
     int exit_status;
-    double	lofrq, hifrq, frqrang;
-    double	bandmid, bandhilimit, bandlolimit;
-    int 	tabindex;
+    double      lofrq, hifrq, frqrang;
+    double      bandmid, bandhilimit, bandlolimit;
+    int         tabindex;
     if((exit_status = reset_timechanging_arpe_variables(&frqrang,&lofrq,&hifrq,dz))<0)
         return(exit_status);
     if((exit_status = locate_current_wavetable_position(dz))<0)
@@ -455,18 +455,18 @@ int specarpe(int *in_start_portion,dataptr dz)
     bandhilimit = min(bandmid + dz->param[ARPE_HBAND],dz->nyquist);
     bandlolimit = max(bandmid - dz->param[ARPE_HBAND],0.0);
 
-    if((exit_status = get_amp_and_frq(dz->flbufptr[0],dz))<0)		/* SEPARATE THE AMP AND FREQ DATA */
+    if((exit_status = get_amp_and_frq(dz->flbufptr[0],dz))<0)           /* SEPARATE THE AMP AND FREQ DATA */
         return(exit_status);
 
-    switch(dz->mode) {		 /* ELIMINATE OR MODIFY FREQUENCIES, AS NECESSARY */
-    case(ON):  			exit_status = do_on(bandhilimit,bandlolimit,dz);							break;
-    case(BELOW):  		exit_status = do_below(bandmid,dz);											break;
-    case(ABOVE):  		exit_status = do_above(bandmid,dz);											break;
-    case(BOOST):  		exit_status = do_boost(bandhilimit,bandlolimit,dz); 		   				break;
-    case(ABOVE_BOOST):  exit_status = do_above_boost(bandhilimit,bandlolimit,in_start_portion,dz);	break;
-    case(BELOW_BOOST):  exit_status = do_below_boost(bandhilimit,bandlolimit,in_start_portion,dz);	break;
-    case(ONCE_ABOVE):  	exit_status = do_once_above(bandhilimit,in_start_portion,dz);				break;
-    case(ONCE_BELOW):  	exit_status = do_once_below(bandlolimit,in_start_portion,dz);				break;
+    switch(dz->mode) {           /* ELIMINATE OR MODIFY FREQUENCIES, AS NECESSARY */
+    case(ON):                   exit_status = do_on(bandhilimit,bandlolimit,dz);                                                        break;
+    case(BELOW):                exit_status = do_below(bandmid,dz);                                                                                     break;
+    case(ABOVE):                exit_status = do_above(bandmid,dz);                                                                                     break;
+    case(BOOST):                exit_status = do_boost(bandhilimit,bandlolimit,dz);                                             break;
+    case(ABOVE_BOOST):  exit_status = do_above_boost(bandhilimit,bandlolimit,in_start_portion,dz);      break;
+    case(BELOW_BOOST):  exit_status = do_below_boost(bandhilimit,bandlolimit,in_start_portion,dz);      break;
+    case(ONCE_ABOVE):   exit_status = do_once_above(bandhilimit,in_start_portion,dz);                           break;
+    case(ONCE_BELOW):   exit_status = do_once_below(bandlolimit,in_start_portion,dz);                           break;
     default:
         sprintf(errstr,"unknown mode in specarpe()\n");
         return(PROGRAM_ERROR);
@@ -1015,7 +1015,7 @@ int specpluck(dataptr dz)
     int exit_status;
     int mask = 1;
     int cc, vc, bflagno, is_set;
-    if(dz->total_windows==1) {		/* Set up BITFLAGS for current state of chans */
+    if(dz->total_windows==1) {          /* Set up BITFLAGS for current state of chans */
         for(cc = 0, vc = 0; cc < dz->clength; cc++, vc += 2){
             if((exit_status = choose_bflagno_and_reset_mask_if_ness
                 (&bflagno,cc,&mask,dz->iparam[PLUK_LONGPOW2],dz->iparam[PLUK_DIVMASK]))<0)
@@ -1024,22 +1024,22 @@ int specpluck(dataptr dz)
                 dz->lparray[PLUK_BFLG][bflagno] |= mask;
             mask <<= 1;
         }
-    } else {		 			/* Check change of state of channels */
+    } else {                                    /* Check change of state of channels */
         for(cc = 0, vc = 0; cc < dz->clength; cc++, vc += 2){
             if((exit_status = choose_bflagno_and_reset_mask_if_ness
                 (&bflagno,cc,&mask,dz->iparam[PLUK_LONGPOW2],dz->iparam[PLUK_DIVMASK]))<0)
                 return(exit_status);
             is_set = dz->lparray[PLUK_BFLG][bflagno] & mask;
-            if(!flteq((double)dz->flbufptr[0][vc],0.0)) { 	/* If chan amp NOT zero */
-                if(!is_set) { 						/* if bit previously 0 (for zero amp) */
+            if(!flteq((double)dz->flbufptr[0][vc],0.0)) {       /* If chan amp NOT zero */
+                if(!is_set) {                                           /* if bit previously 0 (for zero amp) */
                     dz->flbufptr[0][vc] = (float)(dz->flbufptr[0][vc] * dz->param[PLUK_GAIN]);
-                    exit_status = set_bit_to_one(bflagno,mask,dz);	   /* Give boost to chan amp */
+                    exit_status = set_bit_to_one(bflagno,mask,dz);         /* Give boost to chan amp */
                 }
-            } else {	 		     				/* channel amp IS zero */
-                if(is_set)							/* if bit previously 1 for nonzero amp */
+            } else {                                                    /* channel amp IS zero */
+                if(is_set)                                                      /* if bit previously 1 for nonzero amp */
                     exit_status = set_bit_to_zero(bflagno,mask,dz);
             }
-            mask <<= 1;			    				/* move bitmask upwards */
+            mask <<= 1;                                                 /* move bitmask upwards */
         }
     }
     return(FINISHED);
@@ -1049,7 +1049,7 @@ int specpluck(dataptr dz)
 
 int set_bit_to_zero(int bflagno,int mask,dataptr dz)
 {
-    mask = ~mask;		 					  /* bit-invert mask */
+    mask = ~mask;                                                         /* bit-invert mask */
     dz->lparray[PLUK_BFLG][bflagno] &= mask;  /* Set bit to 0 */
     return(FINISHED);
 }
@@ -1070,7 +1070,7 @@ int spectrace(dataptr dz)
     int exit_status;
     int invtrindex, cc, vc;
     int    chans_outside_fltband_to_keep = 0, chans_in_filtband;
-    double	hifrq_limit = 0.0, lofrq_limit = 0.0;
+    double      hifrq_limit = 0.0, lofrq_limit = 0.0;
     chvptr quietest, loudest;
     if((dz->mode == TRC_ALL || dz->vflag[TRACE_RETAIN]) && dz->iparam[TRAC_INDX] >= dz->clength)
         return(FINISHED);
@@ -1115,28 +1115,28 @@ int spectrace(dataptr dz)
             dz->flbufptr[0][loudest->loc] = loudest->val;
         } while((loudest = loudest->next)!=dz->ringhead);
     } else {
-        if(dz->iparam[TRAC_INDX]>(dz->clength/2)) { 						/* IF MORE CHANS TO KEEP THAN TO REJECT */
-            invtrindex = dz->clength - dz->iparam[TRAC_INDX];   			/* COUNT CHANS TO REJECT */
+        if(dz->iparam[TRAC_INDX]>(dz->clength/2)) {                                             /* IF MORE CHANS TO KEEP THAN TO REJECT */
+            invtrindex = dz->clength - dz->iparam[TRAC_INDX];                           /* COUNT CHANS TO REJECT */
             if((exit_status = initialise_ring_vals(invtrindex,BIGAMP,dz))<0)/* MAXIMISE ALL QUIETEST STORES IN RING */
                 return(exit_status);
-            for(vc = 0; vc < dz->wanted; vc += 2) {							/* STORE INDICES OF QUIETEST CHANS */
+            for(vc = 0; vc < dz->wanted; vc += 2) {                                                     /* STORE INDICES OF QUIETEST CHANS */
                 if((exit_status = if_one_of_quietest_chans_store_in_ring(vc,dz))<0)
                     return(exit_status);
             }
             quietest = dz->ringhead;
-            do {								  							/* ZERO ALL QUIETEST CHANS */
+            do {                                                                                                                        /* ZERO ALL QUIETEST CHANS */
                 dz->flbufptr[0][quietest->loc] = 0.0F;
             } while((quietest = quietest->next)!=dz->ringhead);
-        } else {															/* IF MORE CHANS TO REJECT THAN TO KEEP */
+        } else {                                                                                                                        /* IF MORE CHANS TO REJECT THAN TO KEEP */
             if((exit_status = initialise_ring_vals(dz->iparam[TRAC_INDX],-BIGAMP,dz))<0)
-                return(exit_status);										/* MINIMISE ALL LOUDEST STORES IN RING */
+                return(exit_status);                                                                            /* MINIMISE ALL LOUDEST STORES IN RING */
             for(vc = 0; vc < dz->wanted; vc += 2) {
                 if((exit_status = if_one_of_loudest_chans_store_in_ring(vc,dz))<0)
-                    return(exit_status);									/* STORE INDICES OF LOUDEST CHANS */
-                dz->flbufptr[0][AMPP]  = 0.0F;  							/* INITIALISE EVERY CHANNEL TO ZERO AMP	 */
+                    return(exit_status);                                                                        /* STORE INDICES OF LOUDEST CHANS */
+                dz->flbufptr[0][AMPP]  = 0.0F;                                                          /* INITIALISE EVERY CHANNEL TO ZERO AMP  */
             }
             loudest = dz->ringhead;
-            do {															/* RESTORE AMPLITUDE IN LOUDEST CHANS ONLY */
+            do {                                                                                                                        /* RESTORE AMPLITUDE IN LOUDEST CHANS ONLY */
                 dz->flbufptr[0][loudest->loc] = loudest->val;
             } while((loudest = loudest->next)!=dz->ringhead);
         }
@@ -1159,7 +1159,7 @@ int reset_timechanging_arpe_variables(double *frqrange,double *lofrq, double *hi
 {
     double this_arpfrq;
 
-    if(dz->brksize[ARPE_ARPFRQ]) {				  /* RESET ARPFREQ, if ness */
+    if(dz->brksize[ARPE_ARPFRQ]) {                                /* RESET ARPFREQ, if ness */
         this_arpfrq = (dz->param[ARPE_LASTARPFRQ] + dz->param[ARPE_ARPFRQ])/2.0;
         dz->param[ARPE_LASTARPFRQ] = dz->param[ARPE_ARPFRQ];
         dz->param[ARPE_ARPFRQ] = this_arpfrq;
@@ -1171,7 +1171,7 @@ int reset_timechanging_arpe_variables(double *frqrange,double *lofrq, double *hi
             dz->param[ARPE_AMPL]  /= (double)dz->iparam[ARPE_SUST];
     }
 
-    *lofrq = dz->param[ARPE_LOFRQ];				  /* RESET arp hi and lo limits */
+    *lofrq = dz->param[ARPE_LOFRQ];                               /* RESET arp hi and lo limits */
     *hifrq = dz->param[ARPE_HIFRQ];
     if((dz->brksize[ARPE_LOFRQ] || dz->brksize[ARPE_HIFRQ])
        && (*hifrq < *lofrq))
@@ -1186,7 +1186,7 @@ int reset_timechanging_arpe_variables(double *frqrange,double *lofrq, double *hi
 int locate_current_wavetable_position(dataptr dz)
 {
     double tabincr;
-    tabincr 					= dz->frametime * dz->param[ARPE_ARPFRQ] * ARPE_TABSIZE;
+    tabincr                                     = dz->frametime * dz->param[ARPE_ARPFRQ] * ARPE_TABSIZE;
     dz->param[ARPE_LAST_TABPOS] = dz->param[ARPE_WAVETABPOS];
     dz->param[ARPE_WAVETABPOS]  = fmod(dz->param[ARPE_WAVETABPOS] + tabincr,(double)ARPE_TABSIZE);
     return(FINISHED);
@@ -1195,7 +1195,7 @@ int locate_current_wavetable_position(dataptr dz)
 //TW UPDATE: NEW FUNCTIONS (adjusted for float)
 /************************************ VOWEL_FILTER ************************************/
 
-#define NOISEBASE	(0.2)
+#define NOISEBASE       (0.2)
 
 int vowel_filter(dataptr dz)
 {
@@ -1221,7 +1221,7 @@ int vowel_filter(dataptr dz)
 
     dz->flbufptr[0] = dz->bigfbuf;
     if((exit_status = get_formant_frqs
-	(vowels[t],&startformant1,&startformant2,&startformant3,&f2startatten,&f3startatten))<0)
+        (vowels[t],&startformant1,&startformant2,&startformant3,&f2startatten,&f3startatten))<0)
         return(exit_status);
     starttime = times[t++];
     if((exit_status = get_formant_frqs(vowels[t],&endformant1,&endformant2,&endformant3,&f2endatten,&f3endatten))<0)
@@ -1233,7 +1233,7 @@ int vowel_filter(dataptr dz)
     f2attenstep = f2endatten - f2startatten;
     f3attenstep = f3endatten - f3startatten;
     timestep  = endtime-starttime;
-    formant1 = startformant1;	/* works if only one vowel is entered (for time zero) */
+    formant1 = startformant1;   /* works if only one vowel is entered (for time zero) */
     formant2 = startformant2;
     formant3 = startformant3;
     f2atten  = f2startatten;
@@ -1253,7 +1253,7 @@ int vowel_filter(dataptr dz)
         }
         if(dz->itemcnt) {
             time = n * dz->frametime;
-            while(time >= endtime) {	  	/* advance along vowels */
+            while(time >= endtime) {            /* advance along vowels */
                 startformant1 = endformant1;
                 startformant2 = endformant2;
                 startformant3 = endformant3;
@@ -1273,7 +1273,7 @@ int vowel_filter(dataptr dz)
                 f3attenstep = f3endatten - f3startatten;
                 timestep  = endtime-starttime;
             }
-            if(!flteq(starttime,endtime)) {			   		/* interpolate between vowels : or retain last vowel */
+            if(!flteq(starttime,endtime)) {                                     /* interpolate between vowels : or retain last vowel */
                 timefrac = (time - starttime)/timestep;
                 formant1 = startformant1 + (form1step * timefrac);
                 formant2 = startformant2 + (form2step * timefrac);
@@ -1311,7 +1311,7 @@ int do_vowel_filter(double *vamp,double formant1,double formant2,double formant3
 
 {
     double hfwidth1, hfwidth2, hfwidth3 = 0.0, lolim1, lolim2, lolim3 = 0.0, hilim1, hilim2, hilim3 = 0.0;
-    //	double thisfrq, amp, amp2, amp3 = 0.0, totamp = 0.0;
+    //  double thisfrq, amp, amp2, amp3 = 0.0, totamp = 0.0;
     double thisfrq, amp, amp2 = 0.0, amp3 = 0.0;
     int exit_status, cc, vc;
     int overlapped_formants12 = 0, overlapped_formants23 = 0, overlapped_formants13 = 0;
@@ -1322,7 +1322,7 @@ int do_vowel_filter(double *vamp,double formant1,double formant2,double formant3
 
     if(formant3 > 0.0)
         is_third_formant = 1;
-    hfwidth1 = formant1 * dz->param[PV_HWIDTH];	/* set limits of formant bands */
+    hfwidth1 = formant1 * dz->param[PV_HWIDTH]; /* set limits of formant bands */
     lolim1  = formant1 - hfwidth1;
     hilim1  = formant1 + hfwidth1;
     hfwidth2 = formant2 * dz->param[PV_HWIDTH];
@@ -1334,7 +1334,7 @@ int do_vowel_filter(double *vamp,double formant1,double formant2,double formant3
         hilim3  = formant3 + hfwidth3;
     }
 
-    if(hilim1 > lolim2)		/* deal with overlapping formants */
+    if(hilim1 > lolim2)         /* deal with overlapping formants */
         overlapped_formants12 = 1;
     if(is_third_formant) {
         if(hilim2 > lolim3)
@@ -1343,9 +1343,9 @@ int do_vowel_filter(double *vamp,double formant1,double formant2,double formant3
             overlapped_formants13 = 1;
     }
     /* if(is_third_formant) */
-    /* 	toplim =  hilim3; */
+    /*  toplim =  hilim3; */
     /* else */
-    /* 	toplim =  hilim2; */
+    /*  toplim =  hilim2; */
     maxamp = 0.0;
     pre_totamp = 0.0;
     for(cc = 0, vc = 0; cc < dz->clength; cc++, vc += 2) {
@@ -1447,14 +1447,14 @@ int do_vowel_filter(double *vamp,double formant1,double formant2,double formant3
  * approximate compensation for aural sensitivity
  */
 
-#define	LOFRQ_BOOST		(2.511)		/* 8dB  */
-#define	HIFRQ_LOSS		(0.4)		/* -8dB */
+#define LOFRQ_BOOST             (2.511)         /* 8dB  */
+#define HIFRQ_LOSS              (0.4)           /* -8dB */
 
-#define	LOFRQ_FOOT		(250.0)
-#define	MIDFRQSHELF_BOT	(2000.0)
-#define	MIDFRQSHELF_TOP	(3000.0)
-#define	HIFRQ_FOOT		(4000.0)
-#define	TOP_OF_SPECTRUM	(96000.0)	/* double maximum nyquist (i.e. >nyquist: for safety margin)  */
+#define LOFRQ_FOOT              (250.0)
+#define MIDFRQSHELF_BOT (2000.0)
+#define MIDFRQSHELF_TOP (3000.0)
+#define HIFRQ_FOOT              (4000.0)
+#define TOP_OF_SPECTRUM (96000.0)       /* double maximum nyquist (i.e. >nyquist: for safety margin)  */
 
 int define_sensitivity_curve(double **sensitivity,int *senslen)
 {
@@ -1466,12 +1466,12 @@ int define_sensitivity_curve(double **sensitivity,int *senslen)
         return(MEMORY_ERROR);
     }
     p = *sensitivity;
-    *p++ = 0.0;				*p++ = 1.0;						n+= 2;	/* everything must be in 0-1 range */
-    *p++ = LOFRQ_FOOT;		*p++ = 1.0;						n+= 2;	/* for pow() calculations to work, later */
-    *p++ = MIDFRQSHELF_BOT;	*p++ = 1.0/LOFRQ_BOOST;			n+= 2;
-    *p++ = MIDFRQSHELF_TOP;	*p++ = 1.0/LOFRQ_BOOST;			n+= 2;
-    *p++ = HIFRQ_FOOT;		*p++ = HIFRQ_LOSS/LOFRQ_BOOST;	n+= 2;
-    *p++ = TOP_OF_SPECTRUM;	*p++ = HIFRQ_LOSS/LOFRQ_BOOST;	n+= 2;
+    *p++ = 0.0;                         *p++ = 1.0;                                             n+= 2;  /* everything must be in 0-1 range */
+    *p++ = LOFRQ_FOOT;          *p++ = 1.0;                                             n+= 2;  /* for pow() calculations to work, later */
+    *p++ = MIDFRQSHELF_BOT;     *p++ = 1.0/LOFRQ_BOOST;                 n+= 2;
+    *p++ = MIDFRQSHELF_TOP;     *p++ = 1.0/LOFRQ_BOOST;                 n+= 2;
+    *p++ = HIFRQ_FOOT;          *p++ = HIFRQ_LOSS/LOFRQ_BOOST;  n+= 2;
+    *p++ = TOP_OF_SPECTRUM;     *p++ = HIFRQ_LOSS/LOFRQ_BOOST;  n+= 2;
 
     if((*sensitivity = (double *)realloc((char *)(*sensitivity),n * sizeof(double)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY for sensitivity curve.\n");
@@ -1487,65 +1487,65 @@ int get_formant_frqs
 (int vowel,double *formant1, double *formant2, double *formant3, double *f2atten, double *f3atten)
 {
     switch(vowel) {
-    case(VOWEL_EE):	*formant1= EE_FORMANT1;	*formant2= EE_FORMANT2;	*formant3= EE_FORMANT3;
-	/* heed  */								*f2atten = EE_F2ATTEN;	*f3atten = EE_F3ATTEN;
+    case(VOWEL_EE):     *formant1= EE_FORMANT1; *formant2= EE_FORMANT2; *formant3= EE_FORMANT3;
+        /* heed  */                                                             *f2atten = EE_F2ATTEN;  *f3atten = EE_F3ATTEN;
         break;
-    case(VOWEL_I):	*formant1= I_FORMANT1;	*formant2= I_FORMANT2;	*formant3= I_FORMANT3;
-	/* hid  */								*f2atten = I_F2ATTEN;	*f3atten = I_F3ATTEN;
+    case(VOWEL_I):      *formant1= I_FORMANT1;  *formant2= I_FORMANT2;  *formant3= I_FORMANT3;
+        /* hid  */                                                              *f2atten = I_F2ATTEN;   *f3atten = I_F3ATTEN;
         break;
-    case(VOWEL_AI):	*formant1= AI_FORMANT1;	*formant2= AI_FORMANT2;	*formant3= AI_FORMANT3;
-	/* maid  */								*f2atten = AI_F2ATTEN;	*f3atten = AI_F3ATTEN;
+    case(VOWEL_AI):     *formant1= AI_FORMANT1; *formant2= AI_FORMANT2; *formant3= AI_FORMANT3;
+        /* maid  */                                                             *f2atten = AI_F2ATTEN;  *f3atten = AI_F3ATTEN;
         break;
-    case(VOWEL_AII): *formant1= AII_FORMANT1;	*formant2= AII_FORMANT2;	*formant3= AII_FORMANT3;
-	/* scottish educAted  */				*f2atten = AII_F2ATTEN;	*f3atten = AII_F3ATTEN;
+    case(VOWEL_AII): *formant1= AII_FORMANT1;   *formant2= AII_FORMANT2;        *formant3= AII_FORMANT3;
+        /* scottish educAted  */                                *f2atten = AII_F2ATTEN; *f3atten = AII_F3ATTEN;
         break;
-    case(VOWEL_E):	*formant1= E_FORMANT1;	*formant2= E_FORMANT2;	*formant3= E_FORMANT3;
-	/* head  */								*f2atten = E_F2ATTEN;	*f3atten = E_F3ATTEN;
+    case(VOWEL_E):      *formant1= E_FORMANT1;  *formant2= E_FORMANT2;  *formant3= E_FORMANT3;
+        /* head  */                                                             *f2atten = E_F2ATTEN;   *f3atten = E_F3ATTEN;
         break;
-    case(VOWEL_A):	*formant1= A_FORMANT1;	*formant2= A_FORMANT2;	*formant3= A_FORMANT3;
-	/* had  */								*f2atten = A_F2ATTEN;	*f3atten = A_F3ATTEN;
+    case(VOWEL_A):      *formant1= A_FORMANT1;  *formant2= A_FORMANT2;  *formant3= A_FORMANT3;
+        /* had  */                                                              *f2atten = A_F2ATTEN;   *f3atten = A_F3ATTEN;
         break;
-    case(VOWEL_AR):	*formant1= AR_FORMANT1;	*formant2= AR_FORMANT2;	*formant3= AR_FORMANT3;
-	/* hard  */								*f2atten = AR_F2ATTEN;	*f3atten = AR_F3ATTEN;
+    case(VOWEL_AR):     *formant1= AR_FORMANT1; *formant2= AR_FORMANT2; *formant3= AR_FORMANT3;
+        /* hard  */                                                             *f2atten = AR_F2ATTEN;  *f3atten = AR_F3ATTEN;
         break;
-    case(VOWEL_O):	*formant1= O_FORMANT1;	*formant2= O_FORMANT2;	*formant3= O_FORMANT3;
-	/* hod  */								*f2atten = O_F2ATTEN;	*f3atten = O_F3ATTEN;
+    case(VOWEL_O):      *formant1= O_FORMANT1;  *formant2= O_FORMANT2;  *formant3= O_FORMANT3;
+        /* hod  */                                                              *f2atten = O_F2ATTEN;   *f3atten = O_F3ATTEN;
         break;
-    case(VOWEL_OR):	*formant1= OR_FORMANT1;	*formant2= OR_FORMANT2;	*formant3= OR_FORMANT3;
-	/* hoard  */							*f2atten = OR_F2ATTEN;	*f3atten = OR_F3ATTEN;
+    case(VOWEL_OR):     *formant1= OR_FORMANT1; *formant2= OR_FORMANT2; *formant3= OR_FORMANT3;
+        /* hoard  */                                                    *f2atten = OR_F2ATTEN;  *f3atten = OR_F3ATTEN;
         break;
-    case(VOWEL_OA):	*formant1= OA_FORMANT1;	*formant2= OA_FORMANT2;	*formant3= OA_FORMANT3;
-	/* load (North of England)  */			*f2atten = OA_F2ATTEN;	*f3atten = OA_F3ATTEN;
+    case(VOWEL_OA):     *formant1= OA_FORMANT1; *formant2= OA_FORMANT2; *formant3= OA_FORMANT3;
+        /* load (North of England)  */                  *f2atten = OA_F2ATTEN;  *f3atten = OA_F3ATTEN;
         break;
-    case(VOWEL_U):	*formant1= U_FORMANT1;	*formant2= U_FORMANT2;	*formant3= U_FORMANT3;
-	/* hood, mud (North of England)  */		*f2atten = U_F2ATTEN;	*f3atten = U_F3ATTEN;
+    case(VOWEL_U):      *formant1= U_FORMANT1;  *formant2= U_FORMANT2;  *formant3= U_FORMANT3;
+        /* hood, mud (North of England)  */             *f2atten = U_F2ATTEN;   *f3atten = U_F3ATTEN;
         break;
-    case(VOWEL_UU):	*formant1= UU_FORMANT1;	*formant2= UU_FORMANT2;	*formant3= UU_FORMANT3;
-	/* Scottish edUcated  */				*f2atten = UU_F2ATTEN;	*f3atten = UU_F3ATTEN;
+    case(VOWEL_UU):     *formant1= UU_FORMANT1; *formant2= UU_FORMANT2; *formant3= UU_FORMANT3;
+        /* Scottish edUcated  */                                *f2atten = UU_F2ATTEN;  *f3atten = UU_F3ATTEN;
         break;
-    case(VOWEL_UI):	*formant1= UI_FORMANT1;	*formant2= UI_FORMANT2;	*formant3= UI_FORMANT3;
-	/* Scottish 'could'  */					*f2atten = UI_F2ATTEN;	*f3atten = UI_F3ATTEN;
+    case(VOWEL_UI):     *formant1= UI_FORMANT1; *formant2= UI_FORMANT2; *formant3= UI_FORMANT3;
+        /* Scottish 'could'  */                                 *f2atten = UI_F2ATTEN;  *f3atten = UI_F3ATTEN;
         break;
-    case(VOWEL_OO):	*formant1= OO_FORMANT1;	*formant2= OO_FORMANT2;	*formant3= OO_FORMANT3;
-	/* mood  */								*f2atten = OO_F2ATTEN;	*f3atten = OO_F3ATTEN;
+    case(VOWEL_OO):     *formant1= OO_FORMANT1; *formant2= OO_FORMANT2; *formant3= OO_FORMANT3;
+        /* mood  */                                                             *f2atten = OO_F2ATTEN;  *f3atten = OO_F3ATTEN;
         break;
-    case(VOWEL_XX):	*formant1= XX_FORMANT1;	*formant2= XX_FORMANT2;	*formant3= XX_FORMANT3;
-	/* mud (South of England)  */			*f2atten = XX_F2ATTEN;	*f3atten = XX_F3ATTEN;
+    case(VOWEL_XX):     *formant1= XX_FORMANT1; *formant2= XX_FORMANT2; *formant3= XX_FORMANT3;
+        /* mud (South of England)  */                   *f2atten = XX_F2ATTEN;  *f3atten = XX_F3ATTEN;
         break;
-    case(VOWEL_X):	*formant1= X_FORMANT1;	*formant2= X_FORMANT2;	*formant3 = X_FORMANT3;
-	/* the, herd  */						*f2atten = X_F2ATTEN;	*f3atten = X_F3ATTEN;
+    case(VOWEL_X):      *formant1= X_FORMANT1;  *formant2= X_FORMANT2;  *formant3 = X_FORMANT3;
+        /* the, herd  */                                                *f2atten = X_F2ATTEN;   *f3atten = X_F3ATTEN;
         break;
-    case(VOWEL_N):	*formant1= N_FORMANT1;	*formant2= N_FORMANT2;	*formant3 = N_FORMANT3;
-	/* 'n'  */								*f2atten = N_F2ATTEN;	*f3atten = N_F3ATTEN;
+    case(VOWEL_N):      *formant1= N_FORMANT1;  *formant2= N_FORMANT2;  *formant3 = N_FORMANT3;
+        /* 'n'  */                                                              *f2atten = N_F2ATTEN;   *f3atten = N_F3ATTEN;
         break;
-    case(VOWEL_M):	*formant1= M_FORMANT1;	*formant2= M_FORMANT2;	*formant3 = M_FORMANT3;
-	/* 'm' */								*f2atten = M_F2ATTEN;	*f3atten = M_F3ATTEN;
+    case(VOWEL_M):      *formant1= M_FORMANT1;  *formant2= M_FORMANT2;  *formant3 = M_FORMANT3;
+        /* 'm' */                                                               *f2atten = M_F2ATTEN;   *f3atten = M_F3ATTEN;
         break;
-    case(VOWEL_R):	*formant1= R_FORMANT1;	*formant2= R_FORMANT2;	*formant3 = R_FORMANT3;
-	/* dRaws  */							*f2atten = R_F2ATTEN;	*f3atten = R_F3ATTEN;
+    case(VOWEL_R):      *formant1= R_FORMANT1;  *formant2= R_FORMANT2;  *formant3 = R_FORMANT3;
+        /* dRaws  */                                                    *f2atten = R_F2ATTEN;   *f3atten = R_F3ATTEN;
         break;
-    case(VOWEL_TH):	*formant1= TH_FORMANT1;	*formant2= TH_FORMANT2;	*formant3 = TH_FORMANT3;
-	/* 'THe'  */							*f2atten = TH_F2ATTEN;	*f3atten = TH_F3ATTEN;
+    case(VOWEL_TH):     *formant1= TH_FORMANT1; *formant2= TH_FORMANT2; *formant3 = TH_FORMANT3;
+        /* 'THe'  */                                                    *f2atten = TH_F2ATTEN;  *f3atten = TH_F3ATTEN;
         break;
     default:
         sprintf(errstr,"Unknown vowel\n");

@@ -37,9 +37,9 @@
  */
 
 /** @file
- @ingroup win_src
+    @ingroup win_src
 
- @brief Microsoft COM initialization routines.
+    @brief Microsoft COM initialization routines.
 */
 
 #include <windows.h>
@@ -69,50 +69,50 @@ PaError PaWinUtil_CoInitialize( PaHostApiTypeId hostApiType, PaWinUtilComInitial
     comInitializationResult->state = PAWINUTIL_COM_NOT_INITIALIZED;
 
     /*
-        If COM is already initialized CoInitialize will either return
-        FALSE, or RPC_E_CHANGED_MODE if it was initialised in a different
-        threading mode. In either case we shouldn't consider it an error
-        but we need to be careful to not call CoUninitialize() if 
-        RPC_E_CHANGED_MODE was returned.
+      If COM is already initialized CoInitialize will either return
+      FALSE, or RPC_E_CHANGED_MODE if it was initialised in a different
+      threading mode. In either case we shouldn't consider it an error
+      but we need to be careful to not call CoUninitialize() if
+      RPC_E_CHANGED_MODE was returned.
     */
 
     hr = CoInitialize(0); /* use legacy-safe equivalent to CoInitializeEx(NULL, COINIT_APARTMENTTHREADED) */
     if( FAILED(hr) && hr != RPC_E_CHANGED_MODE )
-    {
-        PA_DEBUG(("CoInitialize(0) failed. hr=%d\n", hr));
-
-        if( hr == E_OUTOFMEMORY )
-            return paInsufficientMemory;
-
         {
-            char *lpMsgBuf;
-            FormatMessage(
-                FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-                NULL,
-                hr,
-                MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                (LPTSTR) &lpMsgBuf,
-                0,
-                NULL
-            );
-            PaUtil_SetLastHostErrorInfo( hostApiType, hr, lpMsgBuf );
-            LocalFree( lpMsgBuf );
+            PA_DEBUG(("CoInitialize(0) failed. hr=%d\n", hr));
+
+            if( hr == E_OUTOFMEMORY )
+                return paInsufficientMemory;
+
+            {
+                char *lpMsgBuf;
+                FormatMessage(
+                              FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+                              NULL,
+                              hr,
+                              MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                              (LPTSTR) &lpMsgBuf,
+                              0,
+                              NULL
+                              );
+                PaUtil_SetLastHostErrorInfo( hostApiType, hr, lpMsgBuf );
+                LocalFree( lpMsgBuf );
+            }
+
+            return paUnanticipatedHostError;
         }
 
-        return paUnanticipatedHostError;
-    }
-
     if( hr != RPC_E_CHANGED_MODE )
-    {
-        comInitializationResult->state = PAWINUTIL_COM_INITIALIZED;
+        {
+            comInitializationResult->state = PAWINUTIL_COM_INITIALIZED;
 
-        /*
-            Memorize calling thread id and report warning on Uninitialize if 
-            calling thread is different as CoInitialize must match CoUninitialize 
-            in the same thread.
-        */
-        comInitializationResult->initializingThreadId = GetCurrentThreadId();
-    }
+            /*
+              Memorize calling thread id and report warning on Uninitialize if
+              calling thread is different as CoInitialize must match CoUninitialize
+              in the same thread.
+            */
+            comInitializationResult->initializingThreadId = GetCurrentThreadId();
+        }
 
     return paNoError;
 }
@@ -121,24 +121,24 @@ PaError PaWinUtil_CoInitialize( PaHostApiTypeId hostApiType, PaWinUtilComInitial
 void PaWinUtil_CoUninitialize( PaHostApiTypeId hostApiType, PaWinUtilComInitializationResult *comInitializationResult )
 {
     if( comInitializationResult->state != PAWINUTIL_COM_NOT_INITIALIZED
-            && comInitializationResult->state != PAWINUTIL_COM_INITIALIZED ){
-    
+        && comInitializationResult->state != PAWINUTIL_COM_INITIALIZED ){
+
         PA_DEBUG(("ERROR: PaWinUtil_CoUninitialize called without calling PaWinUtil_CoInitialize\n"));
     }
 
     if( comInitializationResult->state == PAWINUTIL_COM_INITIALIZED )
-    {
-        DWORD currentThreadId = GetCurrentThreadId();
-		if( comInitializationResult->initializingThreadId != currentThreadId )
-		{
-			PA_DEBUG(("ERROR: failed PaWinUtil_CoUninitialize calling thread[%d] does not match initializing thread[%d]\n",
-				currentThreadId, comInitializationResult->initializingThreadId));
-		}
-		else
-		{
-			CoUninitialize();
+        {
+            DWORD currentThreadId = GetCurrentThreadId();
+            if( comInitializationResult->initializingThreadId != currentThreadId )
+                {
+                    PA_DEBUG(("ERROR: failed PaWinUtil_CoUninitialize calling thread[%d] does not match initializing thread[%d]\n",
+                              currentThreadId, comInitializationResult->initializingThreadId));
+                }
+            else
+                {
+                    CoUninitialize();
 
-            comInitializationResult->state = PAWINUTIL_COM_NOT_INITIALIZED;
-		}
-    }
+                    comInitializationResult->state = PAWINUTIL_COM_NOT_INITIALIZED;
+                }
+        }
 }

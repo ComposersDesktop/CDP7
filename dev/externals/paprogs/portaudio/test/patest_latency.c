@@ -1,8 +1,8 @@
 /** @file
-	@ingroup test_src
-	@brief Hear the latency caused by big buffers.
-	Play a sine wave and change frequency based on letter input.
-	@author Phil Burk <philburk@softsynth.com>, and Darren Gibbs
+    @ingroup test_src
+    @brief Hear the latency caused by big buffers.
+    Play a sine wave and change frequency based on letter input.
+    @author Phil Burk <philburk@softsynth.com>, and Darren Gibbs
 */
 /*
  * $Id: patest_latency.c 1368 2008-03-01 00:38:27Z rossb $
@@ -32,13 +32,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -64,7 +64,7 @@ typedef struct
     float left_phase;
     float right_phase;
 }
-paTestData;
+    paTestData;
 
 float LookupSine( paTestData *data, float phase );
 /* Convert phase between and 1.0 to sine value
@@ -98,14 +98,14 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
     (void) inputBuffer; /* Prevent unused variable warning. */
 
     for( i=0; i<framesPerBuffer; i++ )
-    {
-        *out++ = LookupSine(data, data->left_phase);  /* left */
-        *out++ = LookupSine(data, data->right_phase);  /* right */
-        data->left_phase += data->phase_increment;
-        if( data->left_phase >= 1.0f ) data->left_phase -= 1.0f;
-        data->right_phase += (data->phase_increment * 1.5f); /* fifth above */
-        if( data->right_phase >= 1.0f ) data->right_phase -= 1.0f;
-    }
+        {
+            *out++ = LookupSine(data, data->left_phase);  /* left */
+            *out++ = LookupSine(data, data->right_phase);  /* right */
+            data->left_phase += data->phase_increment;
+            if( data->left_phase >= 1.0f ) data->left_phase -= 1.0f;
+            data->right_phase += (data->phase_increment * 1.5f); /* fifth above */
+            if( data->right_phase >= 1.0f ) data->right_phase -= 1.0f;
+        }
     return 0;
 }
 
@@ -123,9 +123,9 @@ int main(void)
     printf("PortAudio Test: enter letter then hit ENTER.\n" );
     /* initialise sinusoidal wavetable */
     for( i=0; i<TABLE_SIZE; i++ )
-    {
-        data.sine[i] = 0.90f * (float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. );
-    }
+        {
+            data.sine[i] = 0.90f * (float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. );
+        }
     data.sine[TABLE_SIZE] = data.sine[0]; /* set guard point. */
     data.left_phase = data.right_phase = 0.0;
     data.phase_increment = CalcPhaseIncrement(MIN_FREQ);
@@ -136,26 +136,26 @@ int main(void)
 
     outputParameters.device = OUTPUT_DEVICE;
     if (outputParameters.device == paNoDevice) {
-      fprintf(stderr,"Error: No default output device.\n");
-      goto error;
+        fprintf(stderr,"Error: No default output device.\n");
+        goto error;
     }
     outputParameters.channelCount = 2;         /* stereo output */
     outputParameters.sampleFormat = paFloat32; /* 32 bit floating point output */
     outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
     outputParameters.hostApiSpecificStreamInfo = NULL;
-    
+
     printf("Requested output latency = %.4f seconds.\n", outputParameters.suggestedLatency );
     printf("%d frames per buffer.\n.", FRAMES_PER_BUFFER );
 
     err = Pa_OpenStream(
-              &stream,
-              NULL, /* no input */
-              &outputParameters,
-              SAMPLE_RATE,
-              FRAMES_PER_BUFFER,
-              paClipOff|paDitherOff,      /* we won't output out of range samples so don't bother clipping them */
-              patestCallback,
-              &data );
+                        &stream,
+                        NULL, /* no input */
+                        &outputParameters,
+                        SAMPLE_RATE,
+                        FRAMES_PER_BUFFER,
+                        paClipOff|paDitherOff,      /* we won't output out of range samples so don't bother clipping them */
+                        patestCallback,
+                        &data );
     if( err != paNoError ) goto error;
 
     err = Pa_StartStream( stream );
@@ -163,28 +163,28 @@ int main(void)
     printf("Play ASCII keyboard. Hit 'q' to stop. (Use RETURN key on Mac)\n");
     fflush(stdout);
     while ( !done )
-    {
-        float  freq;
-        int index;
-        char c;
-        do
         {
-            c = getchar();
-        }
-        while( c < ' '); /* Strip white space and control chars. */
+            float  freq;
+            int index;
+            char c;
+            do
+                {
+                    c = getchar();
+                }
+            while( c < ' '); /* Strip white space and control chars. */
 
-        if( c == 'q' ) done = 1;
-        index = c % 26;
-        freq = MIN_FREQ + (index * 40.0);
-        data.phase_increment = CalcPhaseIncrement(freq);
-    }
+            if( c == 'q' ) done = 1;
+            index = c % 26;
+            freq = MIN_FREQ + (index * 40.0);
+            data.phase_increment = CalcPhaseIncrement(freq);
+        }
     printf("Call Pa_StopStream()\n");
     err = Pa_StopStream( stream );
     if( err != paNoError ) goto error;
     Pa_Terminate();
     printf("Test finished.\n");
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

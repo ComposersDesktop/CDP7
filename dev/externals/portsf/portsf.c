@@ -48,6 +48,7 @@
 /* Aug 2012 TODO (?):  add running check for 4GB limit to writeFrame funcs */
 /* Aug 2012 corrected SPKRS_MONO value (portsf.h) */
 /* Nov 2013: added SPKRS_6_1 to list */
+/* Mar 2020: fix fault parsing floats amb files! */
 
 #include <stdio.h>
 #ifdef unix
@@ -124,12 +125,18 @@ static const float dclip32 = (float)(2147483647.0/2147483648.0);
 
 #define WAVE_FORMAT_PCM         (0x0001)
 
+typedef union {
+    int lsamp;
+    float fsamp;
+    unsigned char bytes[4];
+} SND_SAMP;
+
 typedef struct _GUID 
 { 
-    unsigned int        Data1;
-    unsigned short       Data2;
-    unsigned short       Data3;
-    unsigned char        Data4[8];
+    unsigned int      Data1;
+    unsigned short    Data2;
+    unsigned short    Data3;
+    unsigned char     Data4[8];
 } GUID; 
 
 
@@ -1565,6 +1572,7 @@ int psf_sndWriteFloatFrames(int sfd, const float *buf, DWORD nFrames)
     float fsamp,absfsamp;
     int do_shift = 1;
     PSFFILE *sfdat;
+    SND_SAMP s_samp;
     
     if(sfd < 0 || sfd > psf_maxfiles)
         return PSF_E_BADARG;
@@ -1605,7 +1613,7 @@ int psf_sndWriteFloatFrames(int sfd, const float *buf, DWORD nFrames)
             if(do_reverse){
                 for(i=0; i < nFrames; i++){
                     for(j=0;j < chans; j++) {
-                        fsamp = *pbuf;
+                        fsamp = *pbuf++;
                         if(sfdat->clip_floats){
                             fsamp = min(fsamp,1.0f);
                             fsamp = max(fsamp,-1.0f);
@@ -1615,7 +1623,9 @@ int psf_sndWriteFloatFrames(int sfd, const float *buf, DWORD nFrames)
                             sfdat->pPeaks[j].pos = sfdat->nFrames + i;
                             sfdat->pPeaks[j].val = absfsamp;
                         }
-                        lsamp = * (int *) pbuf++;
+                        // lsamp = * (int *) pbuf++;
+                        s_samp.fsamp = fsamp;
+                        lsamp = s_samp.lsamp;
                         lsamp = REVDWBYTES(lsamp);
                         if(wavDoWrite(sfdat,(char *) &lsamp,sizeof(int))){
                             DBGFPRINTF((stderr, "wavOpenWrite: write error\n"));
@@ -1819,6 +1829,7 @@ int psf_sndWriteDoubleFrames(int sfd, const double *buf, DWORD nFrames)
     float fsamp,absfsamp;
     PSFFILE *sfdat;
     int do_shift = 1;
+    SND_SAMP s_samp;
     
     if(sfd < 0 || sfd > psf_maxfiles)
         return PSF_E_BADARG;
@@ -1867,7 +1878,9 @@ int psf_sndWriteDoubleFrames(int sfd, const double *buf, DWORD nFrames)
                             sfdat->pPeaks[j].pos = sfdat->nFrames + i;
                             sfdat->pPeaks[j].val = absfsamp;
                         }
-                        lsamp = * (int *) &fsamp;
+                        s_samp.fsamp = fsamp;
+                        lsamp = s_samp.lsamp;
+                        //   lsamp = * (int *) &fsamp;
                         lsamp = REVDWBYTES(lsamp);
                         if(wavDoWrite(sfdat,(char *) &lsamp,sizeof(int))){
                             DBGFPRINTF((stderr, "wavOpenWrite: write error\n"));
@@ -2886,6 +2899,7 @@ int psf_sndReadFloatFrames(int sfd, float *buf, DWORD nFrames)
     float fsamp;
     PSFFILE *sfdat;
     int do_shift;
+    SND_SAMP s_samp;
 #ifdef _DEBUG
     static int debug = 1;
 #endif
@@ -2934,7 +2948,9 @@ int psf_sndReadFloatFrames(int sfd, float *buf, DWORD nFrames)
                     if(wavDoRead(sfdat,(char *)&lsamp,sizeof(int)))
                         return PSF_E_CANT_READ;
                     lsamp = REVDWBYTES(lsamp);
-                    fsamp = * (float *)&lsamp;
+                    //    fsamp = * (float *)&lsamp;
+                    s_samp.lsamp = lsamp;
+                    fsamp = s_samp.fsamp;
                     if(sfdat->rescale)
                         fsamp *= sfdat->rescale_fac;
                     *pbuf++ = fsamp;
@@ -3042,6 +3058,7 @@ int psf_sndReadDoubleFrames(int sfd, double *buf, DWORD nFrames)
     double *pbuf = buf;
     float fsamp;
     PSFFILE *sfdat;
+    SND_SAMP s_samp;
     int do_shift;
     
     if(sfd < 0 || sfd > psf_maxfiles)
@@ -3083,13 +3100,14 @@ int psf_sndReadDoubleFrames(int sfd, double *buf, DWORD nFrames)
         fflush(sfdat->file);
     switch(sfdat->samptype){
         case(PSF_SAMP_IEEE_FLOAT):
-            
             if(do_reverse){
                 for(i=0;i < blocksize;i ++){
                     if(wavDoRead(sfdat,(char *)&lsamp,sizeof(int)))
                         return PSF_E_CANT_READ;
                     lsamp = REVDWBYTES(lsamp);
-                    fsamp = * (float *)&lsamp;
+                    //    fsamp = * (float *)&lsamp;
+                    s_samp.lsamp = lsamp;
+                    fsamp = s_samp.fsamp;
                     if(sfdat->rescale)
                         fsamp *= sfdat->rescale_fac;
                     *pbuf++ = (double) fsamp;

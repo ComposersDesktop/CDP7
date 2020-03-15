@@ -1,15 +1,15 @@
 /** @file paqa_devs.c
-	@ingroup qa_src
+    @ingroup qa_src
     @brief Self Testing Quality Assurance app for PortAudio
- 	Try to open each device and run through all the
- 	possible configurations. This test does not verify
+    Try to open each device and run through all the
+    possible configurations. This test does not verify
     that the configuration works well. It just verifies
     that it does not crash. It requires a human to listen to
     the outputs.
 
-	@author Phil Burk  http://www.softsynth.com
-    
-    Pieter adapted to V19 API. Test now relies heavily on 
+    @author Phil Burk  http://www.softsynth.com
+
+    Pieter adapted to V19 API. Test now relies heavily on
     Pa_IsFormatSupported(). Uses same 'standard' sample rates
     as in test pa_devs.c.
 */
@@ -41,13 +41,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -70,7 +70,7 @@ typedef struct PaQaData
     short          sawPhase;
     PaSampleFormat format;
 }
-PaQaData;
+    PaQaData;
 
 /****************************************** Prototypes ***********/
 static void TestDevices( int mode );
@@ -91,21 +91,21 @@ static int gNumFailed = 0;
 /****************************************** Macros ***********/
 /* Print ERROR if it fails. Tally success or failure. */
 /* Odd do-while wrapper seems to be needed for some compilers. */
-#define EXPECT(_exp) \
-    do \
-    { \
-        if ((_exp)) {\
-            /* printf("SUCCESS for %s\n", #_exp ); */ \
-            gNumPassed++; \
-        } \
-        else { \
-            printf("ERROR - 0x%x - %s for %s\n", result, \
-                   ((result == 0) ? "-" : Pa_GetErrorText(result)), \
-                   #_exp ); \
-            gNumFailed++; \
-            goto error; \
-        } \
-    } while(0)
+#define EXPECT(_exp)                                                    \
+    do                                                                  \
+        {                                                               \
+            if ((_exp)) {                                               \
+                /* printf("SUCCESS for %s\n", #_exp ); */               \
+                gNumPassed++;                                           \
+            }                                                           \
+            else {                                                      \
+                printf("ERROR - 0x%x - %s for %s\n", result,            \
+                       ((result == 0) ? "-" : Pa_GetErrorText(result)), \
+                       #_exp );                                         \
+                gNumFailed++;                                           \
+                goto error;                                             \
+            }                                                           \
+        } while(0)
 
 /*******************************************************************/
 /* This routine will be called by the PortAudio engine when audio is needed.
@@ -125,81 +125,81 @@ static int QaCallback( const void *inputBuffer, void *outputBuffer,
 
     /* Play simple sawtooth wave. */
     if( data->mode == MODE_OUTPUT )
-    {
-        phase = data->sawPhase;
-        switch( data->format )
         {
-        case paFloat32:
-            {
-                float *out =  (float *) outputBuffer;
-                for( i=0; i<framesPerBuffer; i++ )
+            phase = data->sawPhase;
+            switch( data->format )
                 {
-                    phase += 0x123;
-                    *out++ = (float) (phase * (1.0 / 32768.0));
-                    if( data->numChannels == 2 )
+                case paFloat32:
                     {
-                        *out++ = (float) (phase * (1.0 / 32768.0));
+                        float *out =  (float *) outputBuffer;
+                        for( i=0; i<framesPerBuffer; i++ )
+                            {
+                                phase += 0x123;
+                                *out++ = (float) (phase * (1.0 / 32768.0));
+                                if( data->numChannels == 2 )
+                                    {
+                                        *out++ = (float) (phase * (1.0 / 32768.0));
+                                    }
+                            }
                     }
-                }
-            }
-            break;
+                    break;
 
-        case paInt32:
-            {
-                int *out =  (int *) outputBuffer;
-                for( i=0; i<framesPerBuffer; i++ )
-                {
-                    phase += 0x123;
-                    *out++ = ((int) phase ) << 16;
-                    if( data->numChannels == 2 )
+                case paInt32:
                     {
-                        *out++ = ((int) phase ) << 16;
+                        int *out =  (int *) outputBuffer;
+                        for( i=0; i<framesPerBuffer; i++ )
+                            {
+                                phase += 0x123;
+                                *out++ = ((int) phase ) << 16;
+                                if( data->numChannels == 2 )
+                                    {
+                                        *out++ = ((int) phase ) << 16;
+                                    }
+                            }
                     }
-                }
-            }
-            break;
-                
-        case paInt16:
-            {
-                short *out =  (short *) outputBuffer;
-                for( i=0; i<framesPerBuffer; i++ )
-                {
-                    phase += 0x123;
-                    *out++ = phase;
-                    if( data->numChannels == 2 )
-                    {
-                        *out++ = phase;
-                    }
-                }
-            }
-            break;
+                    break;
 
-        default:
-            {
-                unsigned char *out =  (unsigned char *) outputBuffer;
-                unsigned long numBytes = framesPerBuffer * data->numChannels * data->bytesPerSample;
-                for( i=0; i<numBytes; i++ )
-                {
-                    *out++ = 0;
+                case paInt16:
+                    {
+                        short *out =  (short *) outputBuffer;
+                        for( i=0; i<framesPerBuffer; i++ )
+                            {
+                                phase += 0x123;
+                                *out++ = phase;
+                                if( data->numChannels == 2 )
+                                    {
+                                        *out++ = phase;
+                                    }
+                            }
+                    }
+                    break;
+
+                default:
+                    {
+                        unsigned char *out =  (unsigned char *) outputBuffer;
+                        unsigned long numBytes = framesPerBuffer * data->numChannels * data->bytesPerSample;
+                        for( i=0; i<numBytes; i++ )
+                            {
+                                *out++ = 0;
+                            }
+                    }
+                    break;
                 }
-            }
-            break;
+            data->sawPhase = phase;
         }
-        data->sawPhase = phase;
-    }
     /* Are we through yet? */
     if( data->framesLeft > framesPerBuffer )
-    {
-        PaUtil_AddTraceMessage("QaCallback: running. framesLeft", data->framesLeft );
-        data->framesLeft -= framesPerBuffer;
-        return 0;
-    }
+        {
+            PaUtil_AddTraceMessage("QaCallback: running. framesLeft", data->framesLeft );
+            data->framesLeft -= framesPerBuffer;
+            return 0;
+        }
     else
-    {
-        PaUtil_AddTraceMessage("QaCallback: DONE! framesLeft", data->framesLeft );
-        data->framesLeft = 0;
-        return 1;
-    }
+        {
+            PaUtil_AddTraceMessage("QaCallback: DONE! framesLeft", data->framesLeft );
+            data->framesLeft = 0;
+            return 1;
+        }
 }
 
 /*******************************************************************/
@@ -212,45 +212,45 @@ int main(void)
     TestDevices( MODE_OUTPUT );
     printf("Test INPUT ---------------\n");
     TestDevices( MODE_INPUT );
-error:
+ error:
     Pa_Terminate();
     printf("QA Report: %d passed, %d failed.\n", gNumPassed, gNumFailed );
     return (gNumFailed > 0) ? 1 : 0;
 }
 
 /*******************************************************************
-* Try each output device, through its full range of capabilities. */
+ * Try each output device, through its full range of capabilities. */
 static void TestDevices( int mode )
 {
     int id, jc, i;
     int maxChannels;
     const PaDeviceInfo *pdi;
     static double standardSampleRates[] = {  8000.0,  9600.0, 11025.0, 12000.0,
-                                            16000.0,          22050.0, 24000.0,
-                                            32000.0,          44100.0, 48000.0,
-                                                              88200.0, 96000.0,
-                                               -1.0 }; /* Negative terminated list. */
+        16000.0,          22050.0, 24000.0,
+        32000.0,          44100.0, 48000.0,
+        88200.0, 96000.0,
+        -1.0 }; /* Negative terminated list. */
     int numDevices = Pa_GetDeviceCount();
     for( id=0; id<numDevices; id++ )            /* Iterate through all devices. */
-    {
-        pdi = Pa_GetDeviceInfo( id );
-        /* Try 1 to maxChannels on each device. */
-        maxChannels = (( mode == MODE_INPUT ) ? pdi->maxInputChannels : pdi->maxOutputChannels);
-        if( maxChannels > MAX_TEST_CHANNELS )
-            maxChannels = MAX_TEST_CHANNELS;
-        
-        for( jc=1; jc<=maxChannels; jc++ )
         {
-            printf("\n========================================================================\n");
-            printf("            Device = %s\n", pdi->name );
-            printf("========================================================================\n");
-            /* Try each standard sample rate. */
-            for( i=0; standardSampleRates[i] > 0; i++ )
-            {
-                TestFormats( mode, (PaDeviceIndex)id, standardSampleRates[i], jc );
-            }
+            pdi = Pa_GetDeviceInfo( id );
+            /* Try 1 to maxChannels on each device. */
+            maxChannels = (( mode == MODE_INPUT ) ? pdi->maxInputChannels : pdi->maxOutputChannels);
+            if( maxChannels > MAX_TEST_CHANNELS )
+                maxChannels = MAX_TEST_CHANNELS;
+
+            for( jc=1; jc<=maxChannels; jc++ )
+                {
+                    printf("\n========================================================================\n");
+                    printf("            Device = %s\n", pdi->name );
+                    printf("========================================================================\n");
+                    /* Try each standard sample rate. */
+                    for( i=0; standardSampleRates[i] > 0; i++ )
+                        {
+                            TestFormats( mode, (PaDeviceIndex)id, standardSampleRates[i], jc );
+                        }
+                }
         }
-    }
 }
 
 /*******************************************************************/
@@ -271,101 +271,101 @@ static int TestAdvance( int mode, PaDeviceIndex deviceID, double sampleRate,
     PaStream *stream = NULL;
     PaError result = paNoError;
     PaQaData myData;
-    #define FRAMES_PER_BUFFER  (64)
+#define FRAMES_PER_BUFFER  (64)
     const int kNumSeconds = 100;
-    
+
     /* Setup data for synthesis thread. */
     myData.framesLeft = (unsigned long) (sampleRate * kNumSeconds);
     myData.numChannels = numChannels;
     myData.mode = mode;
     myData.format = format;
     switch( format )
-    {
-    case paFloat32:
-    case paInt32:
-    case paInt24:
-        myData.bytesPerSample = 4;
-        break;
-/*  case paPackedInt24:
-        myData.bytesPerSample = 3;
-        break; */
-    default:
-        myData.bytesPerSample = 2;
-        break;
-    }
+        {
+        case paFloat32:
+        case paInt32:
+        case paInt24:
+            myData.bytesPerSample = 4;
+            break;
+            /*  case paPackedInt24:
+                myData.bytesPerSample = 3;
+                break; */
+        default:
+            myData.bytesPerSample = 2;
+            break;
+        }
 
     if( mode == MODE_INPUT )
-    {
-        inputParameters.device       = deviceID;
-        inputParameters.channelCount = numChannels;
-        inputParameters.sampleFormat = format;
-        inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
-        inputParameters.hostApiSpecificStreamInfo = NULL;
-        ipp = &inputParameters;
-    }
-    else
-    {
-	   ipp = NULL;
-	}
-	
-    if( mode == MODE_OUTPUT )
-    {
-        outputParameters.device       = deviceID;
-        outputParameters.channelCount = numChannels;
-        outputParameters.sampleFormat = format;
-        outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
-        outputParameters.hostApiSpecificStreamInfo = NULL;
-        opp = &outputParameters;
-    }
-    else
-    {
-		opp = NULL;
-	}
-	
-    if(paFormatIsSupported == Pa_IsFormatSupported( ipp, opp, sampleRate ))
-    {
-        printf("------ TestAdvance: %s, device = %d, rate = %g, numChannels = %d, format = %lu -------\n",
-                ( mode == MODE_INPUT ) ? "INPUT" : "OUTPUT",
-                deviceID, sampleRate, numChannels, (unsigned long)format);
-        EXPECT( ((result = Pa_OpenStream( &stream,
-                                          ipp,
-                                          opp,
-                                          sampleRate,
-                                          FRAMES_PER_BUFFER,
-                                          paClipOff,  /* we won't output out of range samples so don't bother clipping them */
-                                          QaCallback,
-                                          &myData ) ) == 0) );
-        if( stream )
         {
-            PaTime oldStamp, newStamp;
-            unsigned long oldFrames;
-            int minDelay = ( mode == MODE_INPUT ) ? 1000 : 400;
-            /* Was:
-            int minNumBuffers = Pa_GetMinNumBuffers( FRAMES_PER_BUFFER, sampleRate );
-            int msec = (int) ((minNumBuffers * 3 * 1000.0 * FRAMES_PER_BUFFER) / sampleRate);
-            */
-            int msec = (int)( 3.0 *
-                       (( mode == MODE_INPUT ) ? inputParameters.suggestedLatency : outputParameters.suggestedLatency ));
-            if( msec < minDelay ) msec = minDelay;
-            printf("msec = %d\n", msec);  /**/
-            EXPECT( ((result=Pa_StartStream( stream )) == 0) );
-            /* Check to make sure PortAudio is advancing timeStamp. */
-            oldStamp = Pa_GetStreamTime(stream);
-            Pa_Sleep(msec);
-            newStamp = Pa_GetStreamTime(stream);
-            printf("oldStamp = %9.6f, newStamp = %9.6f\n", oldStamp, newStamp ); /**/
-            EXPECT( (oldStamp < newStamp) );
-            /* Check to make sure callback is decrementing framesLeft. */
-            oldFrames = myData.framesLeft;
-            Pa_Sleep(msec);
-            printf("oldFrames = %lu, myData.framesLeft = %lu\n", oldFrames,  myData.framesLeft ); /**/
-            EXPECT( (oldFrames > myData.framesLeft) );
-            EXPECT( ((result=Pa_CloseStream( stream )) == 0) );
-            stream = NULL;
+            inputParameters.device       = deviceID;
+            inputParameters.channelCount = numChannels;
+            inputParameters.sampleFormat = format;
+            inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
+            inputParameters.hostApiSpecificStreamInfo = NULL;
+            ipp = &inputParameters;
         }
-    }
+    else
+        {
+            ipp = NULL;
+        }
+
+    if( mode == MODE_OUTPUT )
+        {
+            outputParameters.device       = deviceID;
+            outputParameters.channelCount = numChannels;
+            outputParameters.sampleFormat = format;
+            outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
+            outputParameters.hostApiSpecificStreamInfo = NULL;
+            opp = &outputParameters;
+        }
+    else
+        {
+            opp = NULL;
+        }
+
+    if(paFormatIsSupported == Pa_IsFormatSupported( ipp, opp, sampleRate ))
+        {
+            printf("------ TestAdvance: %s, device = %d, rate = %g, numChannels = %d, format = %lu -------\n",
+                   ( mode == MODE_INPUT ) ? "INPUT" : "OUTPUT",
+                   deviceID, sampleRate, numChannels, (unsigned long)format);
+            EXPECT( ((result = Pa_OpenStream( &stream,
+                                              ipp,
+                                              opp,
+                                              sampleRate,
+                                              FRAMES_PER_BUFFER,
+                                              paClipOff,  /* we won't output out of range samples so don't bother clipping them */
+                                              QaCallback,
+                                              &myData ) ) == 0) );
+            if( stream )
+                {
+                    PaTime oldStamp, newStamp;
+                    unsigned long oldFrames;
+                    int minDelay = ( mode == MODE_INPUT ) ? 1000 : 400;
+                    /* Was:
+                       int minNumBuffers = Pa_GetMinNumBuffers( FRAMES_PER_BUFFER, sampleRate );
+                       int msec = (int) ((minNumBuffers * 3 * 1000.0 * FRAMES_PER_BUFFER) / sampleRate);
+                    */
+                    int msec = (int)( 3.0 *
+                                      (( mode == MODE_INPUT ) ? inputParameters.suggestedLatency : outputParameters.suggestedLatency ));
+                    if( msec < minDelay ) msec = minDelay;
+                    printf("msec = %d\n", msec);  /**/
+                    EXPECT( ((result=Pa_StartStream( stream )) == 0) );
+                    /* Check to make sure PortAudio is advancing timeStamp. */
+                    oldStamp = Pa_GetStreamTime(stream);
+                    Pa_Sleep(msec);
+                    newStamp = Pa_GetStreamTime(stream);
+                    printf("oldStamp = %9.6f, newStamp = %9.6f\n", oldStamp, newStamp ); /**/
+                    EXPECT( (oldStamp < newStamp) );
+                    /* Check to make sure callback is decrementing framesLeft. */
+                    oldFrames = myData.framesLeft;
+                    Pa_Sleep(msec);
+                    printf("oldFrames = %lu, myData.framesLeft = %lu\n", oldFrames,  myData.framesLeft ); /**/
+                    EXPECT( (oldFrames > myData.framesLeft) );
+                    EXPECT( ((result=Pa_CloseStream( stream )) == 0) );
+                    stream = NULL;
+                }
+        }
     return 0;
-error:
+ error:
     if( stream != NULL ) Pa_CloseStream( stream );
     return -1;
 }

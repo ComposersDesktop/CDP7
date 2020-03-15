@@ -56,7 +56,7 @@ int main(int argc,char *argv[])
 {
     int exit_status;
     dataptr dz = NULL;
-    //	char *special_data_string = NULL;
+    //  char *special_data_string = NULL;
     char **cmdline;
     int  cmdlinecnt;
     //aplptr ap;
@@ -116,7 +116,7 @@ int main(int argc,char *argv[])
             return(FAILED);
         }
     } else {
-        if((exit_status = parse_tk_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {  	/* includes setup_particular_application()      */
+        if((exit_status = parse_tk_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {        /* includes setup_particular_application()      */
             exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);/* and cmdlinelength check = sees extra-infiles */
             return(exit_status);
         }
@@ -124,10 +124,10 @@ int main(int argc,char *argv[])
     //ap = dz->application;
 
     /*********************************************************************************************************************
-	   cmdline[0]				 		  2 vals					   		  ACTIVE
-TK 		(infile) (more-infiles) (outfile) (flag val) (formantsqksrch) (special) params  options   variant-params  flags
-CMDLINE	(infile) (more-infiles) (outfile) (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY	  	POSSIBLY
-								 		  1 val
+           cmdline[0]                                             2 vals                                                          ACTIVE
+TK              (infile) (more-infiles) (outfile) (flag val) (formantsqksrch) (special) params  options   variant-params  flags
+CMDLINE (infile) (more-infiles) (outfile) (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY              POSSIBLY
+                                                                                  1 val
     *********************************************************************************************************************/
 
     if(dz->process!=HOUSE_DEL) {
@@ -159,7 +159,7 @@ CMDLINE	(infile) (more-infiles) (outfile) (formants) (formantsqksrch) (special) 
                     dz->all_words--;
                 if (setup_file_outname_where_ness(cmdline[0],dz)<0) {
                     print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-                    return(FAILED);		 /* stores name of inlistfile at END of list of names of sndfiles */
+                    return(FAILED);              /* stores name of inlistfile at END of list of names of sndfiles */
                 }
             }
         }
@@ -170,10 +170,10 @@ CMDLINE	(infile) (more-infiles) (outfile) (formants) (formantsqksrch) (special) 
     }
 
     /*********************************************************************************************************************
-		cmdline[0]				   2 vals				   			   ACTIVE
-TK 		(more-infiles) (outfile) (flag val) (formantsqksrch) (special) params  options   variant-params  flags
-CMDLINE	(more-infiles) (outfile) (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY		  POSSIBLY
-								   1 val
+                cmdline[0]                                 2 vals                                                          ACTIVE
+TK              (more-infiles) (outfile) (flag val) (formantsqksrch) (special) params  options   variant-params  flags
+CMDLINE (more-infiles) (outfile) (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY                 POSSIBLY
+                                                                   1 val
     *********************************************************************************************************************/
 
     if((exit_status = handle_extra_infiles(&cmdline,&cmdlinecnt,dz))<0) {
@@ -182,10 +182,10 @@ CMDLINE	(more-infiles) (outfile) (formants) (formantsqksrch) (special) params  P
     }
 
     /*********************************************************************************************************************
-		cmdline[0]	  2					   			    ACTIVE
-TK 		(outfile) (flag val) (formantsqksrch) (special) params  options   variant-params  flags
-CMDLINE	(outfile) (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY		   POSSIBLY
-					  1
+                cmdline[0]        2                                                                 ACTIVE
+TK              (outfile) (flag val) (formantsqksrch) (special) params  options   variant-params  flags
+CMDLINE (outfile) (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY                 POSSIBLY
+                                          1
     *********************************************************************************************************************/
 
     if((exit_status = handle_outfile(&cmdlinecnt,&cmdline,is_launched,dz))<0) {
@@ -194,9 +194,9 @@ CMDLINE	(outfile) (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIB
     }
 
     /****************************************************************************************
-		cmdline[0]	  		   			       ACTIVE
-TK 		(flag val) (formantsqksrch) (special) params  options   variant-params  flags
-CMDLINE	(formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY		POSSIBLY
+                cmdline[0]                                                     ACTIVE
+TK              (flag val) (formantsqksrch) (special) params  options   variant-params  flags
+CMDLINE (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY                POSSIBLY
     *****************************************************************************************/
 
     if((exit_status = handle_formants(&cmdlinecnt,&cmdline,dz))<0) {
@@ -213,9 +213,9 @@ CMDLINE	(formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY		POSSIB
     }
 
     /****************************************************************************************
-		cmdline[0]
-TK 		active_params  	options   		variant-params  flags
-CMDLINE	active_params  	POSSIBLY  		POSSIBLY		POSSIBLY
+                cmdline[0]
+TK              active_params   options                 variant-params  flags
+CMDLINE active_params   POSSIBLY                POSSIBLY                POSSIBLY
     *****************************************************************************************/
 
     if((exit_status = read_parameters_and_flags(&cmdline,&cmdlinecnt,dz))<0) {

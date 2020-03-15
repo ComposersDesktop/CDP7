@@ -39,13 +39,13 @@
 #include <limits.h>
 
 #include <sfsys.h>
-#include <osbind.h>		/*RWD*/
+#include <osbind.h>             /*RWD*/
 
 #include <string.h>
 #include <math.h>
 
 static int  check_available_space(dataptr dz);
-static int	copy_textfile(dataptr dz);
+static int      copy_textfile(dataptr dz);
 
 extern unsigned int superzargo;
 
@@ -103,7 +103,7 @@ int do_duplicates(dataptr dz)
             r = dz->wordstor[0] + namelen;
             p = r - 1;
             while((*p != '\\') && (*p != '/') && (*p != ':')) {
-                p--	;
+                p--     ;
                 if(p < dz->wordstor[0])
                     break;
             }
@@ -114,7 +114,7 @@ int do_duplicates(dataptr dz)
             }
         }
         namelen = strlen(dz->wordstor[0]);
-        superzargo = 0;	/* timer-base */
+        superzargo = 0; /* timer-base */
         old_ofd = dz->ofd;
         if((exit_status = check_available_space(dz))<0)
             return(exit_status);
@@ -127,7 +127,7 @@ int do_duplicates(dataptr dz)
             dz->tempsize = INT_MAX; /* ERROR was LONG_MAX **** Overflows **** */
 
         if(sloom) {
-            namelen--;									/* Drop the 0 at end of name */
+            namelen--;                                                                  /* Drop the 0 at end of name */
             start = 0;
             end = dz->iparam[COPY_CNT];
         } else {
@@ -162,7 +162,7 @@ int do_duplicates(dataptr dz)
             } else {
                 insert_new_number_at_filename_end(outfilename,n,1);
             }
-            dz->process_type = EQUAL_SNDFILE;	/* allow sndfile to be created */
+            dz->process_type = EQUAL_SNDFILE;   /* allow sndfile to be created */
             if(!sloom || n>0) {
                 if((exit_status = create_sized_outfile(outfilename,dz))<0) {
                     if(!sloom) {
@@ -197,14 +197,14 @@ int do_duplicates(dataptr dz)
                         return(exit_status);
                 }
             }
-            dz->process_type = EQUAL_SNDFILE;		/* allows header to be written  */
-            dz->outfiletype  = SNDFILE_OUT;			/* allows header to be written  */
+            dz->process_type = EQUAL_SNDFILE;           /* allows header to be written  */
+            dz->outfiletype  = SNDFILE_OUT;                     /* allows header to be written  */
             if((exit_status = headwrite(dz->ofd,dz))<0) {
                 free(outfilename);
                 return(exit_status);
             }
-            dz->process_type = OTHER_PROCESS;		/* restore true status */
-            dz->outfiletype  = NO_OUTPUTFILE;		/* restore true status */
+            dz->process_type = OTHER_PROCESS;           /* restore true status */
+            dz->outfiletype  = NO_OUTPUTFILE;           /* restore true status */
             if((exit_status = reset_peak_finder(dz))<0)
                 return(exit_status);
             if(sndcloseEx(dz->ofd) < 0) {
@@ -258,7 +258,7 @@ int do_deletes(dataptr dz)
             }
         }
         insert_new_number_at_filename_end(outfilename,n,0);
-        if((dz->ofd = sndopenEx(outfilename,0,CDP_OPEN_RDONLY)) < 0) {	 /*RWD don't need sndopenex... */
+        if((dz->ofd = sndopenEx(outfilename,0,CDP_OPEN_RDONLY)) < 0) {   /*RWD don't need sndopenex... */
             unopen++;
             dz->ofd = -1;
             continue;
@@ -304,7 +304,7 @@ int check_available_space(dataptr dz)
 /************************************ CHECK_AVAILABLE_DISKSPACE ********************************/
 /* used for HOUSE DISK only */
 
-#define LEAVESPACE	(10*1024)		/* file space that must be left */
+#define LEAVESPACE      (10*1024)               /* file space that must be left */
 #define DEFAULT_SRATE (44100)
 
 int check_available_diskspace(dataptr dz)
@@ -317,8 +317,8 @@ int check_available_diskspace(dataptr dz)
     unsigned int freespace = getdrivefreespace("temp") - LEAVESPACE;
 
     switch(dz->infile->filetype) {
-    case(SNDFILE):	srate = dz->infile->srate;	break;
-    default:		srate = DEFAULT_SRATE;		break;
+    case(SNDFILE):      srate = dz->infile->srate;      break;
+    default:            srate = DEFAULT_SRATE;          break;
     }
     sprintf(errstr,"AVAILABLE DISK SPACE (at sample rate %d)\n",srate);
     sprintf(temp,"%d",freespace);
@@ -333,10 +333,10 @@ int check_available_diskspace(dataptr dz)
     while (kk < 4) {
         errstr[0] = ENDOFSTR;
         switch(kk) {
-        case(0): outsamps = freespace/2;	break;
-        case(1): outsamps = freespace/3;	break;
-        case(2): outsamps = freespace/4;	break;
-        case(3): outsamps = freespace/sizeof(float);	break;
+        case(0): outsamps = freespace/2;        break;
+        case(1): outsamps = freespace/3;        break;
+        case(2): outsamps = freespace/4;        break;
+        case(3): outsamps = freespace/sizeof(float);    break;
         }
         sprintf(temp,"%d",outsamps);
         strcat(errstr,temp);
@@ -344,10 +344,10 @@ int check_available_diskspace(dataptr dz)
         for(k=0;k<spacecnt;k++)
             strcat(errstr," ");
         switch(kk) {
-        case(0): strcat(errstr,"16-bit samples\n");	break;
-        case(1): strcat(errstr,"24-bit samples\n");	break;
-        case(2): strcat(errstr,"32-bit samples\n");	break;
-        case(3): strcat(errstr,"float  samples\n");	break;
+        case(0): strcat(errstr,"16-bit samples\n");     break;
+        case(1): strcat(errstr,"24-bit samples\n");     break;
+        case(2): strcat(errstr,"32-bit samples\n");     break;
+        case(3): strcat(errstr,"float  samples\n");     break;
         }
         orig_outsamps = outsamps;
         for(m=MONO;m<=STEREO;m++) {
