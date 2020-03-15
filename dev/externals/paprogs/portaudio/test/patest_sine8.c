@@ -1,7 +1,7 @@
 /** @file patest_sine8.c
-	@ingroup test_src
-	@brief Test 8 bit data: play a sine wave for several seconds.
-	@author Ross Bencina <rossb@audiomulch.com>
+    @ingroup test_src
+    @brief Test 8 bit data: play a sine wave for several seconds.
+    @author Ross Bencina <rossb@audiomulch.com>
 */
 /*
  * $Id: patest_sine8.c 1748 2011-09-01 22:08:32Z philburk $
@@ -31,13 +31,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -71,7 +71,7 @@ typedef struct
     int right_phase;
     unsigned int framesToGo;
 }
-paTestData;
+    paTestData;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
@@ -91,32 +91,32 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
     (void) inputBuffer; /* Prevent unused variable warnings. */
 
     if( data->framesToGo < framesPerBuffer )
-    {
-        framesToCalc = data->framesToGo;
-        data->framesToGo = 0;
-        finished = 1;
-    }
+        {
+            framesToCalc = data->framesToGo;
+            data->framesToGo = 0;
+            finished = 1;
+        }
     else
-    {
-        framesToCalc = framesPerBuffer;
-        data->framesToGo -= framesPerBuffer;
-    }
+        {
+            framesToCalc = framesPerBuffer;
+            data->framesToGo -= framesPerBuffer;
+        }
 
     for( i=0; i<framesToCalc; i++ )
-    {
-        *out++ = data->sine[data->left_phase];  /* left */
-        *out++ = data->sine[data->right_phase];  /* right */
-        data->left_phase += 1;
-        if( data->left_phase >= TABLE_SIZE ) data->left_phase -= TABLE_SIZE;
-        data->right_phase += 3; /* higher pitch so we can distinguish left and right. */
-        if( data->right_phase >= TABLE_SIZE ) data->right_phase -= TABLE_SIZE;
-    }
+        {
+            *out++ = data->sine[data->left_phase];  /* left */
+            *out++ = data->sine[data->right_phase];  /* right */
+            data->left_phase += 1;
+            if( data->left_phase >= TABLE_SIZE ) data->left_phase -= TABLE_SIZE;
+            data->right_phase += 3; /* higher pitch so we can distinguish left and right. */
+            if( data->right_phase >= TABLE_SIZE ) data->right_phase -= TABLE_SIZE;
+        }
     /* zero remainder of final buffer */
     for( ; i<(int)framesPerBuffer; i++ )
-    {
-        *out++ = SILENCE; /* left */
-        *out++ = SILENCE; /* right */
-    }
+        {
+            *out++ = SILENCE; /* left */
+            *out++ = SILENCE; /* right */
+        }
     return finished;
 }
 
@@ -138,9 +138,9 @@ int main(void)
 #endif
     /* initialise sinusoidal wavetable */
     for( i=0; i<TABLE_SIZE; i++ )
-    {
-        data.sine[i] = SILENCE + (char) (127.0 * sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. ));
-    }
+        {
+            data.sine[i] = SILENCE + (char) (127.0 * sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. ));
+        }
     data.left_phase = data.right_phase = 0;
     data.framesToGo = totalSamps =  NUM_SECONDS * SAMPLE_RATE; /* Play for a few seconds. */
 
@@ -150,8 +150,8 @@ int main(void)
 
     outputParameters.device = Pa_GetDefaultOutputDevice(); /* Default output device. */
     if (outputParameters.device == paNoDevice) {
-      fprintf(stderr,"Error: No default output device.\n");
-      goto error;
+        fprintf(stderr,"Error: No default output device.\n");
+        goto error;
     }
     outputParameters.channelCount = 2;                     /* Stereo output. */
     outputParameters.sampleFormat = TEST_FORMAT;
@@ -207,7 +207,7 @@ int main(void)
     Pa_Terminate();
     printf("Test finished.\n");
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

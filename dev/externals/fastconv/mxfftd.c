@@ -1,22 +1,22 @@
-/*  
-    mxfftd.c: double precision version of mxfft.c
-	 
-	This file is part of the CDP System.
+/*
+  mxfftd.c: double precision version of mxfft.c
 
-    The CDP System is free software; you can redistribute it
-    and/or modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This file is part of the CDP System.
 
-    The CDP System is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
+  The CDP System is free software; you can redistribute it
+  and/or modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with the CDP System; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-    02111-1307 USA
+  The CDP System is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with the CDP System; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+  02111-1307 USA
 
 */
 
@@ -35,7 +35,7 @@
 
 void fft_(double *, double *, int, int, int, int);
 void fftmx(double *, double *, int, int, int, int, int,
-      int*, double *, double *, double *, double *, int *, int[]);
+           int*, double *, double *, double *, double *, int *, int[]);
 void reals_(double *, double *, int, int);
 
 /*
@@ -53,103 +53,103 @@ void reals_(double *, double *, int, int);
 
 void
 fft_(double *a, double *b, int nseg, int n, int nspn, int isn)
-  /*    *a,       pointer to array 'anal'  */
-  /*    *b;       pointer to array 'banal' */
+/*    *a,       pointer to array 'anal'  */
+/*    *b;       pointer to array 'banal' */
 {
     int nfac[32];               /*  These are one bigger than needed   */
                                 /*  because wish to use Fortran array  */
                                 /* index which runs 1 to n, not 0 to n */
 
     int         m = 0,
-                nf,
-                k,
-                kt,
-                ntot,
-                j,
-                jj,
-                maxf, maxp=-1;
+        nf,
+        k,
+        kt,
+        ntot,
+        j,
+        jj,
+        maxf, maxp=-1;
 
-/* work space pointers */
+    /* work space pointers */
     double       *at, *ck, *bt, *sk;
     int *np;
 
 
-/* reduce the pointers to input arrays - by doing this, FFT uses FORTRAN
-   indexing but retains compatibility with C arrays */
+    /* reduce the pointers to input arrays - by doing this, FFT uses FORTRAN
+       indexing but retains compatibility with C arrays */
     a--;        b--;
 
-/*
- * determine the factors of n
- */
+    /*
+     * determine the factors of n
+     */
     k=nf=abs(n);
     if (nf==1)
-      return;
+        return;
 
     nspn=abs(nf*nspn);
     ntot=abs(nspn*nseg);
 
     if (isn*ntot == 0) {
-      printf("\nerror - zero in fft parameters %d %d %d %d",
-              nseg, n, nspn, isn);
-      return;
+        printf("\nerror - zero in fft parameters %d %d %d %d",
+               nseg, n, nspn, isn);
+        return;
     }
     for (m=0; !(k%16); nfac[++m]=4,k/=16);
     for (j=3,jj=9; jj<=k; j+=2,jj=j*j)
-      for (; !(k%jj); nfac[++m]=j,k/=jj);
+        for (; !(k%jj); nfac[++m]=j,k/=jj);
 
     if (k<=4) {
-      kt = m;
-      nfac[m+1] = k;
-      if (k != 1)
-        m++;
+        kt = m;
+        nfac[m+1] = k;
+        if (k != 1)
+            m++;
     }
     else {
-      if (k%4==0) {
-        nfac[++m]=2;
-        k/=4;
-      }
-
-      kt = m;
-      maxp = (kt+kt+2 > k-1 ? kt+kt+2 : k-1);
-      for (j=2; j<=k; j=1+((j+1)/2)*2)
-        if (k%j==0) {
-          nfac[++m]=j;
-          k/=j;
+        if (k%4==0) {
+            nfac[++m]=2;
+            k/=4;
         }
+
+        kt = m;
+        maxp = (kt+kt+2 > k-1 ? kt+kt+2 : k-1);
+        for (j=2; j<=k; j=1+((j+1)/2)*2)
+            if (k%j==0) {
+                nfac[++m]=j;
+                k/=j;
+            }
     }
     if (m <= kt+1)
-      maxp = m + kt + 1;
+        maxp = m + kt + 1;
     if (m+kt > 15) {
-      printf("\nerror - fft parameter n has more than 15 factors : %d", n);
-      return;
+        printf("\nerror - fft parameter n has more than 15 factors : %d", n);
+        return;
     }
     if (kt!=0) {
-      j = kt;
-      while (j)
-        nfac[++m]=nfac[j--];
+        j = kt;
+        while (j)
+            nfac[++m]=nfac[j--];
     }
     maxf = nfac[m-kt];
     if (kt > 0 && maxf <nfac[kt])
-      maxf = nfac[kt];
+        maxf = nfac[kt];
 
-/*  allocate workspace - assume no errors! */
+    /*  allocate workspace - assume no errors! */
     at = (double *) calloc(maxf,sizeof(double));
     ck = (double *) calloc(maxf,sizeof(double));
     bt = (double *) calloc(maxf,sizeof(double));
     sk = (double *) calloc(maxf,sizeof(double));
     np = (int *) calloc(maxp,sizeof(int));
 
-/* decrement pointers to allow FORTRAN type usage in fftmx */
+    /* decrement pointers to allow FORTRAN type usage in fftmx */
     at--;       bt--;   ck--;   sk--;   np--;
 
-/* call fft driver */
+    /* call fft driver */
 
     fftmx(a,b,ntot,nf,nspn,isn,m,&kt,at,ck,bt,sk,np,nfac);
 
-/* restore pointers before releasing */
+    /* restore pointers before releasing */
     at++;       bt++;   ck++;   sk++;   np++;
 
-/* release working storage before returning - assume no problems */
+    /* release working storage before returning - assume no problems */
     free(at);
     free(sk);
     free(bt);
@@ -169,58 +169,58 @@ fftmx(double *a, double *b, int ntot, int n, int nspan, int isn, int m,
       int *kt, double *at, double *ck, double *bt, double *sk, int *np, int nfac[])
 {
     int i,inc,
-      j,jc,jf, jj,
-      k, k1, k2, k3, k4,
-      kk,klim,ks,kspan, kspnn,
-      lim,
-      maxf,mm,
-      nn,nt;
+        j,jc,jf, jj,
+        k, k1, k2, k3, k4,
+        kk,klim,ks,kspan, kspnn,
+        lim,
+        maxf,mm,
+        nn,nt;
     double  aa, aj, ajm, ajp, ak, akm, akp,
-      bb, bj, bjm, bjp, bk, bkm, bkp,
-      c1, c2, c3, c72, cd,
-      dr,
-      rad,
-      sd, s1, s2, s3, s72, s120;
+        bb, bj, bjm, bjp, bk, bkm, bkp,
+        c1, c2, c3, c72, cd,
+        dr,
+        rad,
+        sd, s1, s2, s3, s72, s120;
 
     double      xx;     /****** ADDED APRIL 1991 *********/
     c2 = c3 = s2 = s3 = k3 = 0;
     inc=abs(isn);
     nt = inc*ntot;
     ks = inc*nspan;
-/******************* REPLACED MARCH 29: ***********************
+    /******************* REPLACED MARCH 29: ***********************
                                         rad = atan((double)1.0);
-**************************************************************/
+    **************************************************************/
     rad = 0.785398163397448278900;
-/******************* REPLACED MARCH 29: ***********************
+    /******************* REPLACED MARCH 29: ***********************
                                         s72 = rad/0.625;
                                         c72 = cos(s72);
                                         s72 = sin(s72);
-**************************************************************/
+    **************************************************************/
     c72 = 0.309016994374947451270;
     s72 = 0.951056516295153531190;
-/******************* REPLACED MARCH 29: ***********************
+    /******************* REPLACED MARCH 29: ***********************
                                         s120 = sqrt((double)0.75);
-**************************************************************/
+    **************************************************************/
     s120 = 0.866025403784438707600;
 
-/* scale by 1/n for isn > 0 ( reverse transform ) */
+    /* scale by 1/n for isn > 0 ( reverse transform ) */
 
     if (isn < 0) {
-      s72 = -s72;
-      s120 = -s120;
-      rad = -rad;}
+        s72 = -s72;
+        s120 = -s120;
+        rad = -rad;}
     else {
-      ak = 1.0/(double)n;
-      for (j=1; j<=nt;j += inc) {
-        a[j] *= (double)ak;
-        b[j] *= (double)ak;
-      }
+        ak = 1.0/(double)n;
+        for (j=1; j<=nt;j += inc) {
+            a[j] *= (double)ak;
+            b[j] *= (double)ak;
+        }
     }
     kspan = ks;
     nn = nt - inc;
     jc = ks/n;
 
-/* sin, cos values are re-initialised each lim steps  */
+    /* sin, cos values are re-initialised each lim steps  */
 
     lim = 32;
     klim = lim * jc;
@@ -229,39 +229,39 @@ fftmx(double *a, double *b, int ntot, int n, int nspan, int isn, int m,
     maxf = m - (*kt);
     maxf = nfac[maxf];
     if ((*kt) > 0 && maxf < nfac[*kt])
-      maxf = nfac[*kt];
+        maxf = nfac[*kt];
 
-/*
- * compute fourier transform
- */
+    /*
+     * compute fourier transform
+     */
 
  lbl40:
     dr = (8.0 * (double)jc)/((double)kspan);
-/*************************** APRIL 1991 POW & POW2 not WORKING.. REPLACE *******
+    /*************************** APRIL 1991 POW & POW2 not WORKING.. REPLACE *******
                     cd = 2.0 * (pow2 ( sin((double)0.5 * dr * rad)) );
-*******************************************************************************/
+    *******************************************************************************/
     xx =  sin((double)0.5 * dr * rad);
     cd = 2.0 * xx * xx;
     sd = sin(dr * rad);
     kk = 1;
     if (nfac[++i]!=2) goto lbl110;
-/*
- * transform for factor of 2 (including rotation factor)
- */
+    /*
+     * transform for factor of 2 (including rotation factor)
+     */
     kspan /= 2;
     k1 = kspan + 2;
     do {
-      do {
-        k2 = kk + kspan;
-        ak = a[k2];
-        bk = b[k2];
-        a[k2] = (a[kk]) - (double)ak;
-        b[k2] = (b[kk]) - (double)bk;
-        a[kk] = (a[kk]) + (double)ak;
-        b[kk] = (b[kk]) + (double)bk;
-        kk = k2 + kspan;
-      } while (kk <= nn);
-      kk -= nn;
+        do {
+            k2 = kk + kspan;
+            ak = a[k2];
+            bk = b[k2];
+            a[k2] = (a[kk]) - (double)ak;
+            b[k2] = (b[kk]) - (double)bk;
+            a[kk] = (a[kk]) + (double)ak;
+            b[kk] = (b[kk]) + (double)bk;
+            kk = k2 + kspan;
+        } while (kk <= nn);
+        kk -= nn;
     } while (kk <= jc);
     if (kk > kspan) goto lbl350;
  lbl60:
@@ -273,21 +273,21 @@ fftmx(double *a, double *b, int ntot, int n, int nspan, int isn, int m,
     ak = c1 - ((cd*c1)+(sd*s1));
     s1 = ((sd*c1)-(cd*s1)) + s1;
     c1 = ak;
-lbl80:
+ lbl80:
     do {
-      do {
-        k2 = kk + kspan;
-        ak = a[kk] - a[k2];
-        bk = b[kk] - b[k2];
-        a[kk] = a[kk] + a[k2];
-        b[kk] = b[kk] + b[k2];
-        a[k2] = (double)((c1 * ak) - (s1 * bk));
-        b[k2] = (double)((s1 * ak) + (c1 * bk));
-        kk = k2 + kspan;
-      } while (kk < nt);
-      k2 = kk - nt;
-      c1 = -c1;
-      kk = k1 - k2;
+        do {
+            k2 = kk + kspan;
+            ak = a[kk] - a[k2];
+            bk = b[kk] - b[k2];
+            a[kk] = a[kk] + a[k2];
+            b[kk] = b[kk] + b[k2];
+            a[k2] = (double)((c1 * ak) - (s1 * bk));
+            b[k2] = (double)((s1 * ak) + (c1 * bk));
+            kk = k2 + kspan;
+        } while (kk < nt);
+        k2 = kk - nt;
+        c1 = -c1;
+        kk = k1 - k2;
     } while (kk > k2);
     kk += jc;
     if (kk <= mm) goto lbl70;
@@ -302,9 +302,9 @@ lbl80:
     s1 = sin(s1);
     mm = (k1/2 < mm+klim ? k1/2 : mm+klim);
     goto lbl80;
-/*
- * transform for factor of 3 (optional code)
- */
+    /*
+     * transform for factor of 3 (optional code)
+     */
 
 
  lbl100:
@@ -330,9 +330,9 @@ lbl80:
     if (kk <= kspan) goto lbl100;
     goto lbl290;
 
-/*
- * transform for factor of 4
- */
+    /*
+     * transform for factor of 4
+     */
 
  lbl110:
     if (nfac[i] != 4) goto lbl230;
@@ -346,15 +346,15 @@ lbl80:
  lbl130:
     c2 = c1 - ((cd*c1)+(sd*s1));
     s1 = ((sd*c1)-(cd*s1)) + s1;
-/*
- * the following three statements compensate for truncation
- * error.  if rounded arithmetic is used, substitute
- * c1=c2
- *
- * c1 = (0.5/(pow2(c2)+pow2(s1))) + 0.5;
- * s1 = c1*s1;
- * c1 = c1*c2;
- */
+    /*
+     * the following three statements compensate for truncation
+     * error.  if rounded arithmetic is used, substitute
+     * c1=c2
+     *
+     * c1 = (0.5/(pow2(c2)+pow2(s1))) + 0.5;
+     * s1 = c1*s1;
+     * c1 = c1*c2;
+     */
     c1 = c2;
  lbl140:
     c2 = (c1 * c1) - (s1 * s1);
@@ -400,7 +400,7 @@ lbl80:
     if (kk <= jc)   goto lbl120;
     if (kspan==jc)  goto lbl350;
     goto lbl40;
-lbl180:
+ lbl180:
     akp = akm + bjm;
     akm = akm - bjm;
     bkp = bkm - ajm;
@@ -423,9 +423,9 @@ lbl180:
     mm = (kspan < mm+klim ? kspan : mm+klim);
     goto lbl140;
 
-/*
- * transform for factor of 5 (optional code)
- */
+    /*
+     * transform for factor of 5 (optional code)
+     */
 
  lbl210:
     c2 = (c72*c72) - (s72*s72);
@@ -469,9 +469,9 @@ lbl180:
     if (kk <= kspan) goto lbl220;
     goto lbl290;
 
-/*
- * transform for odd factors
- */
+    /*
+     * transform for odd factors
+     */
 
  lbl230:
     k = nfac[i];
@@ -487,11 +487,11 @@ lbl180:
     ck[jf] = 1.0;
     sk[jf] = 0.0;
     for (j=1; j<k ; j++) {
-      ck[j] = (double)((ck[k])*c1 + (sk[k])*s1);
-      sk[j] = (double)((ck[k])*s1 - (sk[k])*c1);
-      k--;
-      ck[k] = ck[j];
-      sk[k] = -(sk[j]);
+        ck[j] = (double)((ck[k])*c1 + (sk[k])*s1);
+        sk[j] = (double)((ck[k])*s1 - (sk[k])*c1);
+        k--;
+        ck[k] = ck[j];
+        sk[k] = -(sk[j]);
     }
  lbl250:
     k1 = kk;
@@ -503,16 +503,16 @@ lbl180:
     j = 1;
     k1 += kspan;
     do {
-      k2 -= kspan;
-      j++;
-      at[j] = a[k1] + a[k2];
-      ak = at[j] + ak;
-      bt[j] = b[k1] + b[k2];
-      bk = bt[j] + bk;
-      j++;
-      at[j] = a[k1] - a[k2];
-      bt[j] = b[k1] - b[k2];
-      k1 += kspan;
+        k2 -= kspan;
+        j++;
+        at[j] = a[k1] + a[k2];
+        ak = at[j] + ak;
+        bt[j] = b[k1] + b[k2];
+        bk = bt[j] + bk;
+        j++;
+        at[j] = a[k1] - a[k2];
+        bt[j] = b[k1] - b[k2];
+        k1 += kspan;
     } while (k1 < k2);
     a[kk] = (double)ak;
     b[kk] = (double)bk;
@@ -529,15 +529,15 @@ lbl180:
     bj = 0.0;
     k = 1;
     do {
-      k++;
-      ak = (at[k] * ck[jj]) + ak;
-      bk = (bt[k] * ck[jj]) + bk;
-      k++;
-      aj = (at[k] * sk[jj]) + aj;
-      bj = (bt[k] * sk[jj]) + bj;
-      jj += j;
-      if (jj > jf)
-        jj -= jf;
+        k++;
+        ak = (at[k] * ck[jj]) + ak;
+        bk = (bt[k] * ck[jj]) + bk;
+        k++;
+        aj = (at[k] * sk[jj]) + aj;
+        bj = (bt[k] * sk[jj]) + bj;
+        jj += j;
+        if (jj > jf)
+            jj -= jf;
     } while (k < jf);
     k = jf - j;
     a[k1] = (double)(ak - bj);
@@ -551,9 +551,9 @@ lbl180:
     kk -= nn;
     if (kk<=kspan) goto lbl250;
 
-/*
- * multiply by rotation factor (except for factors of 2 and 4)
- */
+    /*
+     * multiply by rotation factor (except for factors of 2 and 4)
+     */
 
  lbl290:
     if (i==m) goto lbl350;
@@ -594,21 +594,21 @@ lbl180:
     mm = (kspan < mm+klim ?  kspan :mm+klim);
     goto lbl320;
 
-/*
- * permute the results to normal order---done in two stages
- * permutation for square factors of n
- */
+    /*
+     * permute the results to normal order---done in two stages
+     * permutation for square factors of n
+     */
 
  lbl350:
     np[1] = ks;
     if (!(*kt)) goto lbl440;
     k = *kt + *kt + 1;
     if (m < k)
-      k--;
+        k--;
     np[k+1] = jc;
     for (j=1; j < k; j++,k--) {
-      np[j+1] = np[j] / nfac[j];
-      np[k] = np[k+1] * nfac[j];
+        np[j+1] = np[j] / nfac[j];
+        np[k] = np[k+1] * nfac[j];
     }
     k3 = np[k+1];
     kspan = np[2];
@@ -616,29 +616,29 @@ lbl180:
     k2 = kspan + 1;
     j = 1;
     if (n != ntot) goto lbl400;
-/*
- * permutation for single-variate transform (optional code)
- */
+    /*
+     * permutation for single-variate transform (optional code)
+     */
  lbl370:
     do {
-      ak = a[kk];
-      a[kk] = a[k2];
-      a[k2] = (double)ak;
-      bk = b[kk];
-      b[kk] = b[k2];
-      b[k2] = (double)bk;
-      kk += inc;
-      k2 += kspan;
+        ak = a[kk];
+        a[kk] = a[k2];
+        a[k2] = (double)ak;
+        bk = b[kk];
+        b[kk] = b[k2];
+        b[k2] = (double)bk;
+        kk += inc;
+        k2 += kspan;
     } while (k2 < ks);
-lbl380:
+ lbl380:
     do {
-      k2 -= np[j++];
-      k2 += np[j+1];
+        k2 -= np[j++];
+        k2 += np[j+1];
     } while (k2 > np[j]);
     j = 1;
  lbl390:
     if (kk < k2) {
-      goto lbl370;
+        goto lbl370;
     }
     kk += inc;
     k2 += kspan;
@@ -646,33 +646,33 @@ lbl380:
     if (kk < ks) goto lbl380;
     jc = k3;
     goto lbl440;
-/*
- * permutation for multivariate transform
- */
+    /*
+     * permutation for multivariate transform
+     */
  lbl400:
     do {
-      do {
-        k = kk + jc;
         do {
-          ak = a[kk];
-          a[kk] = a[k2];
-          a[k2] = (double)ak;
-          bk = b[kk];
-          b[kk] = b[k2];
-          b[k2] = (double)bk;
-          kk += inc;
-          k2 += inc;
-        } while (kk < k);
-        kk += (ks - jc);
-        k2 += (ks - jc);
-      } while (kk < nt);
-      k2 -= (nt - kspan);
-      kk -= (nt - jc);
+            k = kk + jc;
+            do {
+                ak = a[kk];
+                a[kk] = a[k2];
+                a[k2] = (double)ak;
+                bk = b[kk];
+                b[kk] = b[k2];
+                b[k2] = (double)bk;
+                kk += inc;
+                k2 += inc;
+            } while (kk < k);
+            kk += (ks - jc);
+            k2 += (ks - jc);
+        } while (kk < nt);
+        k2 -= (nt - kspan);
+        kk -= (nt - jc);
     } while (k2 < ks);
  lbl420:
     do {
-      k2 -= np[j++];
-      k2 += np[j+1];
+        k2 -= np[j++];
+        k2 += np[j+1];
     } while (k2 > np[j]);
     j = 1;
  lbl430:
@@ -684,7 +684,7 @@ lbl380:
     jc = k3;
  lbl440:
     if ((2*(*kt))+1 >= m)
-      return;
+        return;
 
     kspnn = *(np + *(kt) + 1);
     j = m - *kt;
@@ -712,7 +712,7 @@ lbl380:
     kk = nfac[k];
     j++;
     if (j <= nn) goto lbl470;
-/* Determine permutation cycles of length greater than 1 */
+    /* Determine permutation cycles of length greater than 1 */
     j = 0;
     goto lbl500;
  lbl490:
@@ -737,7 +737,7 @@ lbl380:
  lbl520:
     kspan = jj;
     if (jj > maxf)
-      kspan = maxf;
+        kspan = maxf;
     jj -= kspan;
     k = np[j];
     kk = (jc*k) + i + jj;
@@ -771,7 +771,7 @@ lbl380:
     if (k1 != kk) goto lbl560;
     if (jj)       goto lbl520;
     if (j  != 1)  goto lbl510;
-lbl570:
+ lbl570:
     j = k3 + 1;
     nt -= kspnn;
     i = nt - inc + 1;
@@ -783,7 +783,7 @@ lbl570:
 /*
  *-----------------------------------------------------------------------
  * subroutine:
-  reals
+ reals
  * used with 'fft' to compute fourier transform or inverse for real data
  *-----------------------------------------------------------------------
  *      this is the call from C:
@@ -796,89 +796,87 @@ lbl570:
 void
 reals_(double *a, double *b, int n, int isn)
 
-  /*    *a,       a refers to an array of floats 'anal'   */
-  /*    *b;       b refers to an array of floats 'banal'  */
+/*    *a,       a refers to an array of floats 'anal'   */
+/*    *b;       b refers to an array of floats 'banal'  */
 /* See IEEE book for a long comment here on usage */
 
 {
     int inc,
-      j,
-      k,
-      lim,
-      mm,ml,
-      nf,nk,nh;
+        j,
+        k,
+        lim,
+        mm,ml,
+        nf,nk,nh;
 
     double      aa,ab,
-      ba,bb,
-      cd,cn,
-      dr,
-      em,
-      rad,re,
-      sd,sn;
+        ba,bb,
+        cd,cn,
+        dr,
+        em,
+        rad,re,
+        sd,sn;
     double      xx;     /******* ADDED APRIL 1991 ******/
     /* adjust  input array pointers (called from C) */
     a--;        b--;
     inc=abs(isn);
     nf=abs(n);
     if (nf*isn==0) {
-      printf("\nerror - zero in reals parameters : %d : %d ",n,isn);
-      return;
+        printf("\nerror - zero in reals parameters : %d : %d ",n,isn);
+        return;
     }
     nk = (nf*inc) + 2;
     nh = nk/2;
-/*****************************
+    /*****************************
         rad  = atan((double)1.0);
-******************************/
+    ******************************/
     rad = 0.785398163397448278900;
     dr = -4.0/(double)(nf);
-/********************************** POW2 REMOVED APRIL 1991 *****************
+    /********************************** POW2 REMOVED APRIL 1991 *****************
                                 cd = 2.0 * (pow2(sin((double)0.5 * dr * rad)));
-*****************************************************************************/
+    *****************************************************************************/
     xx = sin((double)0.5 * dr * rad);
     cd = 2.0 * xx * xx;
     sd = sin(dr * rad);
-/*
- * sin,cos values are re-initialised each lim steps
- */
+    /*
+     * sin,cos values are re-initialised each lim steps
+     */
     lim = 32;
     mm = lim;
     ml = 0;
     sn = 0.0;
     if (isn<0) {
-      cn = 1.0;
-      a[nk-1] = a[1];
-      b[nk-1] = b[1]; }
+        cn = 1.0;
+        a[nk-1] = a[1];
+        b[nk-1] = b[1]; }
     else {
-      cn = -1.0;
-      sd = -sd;
+        cn = -1.0;
+        sd = -sd;
     }
     for (j=1;j<=nh;j+=inc)      {
-      k = nk - j;
-      aa = a[j] + a[k];
-      ab = a[j] - a[k];
-      ba = b[j] + b[k];
-      bb = b[j] - b[k];
-      re = (cn*ba) + (sn*ab);
-      em = (sn*ba) - (cn*ab);
-      b[k] = (double)((em-bb)*0.5);
-      b[j] = (double)((em+bb)*0.5);
-      a[k] = (double)((aa-re)*0.5);
-      a[j] = (double)((aa+re)*0.5);
-      ml++;
-      if (ml!=mm) {
-        aa = cn - ((cd*cn)+(sd*sn));
-        sn = ((sd*cn) - (cd*sn)) + sn;
-        cn = aa;}
-      else {
-        mm +=lim;
-        sn = ((double)ml) * dr * rad;
-        cn = cos(sn);
-        if (isn>0)
-          cn = -cn;
-        sn = sin(sn);
-      }
+        k = nk - j;
+        aa = a[j] + a[k];
+        ab = a[j] - a[k];
+        ba = b[j] + b[k];
+        bb = b[j] - b[k];
+        re = (cn*ba) + (sn*ab);
+        em = (sn*ba) - (cn*ab);
+        b[k] = (double)((em-bb)*0.5);
+        b[j] = (double)((em+bb)*0.5);
+        a[k] = (double)((aa-re)*0.5);
+        a[j] = (double)((aa+re)*0.5);
+        ml++;
+        if (ml!=mm) {
+            aa = cn - ((cd*cn)+(sd*sn));
+            sn = ((sd*cn) - (cd*sn)) + sn;
+            cn = aa;}
+        else {
+            mm +=lim;
+            sn = ((double)ml) * dr * rad;
+            cn = cos(sn);
+            if (isn>0)
+                cn = -cn;
+            sn = sin(sn);
+        }
     }
     return;
 }
-
-

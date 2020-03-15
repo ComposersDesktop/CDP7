@@ -1,8 +1,8 @@
 /** @file patest_hang.c
-	@ingroup test_src
-	@brief Play a sine then hang audio callback to test watchdog.
-	@author Ross Bencina <rossb@audiomulch.com>
-	@author Phil Burk <philburk@softsynth.com>
+    @ingroup test_src
+    @brief Play a sine then hang audio callback to test watchdog.
+    @author Ross Bencina <rossb@audiomulch.com>
+    @author Phil Burk <philburk@softsynth.com>
 */
 /*
  * $Id: patest_hang.c 1368 2008-03-01 00:38:27Z rossb $
@@ -32,13 +32,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -59,7 +59,7 @@ typedef struct paTestData
     int    sleepFor;
     double phase;
 }
-paTestData;
+    paTestData;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
@@ -77,22 +77,22 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
     int finished = 0;
     double phaseInc = 0.02;
     double phase = data->phase;
-    
+
     (void) inputBuffer; /* Prevent unused argument warning. */
 
     for( i=0; i<framesPerBuffer; i++ )
-    {
-        phase += phaseInc;
-        if( phase > TWOPI ) phase -= TWOPI;
-        /* This is not a very efficient way to calc sines. */
-        *out++ = (float) sin( phase ); /* mono */
-    }
-    
+        {
+            phase += phaseInc;
+            if( phase > TWOPI ) phase -= TWOPI;
+            /* This is not a very efficient way to calc sines. */
+            *out++ = (float) sin( phase ); /* mono */
+        }
+
     if( data->sleepFor > 0 )
-    {
-        Pa_Sleep( data->sleepFor );
-    }
-    
+        {
+            Pa_Sleep( data->sleepFor );
+        }
+
     data->phase = phase;
     return finished;
 }
@@ -106,23 +106,23 @@ int main(void)
     PaError             err;
     int                 i;
     paTestData          data = {0};
-    
+
     printf("PortAudio Test: output sine wave. SR = %d, BufSize = %d\n",
-        SAMPLE_RATE, FRAMES_PER_BUFFER );
+           SAMPLE_RATE, FRAMES_PER_BUFFER );
 
     err = Pa_Initialize();
     if( err != paNoError ) goto error;
 
     outputParameters.device = Pa_GetDefaultOutputDevice(); /* Default output device. */
     if (outputParameters.device == paNoDevice) {
-      fprintf(stderr,"Error: No default output device.\n");
-      goto error;
+        fprintf(stderr,"Error: No default output device.\n");
+        goto error;
     }
     outputParameters.channelCount = 1;                     /* Mono output. */
     outputParameters.sampleFormat = paFloat32;             /* 32 bit floating point. */
     outputParameters.hostApiSpecificStreamInfo = NULL;
     outputParameters.suggestedLatency          = Pa_GetDeviceInfo(outputParameters.device)
-                                                 ->defaultLowOutputLatency;
+        ->defaultLowOutputLatency;
     err = Pa_OpenStream(&stream,
                         NULL,                    /* No input. */
                         &outputParameters,
@@ -132,22 +132,22 @@ int main(void)
                         patestCallback,
                         &data);
     if (err != paNoError) goto error;
-    
+
     err = Pa_StartStream( stream );
     if( err != paNoError ) goto error;
 
     /* Gradually increase sleep time. */
     /* Was: for( i=0; i<10000; i+= 1000 ) */
     for(i=0; i <= 1000; i += 100)
-    {
-        printf("Sleep for %d milliseconds in audio callback.\n", i );
-        data.sleepFor = i;
-        Pa_Sleep( ((i<1000) ? 1000 : i) );
-    }
-    
+        {
+            printf("Sleep for %d milliseconds in audio callback.\n", i );
+            data.sleepFor = i;
+            Pa_Sleep( ((i<1000) ? 1000 : i) );
+        }
+
     printf("Suffer for 10 seconds.\n");
     Pa_Sleep( 10000 );
-    
+
     err = Pa_StopStream( stream );
     if( err != paNoError ) goto error;
     err = Pa_CloseStream( stream );
@@ -155,7 +155,7 @@ int main(void)
     Pa_Terminate();
     printf("Test finished.\n");
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

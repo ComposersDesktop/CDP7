@@ -26,13 +26,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -40,7 +40,7 @@
 #include <time.h>
 #include <math.h>
 
-#define  _WIN32_WINNT 0x0501 /* for GetNativeSystemInfo */ 
+#define  _WIN32_WINNT 0x0501 /* for GetNativeSystemInfo */
 #include <windows.h>
 //#include <mmsystem.h>   /* required when using pa_win_wmme.h */
 
@@ -78,15 +78,15 @@ static BOOL IsWow64()
     //and GetProcAddress to get a pointer to the function if available.
 
     fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(
-        GetModuleHandle(TEXT("kernel32")),"IsWow64Process" );
+                                                            GetModuleHandle(TEXT("kernel32")),"IsWow64Process" );
 
     if(NULL != fnIsWow64Process)
-    {
-        if (!fnIsWow64Process(GetCurrentProcess(),&bIsWow64))
         {
-            //handle error
+            if (!fnIsWow64Process(GetCurrentProcess(),&bIsWow64))
+                {
+                    //handle error
+                }
         }
-    }
     return bIsWow64;
 }
 
@@ -102,92 +102,92 @@ static void printWindowsVersionInfo( FILE *fp )
     osVersionInfoEx.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
     GetVersionEx( &osVersionInfoEx );
 
-    
+
     if( osVersionInfoEx.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS ){
         switch( osVersionInfoEx.dwMinorVersion ){
-            case 0: osName = "Windows 95"; break;
-            case 10: osName = "Windows 98"; break;  // could also be 98SE (I've seen code discriminate based 
-                                                    // on osInfo.Version.Revision.ToString() == "2222A")
-            case 90: osName = "Windows Me"; break;
+        case 0: osName = "Windows 95"; break;
+        case 10: osName = "Windows 98"; break;  // could also be 98SE (I've seen code discriminate based
+            // on osInfo.Version.Revision.ToString() == "2222A")
+        case 90: osName = "Windows Me"; break;
         }
     }else if( osVersionInfoEx.dwPlatformId == VER_PLATFORM_WIN32_NT ){
         switch( osVersionInfoEx.dwMajorVersion ){
-            case 3: osName = "Windows NT 3.51"; break;
-            case 4: osName = "Windows NT 4.0"; break;
-            case 5: switch( osVersionInfoEx.dwMinorVersion ){
-                        case 0: osName = "Windows 2000"; break;
-                        case 1: osName = "Windows XP"; break;
-                        case 2:
-                            if( osVersionInfoEx.wSuiteMask & 0x00008000 /*VER_SUITE_WH_SERVER*/ ){
-                                osName = "Windows Home Server";
-                            }else{
-                                if( osVersionInfoEx.wProductType == VER_NT_WORKSTATION ){
-                                    osName = "Windows XP Professional x64 Edition (?)";
-                                }else{
-                                    if( GetSystemMetrics(/*SM_SERVERR2*/89) == 0 )
-                                        osName = "Windows Server 2003";
-                                    else
-                                        osName = "Windows Server 2003 R2";
-                                }
-                            }break;
-                    }break;
-            case 6:switch( osVersionInfoEx.dwMinorVersion ){
-                        case 0: 
-                            if( osVersionInfoEx.wProductType == VER_NT_WORKSTATION )
-                                osName = "Windows Vista";
-                            else
-                                osName = "Windows Server 2008";
-                            break;
-                        case 1: 
-                            if( osVersionInfoEx.wProductType == VER_NT_WORKSTATION )
-                                osName = "Windows 7";
-                            else
-                                osName = "Windows Server 2008 R2";
-                            break;
-                    }break;
+        case 3: osName = "Windows NT 3.51"; break;
+        case 4: osName = "Windows NT 4.0"; break;
+        case 5: switch( osVersionInfoEx.dwMinorVersion ){
+            case 0: osName = "Windows 2000"; break;
+            case 1: osName = "Windows XP"; break;
+            case 2:
+                if( osVersionInfoEx.wSuiteMask & 0x00008000 /*VER_SUITE_WH_SERVER*/ ){
+                    osName = "Windows Home Server";
+                }else{
+                    if( osVersionInfoEx.wProductType == VER_NT_WORKSTATION ){
+                        osName = "Windows XP Professional x64 Edition (?)";
+                    }else{
+                        if( GetSystemMetrics(/*SM_SERVERR2*/89) == 0 )
+                            osName = "Windows Server 2003";
+                        else
+                            osName = "Windows Server 2003 R2";
+                    }
+                }break;
+            }break;
+        case 6:switch( osVersionInfoEx.dwMinorVersion ){
+            case 0:
+                if( osVersionInfoEx.wProductType == VER_NT_WORKSTATION )
+                    osName = "Windows Vista";
+                else
+                    osName = "Windows Server 2008";
+                break;
+            case 1:
+                if( osVersionInfoEx.wProductType == VER_NT_WORKSTATION )
+                    osName = "Windows 7";
+                else
+                    osName = "Windows Server 2008 R2";
+                break;
+            }break;
         }
     }
 
     if(osVersionInfoEx.dwMajorVersion == 4)
-    {
-        if(osVersionInfoEx.wProductType == VER_NT_WORKSTATION)
-            osProductType = "Workstation";
-        else if(osVersionInfoEx.wProductType == VER_NT_SERVER)
-            osProductType = "Server";
-    }
+        {
+            if(osVersionInfoEx.wProductType == VER_NT_WORKSTATION)
+                osProductType = "Workstation";
+            else if(osVersionInfoEx.wProductType == VER_NT_SERVER)
+                osProductType = "Server";
+        }
     else if(osVersionInfoEx.dwMajorVersion == 5)
-    {
-        if(osVersionInfoEx.wProductType == VER_NT_WORKSTATION)
         {
-            if((osVersionInfoEx.wSuiteMask & VER_SUITE_PERSONAL) == VER_SUITE_PERSONAL)
-                osProductType = "Home Edition"; // Windows XP Home Edition
+            if(osVersionInfoEx.wProductType == VER_NT_WORKSTATION)
+                {
+                    if((osVersionInfoEx.wSuiteMask & VER_SUITE_PERSONAL) == VER_SUITE_PERSONAL)
+                        osProductType = "Home Edition"; // Windows XP Home Edition
+                    else
+                        osProductType = "Professional"; // Windows XP / Windows 2000 Professional
+                }
+            else if(osVersionInfoEx.wProductType == VER_NT_SERVER)
+                {
+                    if(osVersionInfoEx.dwMinorVersion == 0)
+                        {
+                            if((osVersionInfoEx.wSuiteMask & VER_SUITE_DATACENTER) == VER_SUITE_DATACENTER)
+                                osProductType = "Datacenter Server"; // Windows 2000 Datacenter Server
+                            else if((osVersionInfoEx.wSuiteMask & VER_SUITE_ENTERPRISE) == VER_SUITE_ENTERPRISE)
+                                osProductType = "Advanced Server"; // Windows 2000 Advanced Server
+                            else
+                                osProductType = "Server"; // Windows 2000 Server
+                        }
+                }
             else
-                osProductType = "Professional"; // Windows XP / Windows 2000 Professional
+                {
+                    if((osVersionInfoEx.wSuiteMask & VER_SUITE_DATACENTER) == VER_SUITE_DATACENTER)
+                        osProductType = "Datacenter Edition"; // Windows Server 2003 Datacenter Edition
+                    else if((osVersionInfoEx.wSuiteMask & VER_SUITE_ENTERPRISE) == VER_SUITE_ENTERPRISE)
+                        osProductType = "Enterprise Edition"; // Windows Server 2003 Enterprise Edition
+                    else if((osVersionInfoEx.wSuiteMask & VER_SUITE_BLADE) == VER_SUITE_BLADE)
+                        osProductType = "Web Edition"; // Windows Server 2003 Web Edition
+                    else
+                        osProductType = "Standard Edition"; // Windows Server 2003 Standard Edition
+                }
         }
-        else if(osVersionInfoEx.wProductType == VER_NT_SERVER)
-        {
-            if(osVersionInfoEx.dwMinorVersion == 0) 
-            {
-                if((osVersionInfoEx.wSuiteMask & VER_SUITE_DATACENTER) == VER_SUITE_DATACENTER)
-                    osProductType = "Datacenter Server"; // Windows 2000 Datacenter Server
-                else if((osVersionInfoEx.wSuiteMask & VER_SUITE_ENTERPRISE) == VER_SUITE_ENTERPRISE)
-                    osProductType = "Advanced Server"; // Windows 2000 Advanced Server
-                else
-                    osProductType = "Server"; // Windows 2000 Server
-            }
-        }
-        else
-        {
-            if((osVersionInfoEx.wSuiteMask & VER_SUITE_DATACENTER) == VER_SUITE_DATACENTER)
-                osProductType = "Datacenter Edition"; // Windows Server 2003 Datacenter Edition
-            else if((osVersionInfoEx.wSuiteMask & VER_SUITE_ENTERPRISE) == VER_SUITE_ENTERPRISE)
-                osProductType = "Enterprise Edition"; // Windows Server 2003 Enterprise Edition
-            else if((osVersionInfoEx.wSuiteMask & VER_SUITE_BLADE) == VER_SUITE_BLADE)
-                osProductType = "Web Edition"; // Windows Server 2003 Web Edition
-            else
-                osProductType = "Standard Edition"; // Windows Server 2003 Standard Edition
-        }
-    }
 
     memset( &systemInfo, 0, sizeof(SYSTEM_INFO) );
     GetNativeSystemInfo( &systemInfo );
@@ -201,9 +201,9 @@ static void printWindowsVersionInfo( FILE *fp )
 
 
     fprintf( fp, "OS name and edition: %s %s\n", osName, osProductType );
-    fprintf( fp, "OS version: %d.%d.%d %S\n", 
-                osVersionInfoEx.dwMajorVersion, osVersionInfoEx.dwMinorVersion, 
-                osVersionInfoEx.dwBuildNumber, osVersionInfoEx.szCSDVersion );
+    fprintf( fp, "OS version: %d.%d.%d %S\n",
+             osVersionInfoEx.dwMajorVersion, osVersionInfoEx.dwMinorVersion,
+             osVersionInfoEx.dwBuildNumber, osVersionInfoEx.szCSDVersion );
     fprintf( fp, "Processor architecture: %s\n", processorArchitecture );
     fprintf( fp, "WoW64 process: %s\n", IsWow64() ? "Yes" : "No" );
 }
@@ -225,13 +225,13 @@ static void printTimeAndDate( FILE *fp )
 typedef struct
 {
     float sine[TABLE_SIZE];
-	double phase;
+    double phase;
     double phaseIncrement;
     volatile int fadeIn;
     volatile int fadeOut;
     double amp;
 }
-paTestData;
+    paTestData;
 
 static paTestData data;
 
@@ -240,10 +240,10 @@ static paTestData data;
 ** that could mess up the system like calling malloc() or free().
 */
 static int patestCallback( const void *inputBuffer, void *outputBuffer,
-                            unsigned long framesPerBuffer,
-                            const PaStreamCallbackTimeInfo* timeInfo,
-                            PaStreamCallbackFlags statusFlags,
-                            void *userData )
+                           unsigned long framesPerBuffer,
+                           const PaStreamCallbackTimeInfo* timeInfo,
+                           PaStreamCallbackFlags statusFlags,
+                           void *userData )
 {
     paTestData *data = (paTestData*)userData;
     float *out = (float*)outputBuffer;
@@ -252,30 +252,30 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
     (void) timeInfo; /* Prevent unused variable warnings. */
     (void) statusFlags;
     (void) inputBuffer;
-    
-    for( i=0; i<framesPerBuffer; i++ )
-    {
-        float x = data->sine[(int)data->phase];
-        data->phase += data->phaseIncrement;
-        if( data->phase >= TABLE_SIZE ){
-			data->phase -= TABLE_SIZE;
-		}
 
-        x *= data->amp;
-        if( data->fadeIn ){
-            data->amp += .001;
-            if( data->amp >= 1. )
-                data->fadeIn = 0;
-        }else if( data->fadeOut ){
-            if( data->amp > 0 )
-                data->amp -= .001;
+    for( i=0; i<framesPerBuffer; i++ )
+        {
+            float x = data->sine[(int)data->phase];
+            data->phase += data->phaseIncrement;
+            if( data->phase >= TABLE_SIZE ){
+                data->phase -= TABLE_SIZE;
+            }
+
+            x *= data->amp;
+            if( data->fadeIn ){
+                data->amp += .001;
+                if( data->amp >= 1. )
+                    data->fadeIn = 0;
+            }else if( data->fadeOut ){
+                if( data->amp > 0 )
+                    data->amp -= .001;
+            }
+
+            for( j = 0; j < CHANNEL_COUNT; ++j ){
+                *out++ = x;
+            }
         }
 
-		for( j = 0; j < CHANNEL_COUNT; ++j ){
-            *out++ = x;
-		}
-	}
-    
     if( data->amp > 0 )
         return paContinue;
     else
@@ -287,8 +287,8 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
 #define NO      0
 
 
-static int playUntilKeyPress( int deviceIndex, float sampleRate, 
-                             int framesPerUserBuffer, int framesPerDSoundBuffer )
+static int playUntilKeyPress( int deviceIndex, float sampleRate,
+                              int framesPerUserBuffer, int framesPerDSoundBuffer )
 {
     PaStreamParameters outputParameters;
     PaWinDirectSoundStreamInfo directSoundStreamInfo;
@@ -303,21 +303,21 @@ static int playUntilKeyPress( int deviceIndex, float sampleRate,
     outputParameters.hostApiSpecificStreamInfo = NULL;
 
     directSoundStreamInfo.size = sizeof(PaWinDirectSoundStreamInfo);
-    directSoundStreamInfo.hostApiType = paDirectSound; 
+    directSoundStreamInfo.hostApiType = paDirectSound;
     directSoundStreamInfo.version = 2;
     directSoundStreamInfo.flags = paWinDirectSoundUseLowLevelLatencyParameters;
     directSoundStreamInfo.framesPerBuffer = framesPerDSoundBuffer;
     outputParameters.hostApiSpecificStreamInfo = &directSoundStreamInfo;
 
     err = Pa_OpenStream(
-              &stream,
-              NULL, /* no input */
-              &outputParameters,
-              sampleRate,
-              framesPerUserBuffer,
-              paClipOff | paPrimeOutputBuffersUsingStreamCallback,      /* we won't output out of range samples so don't bother clipping them */
-              patestCallback,
-              &data );
+                        &stream,
+                        NULL, /* no input */
+                        &outputParameters,
+                        sampleRate,
+                        framesPerUserBuffer,
+                        paClipOff | paPrimeOutputBuffersUsingStreamCallback,      /* we won't output out of range samples so don't bother clipping them */
+                        patestCallback,
+                        &data );
     if( err != paNoError ) goto error;
 
     data.amp = 0;
@@ -351,7 +351,7 @@ static int playUntilKeyPress( int deviceIndex, float sampleRate,
 
     return (c == 'y') ? YES : NO;
 
-error:
+ error:
     return err;
 }
 
@@ -373,9 +373,9 @@ static void usage( int dsoundHostApiIndex )
 }
 
 /*
-    ideas: 
-        o- could be testing with 80% CPU load
-        o- could test with different channel counts
+  ideas:
+  o- could be testing with 80% CPU load
+  o- could test with different channel counts
 */
 
 int main(int argc, char* argv[])
@@ -401,15 +401,15 @@ int main(int argc, char* argv[])
     if( argc > 3 )
         usage(dsoundHostApiIndex);
 
-	deviceIndex = dsoundHostApiInfo->defaultOutputDevice;
-	if( argc >= 2 ){
+    deviceIndex = dsoundHostApiInfo->defaultOutputDevice;
+    if( argc >= 2 ){
         deviceIndex = -1;
-		if( sscanf( argv[1], "%d", &deviceIndex ) != 1 )
+        if( sscanf( argv[1], "%d", &deviceIndex ) != 1 )
             usage(dsoundHostApiInfo);
         if( deviceIndex < 0 || deviceIndex >= Pa_GetDeviceCount() || Pa_GetDeviceInfo(deviceIndex)->hostApi != dsoundHostApiIndex ){
             usage(dsoundHostApiInfo);
         }
-	}
+    }
 
     printf( "Using device id %d (%s)\n", deviceIndex, Pa_GetDeviceInfo(deviceIndex)->name );
 
@@ -420,22 +420,22 @@ int main(int argc, char* argv[])
 
     printf( "Testing with sample rate %f.\n", (float)sampleRate );
 
- 
+
 
     /* initialise sinusoidal wavetable */
     for( i=0; i<TABLE_SIZE; i++ )
-    {
-        data.sine[i] = (float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. );
-    }
+        {
+            data.sine[i] = (float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. );
+        }
 
-	data.phase = 0;
+    data.phase = 0;
 
     resultsFp = fopen( "results.txt", "at" );
     fprintf( resultsFp, "*** DirectSound smallest working output buffer sizes\n" );
 
     printTimeAndDate( resultsFp );
     printWindowsVersionInfo( resultsFp );
-    
+
     fprintf( resultsFp, "audio device: %s\n", Pa_GetDeviceInfo( deviceIndex )->name );
     fflush( resultsFp );
 
@@ -444,9 +444,9 @@ int main(int argc, char* argv[])
 
 
     /*
-        Binary search after Niklaus Wirth
-        from http://en.wikipedia.org/wiki/Binary_search_algorithm#The_algorithm
-     */
+      Binary search after Niklaus Wirth
+      from http://en.wikipedia.org/wiki/Binary_search_algorithm#The_algorithm
+    */
     min = 1;
     max = (int)(sampleRate * .3);   /* we assume that this size works 300ms */
     smallestWorkingBufferSize = 0;
@@ -463,7 +463,7 @@ int main(int argc, char* argv[])
         }else{
             min = mid + 1;
         }
-         
+
     }while( (min <= max) && (testResult == YES || testResult == NO) );
 
     smallestWorkingBufferingLatencyFrames = smallestWorkingBufferSize; /* not strictly true, but we're using an unspecified callback size, so kind of */
@@ -490,7 +490,7 @@ int main(int argc, char* argv[])
         }
 
     }while( (dsoundBufferSize <= (int)(sampleRate * .3)) && testResult == NO );
-    
+
     smallestWorkingBufferingLatencyFrames = smallestWorkingBufferSize; /* not strictly true, but we're using an unspecified callback size, so kind of */
 
     fprintf( resultsFp, "%d, %d, %f\n", smallestWorkingBufferSize, smallestWorkingBufferingLatencyFrames, smallestWorkingBufferingLatencyFrames / sampleRate );
@@ -499,16 +499,15 @@ int main(int argc, char* argv[])
 
     fprintf( resultsFp, "###\n" );
     fclose( resultsFp );
-    
+
     Pa_Terminate();
     printf("Test finished.\n");
-    
+
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occurred while using the PortAudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
     return err;
 }
-

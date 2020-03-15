@@ -1,9 +1,9 @@
 /** @file patest_ringmix.c
-	@ingroup test_src
-	@brief Ring modulate inputs to left output, mix inputs to right output.
+    @ingroup test_src
+    @brief Ring modulate inputs to left output, mix inputs to right output.
 */
 /*
- * $Id: patest_ringmix.c 1097 2006-08-26 08:27:53Z rossb $ 
+ * $Id: patest_ringmix.c 1097 2006-08-26 08:27:53Z rossb $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -30,13 +30,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -45,24 +45,24 @@
 #include "portaudio.h"
 /* This will be called asynchronously by the PortAudio engine. */
 static int myCallback( const void *inputBuffer, void *outputBuffer,
-                            unsigned long framesPerBuffer,
-                            const PaStreamCallbackTimeInfo* timeInfo,
-                            PaStreamCallbackFlags statusFlags,
-                            void *userData )
+                       unsigned long framesPerBuffer,
+                       const PaStreamCallbackTimeInfo* timeInfo,
+                       PaStreamCallbackFlags statusFlags,
+                       void *userData )
 {
     const float *in  = (const float *) inputBuffer;
-	float *out = (float *) outputBuffer;    
+    float *out = (float *) outputBuffer;
     float leftInput, rightInput;
     unsigned int i;
 
     /* Read input buffer, process data, and fill output buffer. */
     for( i=0; i<framesPerBuffer; i++ )
-    {
-        leftInput = *in++;      /* Get interleaved samples from input buffer. */
-        rightInput = *in++;
-        *out++ = leftInput * rightInput;            /* ring modulation */
-        *out++ = 0.5f * (leftInput + rightInput);   /* mix */
-    }
+        {
+            leftInput = *in++;      /* Get interleaved samples from input buffer. */
+            rightInput = *in++;
+            *out++ = leftInput * rightInput;            /* ring modulation */
+            *out++ = 0.5f * (leftInput + rightInput);   /* mix */
+        }
     return 0;
 }
 
@@ -72,11 +72,11 @@ int main(void)
     PaStream *stream;
     Pa_Initialize();
     Pa_OpenDefaultStream(
-        &stream,
-        2, 2,               /* stereo input and output */
-        paFloat32,  44100.0,
-        64,                 /* 64 frames per buffer */
-        myCallback, NULL );
+                         &stream,
+                         2, 2,               /* stereo input and output */
+                         paFloat32,  44100.0,
+                         64,                 /* 64 frames per buffer */
+                         myCallback, NULL );
     Pa_StartStream( stream );
     Pa_Sleep( 10000 );    /* Sleep for 10 seconds while processing. */
     Pa_StopStream( stream );

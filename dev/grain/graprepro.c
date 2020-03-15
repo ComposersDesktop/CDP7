@@ -71,7 +71,7 @@ int grain_preprocess(int gate_paramno,dataptr dz)
     if(dz->brksize[gate_paramno]) {
         if((exit_status = convert_gate_time_to_abs_samplecnts(gate_paramno,dz))<0)
             return(exit_status);
-        if((exit_status = insert_limit_vals(gate_paramno,dz))<0)	 /* CARE - ONLY WORKS FOR FILE0 */
+        if((exit_status = insert_limit_vals(gate_paramno,dz))<0)         /* CARE - ONLY WORKS FOR FILE0 */
             return(exit_status);
         dz->brkptr[gate_paramno]   = dz->brk[gate_paramno];
         dz->ptr[GR_GATEVALS]       = dz->brk[gate_paramno];
@@ -85,52 +85,52 @@ int grain_preprocess(int gate_paramno,dataptr dz)
             dz->iparam[GR_UP] = TRUE;
         else
             dz->iparam[GR_UP] = FALSE;
-    	if((dz->iparam[GR_TESTLIM] = dz->iparam[GR_NEXTBRKSAMP] - 1000)<dz->iparam[GR_THISBRKSAMP])
+        if((dz->iparam[GR_TESTLIM] = dz->iparam[GR_NEXTBRKSAMP] - 1000)<dz->iparam[GR_THISBRKSAMP])
             dz->iparam[GR_TESTLIM] = dz->iparam[GR_NEXTBRKSAMP];
         dz->ptr[GR_GATEBRKEND] = dz->brk[gate_paramno] + (dz->brksize[gate_paramno] * 2);
         dz->brksize[gate_paramno] = 0; /* Comment: prevents programs RE-READING brktable (using TIME as index)
                                           where it calls "read_values_from_all_existing_brktables()" */
     } else
-        do_arbitrary_param_presets(dz);	/* otherwise program thinks param not assigned, and objects */
+        do_arbitrary_param_presets(dz); /* otherwise program thinks param not assigned, and objects */
 
     dz->param[GR_NGATE] = -dz->param[GR_GATE];
 
     /* setup splicing params */
-    dz->iparam[GR_SPLICELEN]	 = round(GRAIN_SPLICELEN * MS_TO_SECS * (double)dz->infile->srate);
+    dz->iparam[GR_SPLICELEN]     = round(GRAIN_SPLICELEN * MS_TO_SECS * (double)dz->infile->srate);
     if(ODD(dz->iparam[GR_SPLICELEN]))
-        dz->iparam[GR_SPLICELEN]++;	/* Needs to be even as we use HALF of it */
-    dz->param[GR_SPLUS1]    	 = (double)dz->iparam[GR_SPLICELEN] + 1.0;
+        dz->iparam[GR_SPLICELEN]++;     /* Needs to be even as we use HALF of it */
+    dz->param[GR_SPLUS1]         = (double)dz->iparam[GR_SPLICELEN] + 1.0;
     dz->iparam[GR_ABS_SPLICELEN] = dz->iparam[GR_SPLICELEN] * chans;
     dz->iparam[GR_ABS_SPLICEX2]  = dz->iparam[GR_ABS_SPLICELEN] * 2;
-    dz->iparam[GR_MINHOLE]   	 = (int)(round(dz->param[GR_MINTIME] * (double)dz->infile->srate) * chans);
+    dz->iparam[GR_MINHOLE]       = (int)(round(dz->param[GR_MINTIME] * (double)dz->infile->srate) * chans);
     splice_samplen = (dz->iparam[GR_SPLICELEN]/2) * chans;
     if(dz->process!=GRAIN_GET && dz->process!=GRAIN_COUNT && dz->process!=GRAIN_ASSESS) {
         if((dz->extrabuf[0] = (float *)malloc(splice_samplen * sizeof(float)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for splice buffer.\n");
-            return(MEMORY_ERROR);				/* setup 1st splicebuf */
+            return(MEMORY_ERROR);                               /* setup 1st splicebuf */
         }
         if((dz->extrabuf[1] = (float *)malloc(splice_samplen * sizeof(float)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for 2nd splice buffer.");
-            return(MEMORY_ERROR);				/* setup 2nd splicebuf */
+            return(MEMORY_ERROR);                               /* setup 2nd splicebuf */
         }
         if((exit_status = make_grain_splicetable(dz))<0)
             return(exit_status);
     }
     switch(dz->process) {
-    case(GRAIN_POSITION):			/* Check offset value, converting to abs_samplecnt */
+    case(GRAIN_POSITION):                       /* Check offset value, converting to abs_samplecnt */
         dz->param[GR_OFFSET] = (double)(round(dz->param[GR_OFFSET] *(double)dz->infile->srate) * chans);
         if((exit_status = convert_arraytimelist_to_abs_samplecnts
             (dz->parray[GR_SYNCTIME],(int)dz->iparam[GR_SYNCCNT],dz))<0)
             return(exit_status);
         if(dz->param[GR_OFFSET] > 0.0)
-            offset_synctimes(dz);				/* Add offset */
-        convert_sampletime_to_samplegap(dz);	/* Convert abs_grain_samptimes to gaps between grains */
+            offset_synctimes(dz);                               /* Add offset */
+        convert_sampletime_to_samplegap(dz);    /* Convert abs_grain_samptimes to gaps between grains */
         if((dz->extrabuf[2] = (float *)malloc(dz->buflen * sizeof(float)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for sound copying array.\n");
-            return(MEMORY_ERROR);				/* setup buffer for snd copying */
+            return(MEMORY_ERROR);                               /* setup buffer for snd copying */
         }
         break;
-    case(GRAIN_REVERSE):			/* Establish array to store abs_grain_positions */
+    case(GRAIN_REVERSE):                        /* Establish array to store abs_grain_positions */
         dz->iparam[GR_ARRAYSIZE] = BIGARRAY;
         if((dz->lparray[GR_ABS_POS] = (int *)malloc(dz->iparam[GR_ARRAYSIZE] * sizeof(int)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for grain times array.\n");
@@ -142,7 +142,7 @@ int grain_preprocess(int gate_paramno,dataptr dz)
         dz->iparam[GR_STORESIZE] = NOMINAL_LENGTH;
         if((dz->extrabuf[2] = (float *)malloc(dz->iparam[GR_STORESIZE] * sizeof(float)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for sound copying buffer.\n");
-            return(MEMORY_ERROR);				/* setup buffer for snd copying */
+            return(MEMORY_ERROR);                               /* setup buffer for snd copying */
         }
     }
     return(FINISHED);
@@ -167,11 +167,11 @@ int get_grain_envelope(dataptr dz)
     double *winptr;
     float maxsamp = 0;
     if(((bufcnt = dz->insams[0]/dz->buflen)*dz->buflen)!=dz->insams[0])
-        bufcnt++;	/* Find number of buffers contained in file. */
+        bufcnt++;       /* Find number of buffers contained in file. */
     if(((dz->iparam[GR_WINCNT] =
          dz->insams[0]/dz->iparam[GR_WSIZE_SAMPS])
         * dz->iparam[GR_WSIZE_SAMPS])!=dz->insams[0])
-    	dz->iparam[GR_WINCNT]++; 	/* Find number of windows contained in file. */
+        dz->iparam[GR_WINCNT]++;        /* Find number of windows contained in file. */
     if((dz->parray[GR_ENVEL]=(double *)malloc(dz->iparam[GR_WINCNT] * sizeof(double)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY for envelope store.\n");
         return(MEMORY_ERROR);
@@ -189,7 +189,7 @@ int get_grain_envelope(dataptr dz)
         fflush(stdout);
     }
 
-    for(n = 0; n < bufcnt; n++)	{
+    for(n = 0; n < bufcnt; n++) {
         if((exit_status = read_samps(dz->sampbuf[0],dz))<0)
             return(exit_status);
         if(sloom)
@@ -269,49 +269,49 @@ int convert_gate_time_to_abs_samplecnts(int paramno,dataptr dz)
 
 /************************** INSERT_LIMIT_VALS ***************************/
 
-int insert_limit_vals(int gate_paramno,dataptr dz)	 /* CARE: ASSUMES WE'RE DEALING WITH FILE 0 */
+int insert_limit_vals(int gate_paramno,dataptr dz)       /* CARE: ASSUMES WE'RE DEALING WITH FILE 0 */
 {
     double timediff, truediff, ratio, valdiff;
     double *q, *p = dz->brk[gate_paramno];
-    if(*p != 0.0) {						/* IF NO VALUE AT ZEROTIME */
+    if(*p != 0.0) {                                             /* IF NO VALUE AT ZEROTIME */
         dz->brksize[gate_paramno]++;
         if((dz->brk[gate_paramno] = (double *)realloc
             ((char *)dz->brk[gate_paramno],dz->brksize[gate_paramno] * 2 * sizeof(double)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for array limit values.\n");
-            return(MEMORY_ERROR);		/* create any extra pair-location */
+            return(MEMORY_ERROR);               /* create any extra pair-location */
         }
         p = dz->brk[gate_paramno] + (dz->brksize[gate_paramno] * 2) - 1;
         q = p - 2;
-        while(q >= dz->brk[gate_paramno]) {	/* shuffle values up by 2 places */
+        while(q >= dz->brk[gate_paramno]) {     /* shuffle values up by 2 places */
             *p = *q;
             p--;
             q--;
         }
-        p = dz->brk[gate_paramno]+1;		/* copy post-zerotime value into zero-time value */
+        p = dz->brk[gate_paramno]+1;            /* copy post-zerotime value into zero-time value */
         q = p + 2;
         *p-- = *q;
-        *p = 0.0;							/* insert zero-time at start */
+        *p = 0.0;                                                       /* insert zero-time at start */
     }
     p = dz->brk[gate_paramno] + (dz->brksize[gate_paramno] * 2) - 2;
-    if(*p < dz->insams[0]) {			/* IF VALUES DON'T REACH ENDOFFILE-TIME */
+    if(*p < dz->insams[0]) {                    /* IF VALUES DON'T REACH ENDOFFILE-TIME */
         dz->brksize[gate_paramno]++;
         if((dz->brk[gate_paramno] = (double *)realloc
             ((char *)dz->brk[gate_paramno],dz->brksize[gate_paramno] * 2 * sizeof(double)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for array limit values.\n");
-            return(MEMORY_ERROR);		/* create any extra pair-location */
+            return(MEMORY_ERROR);               /* create any extra pair-location */
         }
         p = dz->brk[gate_paramno] + (dz->brksize[gate_paramno] * 2) - 1;
-        q = p - 2;						/* copy endtime value into endoffile-val location */
+        q = p - 2;                                              /* copy endtime value into endoffile-val location */
         *p-- = *q;
-        *p = dz->insams[0] + 2; 		/* Put endoffile time in endoffile-time location (+2 for safety) */
-    } else if (*p > dz->insams[0]) {	/* IF VALUES REACH BEYOND ENDOFFILE-TIME */
+        *p = dz->insams[0] + 2;                 /* Put endoffile time in endoffile-time location (+2 for safety) */
+    } else if (*p > dz->insams[0]) {    /* IF VALUES REACH BEYOND ENDOFFILE-TIME */
         while(*p > dz->insams[0]) {
-            p -= 2;						/* step back to value AT or before endoffile-time */
-            dz->brksize[gate_paramno]--;		/* adjusting brktable size */
+            p -= 2;                                             /* step back to value AT or before endoffile-time */
+            dz->brksize[gate_paramno]--;                /* adjusting brktable size */
         }
-        if(*p < dz->insams[0]) {		/* If value now reached is before endoffile-time */
-            dz->brksize[gate_paramno]++;		/* readjust brktable size upwards */
-            q = p + 2;					/* create an interpolated value for endoffile-time */
+        if(*p < dz->insams[0]) {                /* If value now reached is before endoffile-time */
+            dz->brksize[gate_paramno]++;                /* readjust brktable size upwards */
+            q = p + 2;                                  /* create an interpolated value for endoffile-time */
             timediff = *q - *p;
             truediff = dz->insams[0] - *p;
             ratio = truediff/timediff;
@@ -321,7 +321,7 @@ int insert_limit_vals(int gate_paramno,dataptr dz)	 /* CARE: ASSUMES WE'RE DEALI
             valdiff = *q - *p;
             valdiff *= ratio;
             *q = *p + valdiff;
-        }								 /* and finally, readjust the brktable-space to its true size */
+        }                                                                /* and finally, readjust the brktable-space to its true size */
         if((dz->brk[gate_paramno] = (double *)realloc
             ((char *)dz->brk[gate_paramno],dz->brksize[gate_paramno] * 2 * sizeof(double)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY to reallocate values.\n");
@@ -337,10 +337,10 @@ void do_arbitrary_param_presets(dataptr dz)
 {
     dz->iparam[GR_THISBRKSAMP] = 0;
     dz->iparam[GR_NEXTBRKSAMP] = 0;
-    dz->param[GR_NEXTGATE]	   = 0;
-    dz->param[GR_GATESTEP]	   = 0.0;
-    dz->iparam[GR_UP]		   = TRUE;
-    dz->iparam[GR_TESTLIM]	   = 0;
+    dz->param[GR_NEXTGATE]         = 0;
+    dz->param[GR_GATESTEP]         = 0.0;
+    dz->iparam[GR_UP]              = TRUE;
+    dz->iparam[GR_TESTLIM]         = 0;
 }
 
 /************************ CONVERT_SAMPLETIME_TO_SAMPLEGAP ***************************
@@ -438,7 +438,7 @@ int readenv(int samps_to_process,int winsamps,float *maxsamp,double **winptr,dat
         startsamp += winsamps;
         samps_to_process -= winsamps;
     }
-    if(samps_to_process) {	/* Handle any final short buffer */
+    if(samps_to_process) {      /* Handle any final short buffer */
         *env = getmaxsamp(startsamp,maxsamp,winsamps,dz);
         if(++env > dz->ptr[GR_ENVEND]) {
             sprintf(errstr,"Array overflow in readenv(): 2\n");

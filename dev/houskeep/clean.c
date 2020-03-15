@@ -51,37 +51,37 @@
 /* RWD keep this? */
 #define SAMPLE_T float
 
-#define	IBUF	(0)
-#define	OBUF	(1)
-#define	BUFEND	(2)
-#define	WRAP	(1)
+#define IBUF    (0)
+#define OBUF    (1)
+#define BUFEND  (2)
+#define WRAP    (1)
 
-#define	ENV		(0)
-#define	ENVEND	(1)
+#define ENV             (0)
+#define ENVEND  (1)
 /* RWD ????? */
 //TW REDUNDANT
-//#define SR		(22050)
-//#define SRDAT	(24000)
-//#define SRDATLO	(16000)
+//#define SR            (22050)
+//#define SRDAT (24000)
+//#define SRDATLO       (16000)
 
-#define MAXCUTS 	(999)
+#define MAXCUTS         (999)
 
-#define TOPN_DEFAULT_SPLEN 	(15.0)	/* MS */
+#define TOPN_DEFAULT_SPLEN      (15.0)  /* MS */
 
 static int  top_and_tail(dataptr dz);
 static int  get_startsamp(float *ibuf,int chans,int nbuff,int *startsamp,double gate,double ngate,dataptr dz);
 static int  get_endsamp(float *ibuf,int chans,int nbuff,int *endsamp,double gate,double ngate,dataptr dz);
 //TW REVISED
 //static int  do_startsplice(float **ibuf,float **obuf,int splicecnt,
-//			int startseek,int *sampseek,int *firsttime,int offset,int offset_samps,int wrap_samps,int input_report,dataptr dz);
+//                      int startseek,int *sampseek,int *firsttime,int offset,int offset_samps,int wrap_samps,int input_report,dataptr dz);
 static int do_startsplice(int splicecnt,int startsamp,int *sampseek,int input_report,dataptr dz);
 //TW REVISED
 //static int  advance_to_endsamp(float **ibuf,float **obuf,int endsamp,int *sampseek,
-//			int *firsttime,int wrap_samps,int offset_samps,int input_report,dataptr dz);
+//                      int *firsttime,int wrap_samps,int offset_samps,int input_report,dataptr dz);
 static int  advance_to_endsamp(int endsamp,int *sampseek,int input_report,dataptr dz);
 //TW REVISED
 //static int  do_end_splice(float **ibuf,float **obuf,int *k,int splicecnt,int firsttime,
-//			int wrap_samps,int offset_samps,int input_report,dataptr dz);
+//                      int wrap_samps,int offset_samps,int input_report,dataptr dz);
 static int do_end_splice(int *k,int splicecnt,int input_report,dataptr dz);
 
 static int  do_cutgate(dataptr dz);
@@ -104,7 +104,7 @@ static int  do_rectify(dataptr dz);
 static int  create_cutgate_buffer(dataptr dz);
 static int  create_topntail_buffer(dataptr dz);
 //TW FUNCTION NEW REDUNDANT
-//static int	do_by_hand(dataptr dz);
+//static int    do_by_hand(dataptr dz);
 //TW UPDATES
 static int find_onset_cuts(int *ccnt,dataptr dz);
 static int store_startcut_positions_in_samples(int ccnt,int startsec,dataptr dz);
@@ -112,9 +112,9 @@ static int store_startcut_positions_in_samples(int ccnt,int startsec,dataptr dz)
 
 /******************************* PCONSISTENCY_CLEAN *******************************/
 
-int	pconsistency_clean(dataptr dz)
+int     pconsistency_clean(dataptr dz)
 {
-    //	int exit_status;
+    //  int exit_status;
     double sr = (double)dz->infile->srate;
     int chans = dz->infile->channels;
 
@@ -151,7 +151,7 @@ int	pconsistency_clean(dataptr dz)
             return(GOAL_FAILED);
         }
         //TW UPDATE (redundant)
-        //		dz->param[TOPN_NGATE] = -dz->param[TOPN_GATE];
+        //              dz->param[TOPN_NGATE] = -dz->param[TOPN_GATE];
         break;
     }
     return(FINISHED);
@@ -159,7 +159,7 @@ int	pconsistency_clean(dataptr dz)
 
 /******************************* CREATE_CLEAN_BUFFERS *******************************/
 
-int	create_clean_buffers(dataptr dz)
+int     create_clean_buffers(dataptr dz)
 {
     if(dz->process == TOPNTAIL_CLICKS)
         return create_topntail_buffer(dz);
@@ -168,8 +168,8 @@ int	create_clean_buffers(dataptr dz)
     case(HOUSE_CUTGATE_PREVIEW):
         //TW NEW CASE
     case(HOUSE_ONSETS):
-    case(HOUSE_CUTGATE):	return create_cutgate_buffer(dz);
-    case(HOUSE_TOPNTAIL):	return create_topntail_buffer(dz);
+    case(HOUSE_CUTGATE):        return create_cutgate_buffer(dz);
+    case(HOUSE_TOPNTAIL):       return create_topntail_buffer(dz);
     }
     sprintf(errstr,"Unknown mode: create_clean_buffers()\n");
     return(PROGRAM_ERROR);
@@ -191,11 +191,11 @@ int create_cutgate_buffer(dataptr dz)
     /* dz->buflen needed for searchpars() */
     searchpars(dz);
     if((k =
-	dz->iparam[CUTGATE_NUMSECS]/dz->iparam[CUTGATE_SAMPBLOK])* dz->iparam[CUTGATE_SAMPBLOK] < dz->iparam[CUTGATE_NUMSECS])
+        dz->iparam[CUTGATE_NUMSECS]/dz->iparam[CUTGATE_SAMPBLOK])* dz->iparam[CUTGATE_SAMPBLOK] < dz->iparam[CUTGATE_NUMSECS])
         k++;
     numsecs = k * dz->iparam[CUTGATE_SAMPBLOK];
     envelope_space = (numsecs + dz->iparam[CUTGATE_WINDOWS]) * sizeof(float);
-    total_bufsize = bigbufsize + envelope_space + (F_SECSIZE * sizeof(float));	/* overflow sector in sndbuf */
+    total_bufsize = bigbufsize + envelope_space + (F_SECSIZE * sizeof(float));  /* overflow sector in sndbuf */
     if((dz->bigbuf = (float *)malloc((size_t)total_bufsize)) == NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY for sound and envelope.\n");
         return(MEMORY_ERROR);
@@ -206,7 +206,7 @@ int create_cutgate_buffer(dataptr dz)
 
 /******************************* PROCESS_CLEAN *******************************/
 
-int	process_clean(dataptr dz)
+int     process_clean(dataptr dz)
 {
     if(dz->process == TOPNTAIL_CLICKS)
         return top_and_tail(dz);
@@ -214,11 +214,11 @@ int	process_clean(dataptr dz)
     switch(dz->mode) {
     case(HOUSE_CUTGATE_PREVIEW):
     case(HOUSE_ONSETS):
-    case(HOUSE_CUTGATE):	return do_cutgate(dz);
+    case(HOUSE_CUTGATE):        return do_cutgate(dz);
 
-    case(HOUSE_TOPNTAIL):	return top_and_tail(dz);
-    case(HOUSE_RECTIFY):	return do_rectify(dz);
-    default:	   /*RWD*/
+    case(HOUSE_TOPNTAIL):       return top_and_tail(dz);
+    case(HOUSE_RECTIFY):        return do_rectify(dz);
+    default:       /*RWD*/
         break;
     }
     sprintf(errstr,"Unknown mode: process_clean()\n");
@@ -249,18 +249,18 @@ int top_and_tail(dataptr dz)
     int  exit_status;
     float *ibuf = dz->bigbuf;
     float *obuf = ibuf;
-    int	 nbuff;
-    //	int  gotend   = FALSE;
-    //	int  gotstart = FALSE;
+    int  nbuff;
+    //  int  gotend   = FALSE;
+    //  int  gotstart = FALSE;
     int  chans = dz->infile->channels;
-    //	int  firsttime = TRUE;
+    //  int  firsttime = TRUE;
     int startsamp = 0;
     int endsamp = dz->insams[0];
     int splicecnt   = round(dz->param[TOPN_SPLEN] * MS_TO_SECS * (double)dz->infile->srate);
     int splicesamps = splicecnt * chans;
     int sampseek = 0;
     int startsplice, endsplice = 0, samps_to_write;
-    //	int startseek;
+    //  int startseek;
     double gate, ngate;
 
     dz->ssampsread = 0;
@@ -268,7 +268,7 @@ int top_and_tail(dataptr dz)
     nbuff = dz->insams[0]/dz->buflen;
     /* **** BUG?? **** */
     if(nbuff * dz->buflen < dz->insams[0])
-        nbuff++;		/* number of buffers contaning entire file */
+        nbuff++;                /* number of buffers contaning entire file */
     gate  = dz->param[TOPN_GATE] * (double)F_MAXSAMP;
     ngate = -gate;
     switch(dz->process) {
@@ -281,7 +281,7 @@ int top_and_tail(dataptr dz)
                 return(GOAL_FAILED);
             }
         } else
-            startsplice = 0;	/* Needed for settting wrap, offset, seek */
+            startsplice = 0;    /* Needed for settting wrap, offset, seek */
         if(dz->vflag[END_TRIM]) {
             if((exit_status = get_endsamp(ibuf,chans,nbuff,&endsplice,gate,ngate,dz))<0)
                 return(exit_status);
@@ -320,7 +320,7 @@ int top_and_tail(dataptr dz)
         break;
     }
 
-    //	startseek = startsamp * sizeof(float);
+    //  startseek = startsamp * sizeof(float);
     // DEC 2004
     dz->ssampsread = 0;
 
@@ -376,7 +376,7 @@ int get_startsamp(float *ibuf,int chans,int nbuff,int *startsamp,double gate,dou
         }
         if(gotstart) {
             *startsamp  = n + (thisbuff * dz->buflen);
-            *startsamp = (*startsamp/chans) * chans;	/* align to channel group boundary */
+            *startsamp = (*startsamp/chans) * chans;    /* align to channel group boundary */
             break;
         }
         thisbuff++;
@@ -396,7 +396,7 @@ int get_endsamp(float *ibuf,int chans,int nbuff,int *endsamp,double gate,double 
     int exit_status;
     int n;
     int gotend = FALSE;
-    int	thisbuff = nbuff - 1;	/* buffer that contains last sample */
+    int thisbuff = nbuff - 1;   /* buffer that contains last sample */
     while(!gotend && thisbuff >= 0) {
         if(sndseekEx(dz->ifd[0],thisbuff * dz->buflen,0)<0) {
             sprintf(errstr,"sndseek() failed: 1\n");
@@ -412,7 +412,7 @@ int get_endsamp(float *ibuf,int chans,int nbuff,int *endsamp,double gate,double 
         }
         if(gotend) {
             *endsamp = n + (thisbuff * dz->buflen);
-            *endsamp = (*endsamp/chans) * chans;	/* align to channel group boundary */
+            *endsamp = (*endsamp/chans) * chans;        /* align to channel group boundary */
             break;
         }
         thisbuff--;
@@ -441,7 +441,7 @@ int do_startsplice(int splicecnt,int startsamp,int *sampseek,int input_report,da
     }
     // NEW TW June 2004
     *sampseek = startsamp;
-    if((exit_status = read_samps(dz->bigbuf,dz))<0)	/* read buffer with additional sector */
+    if((exit_status = read_samps(dz->bigbuf,dz))<0)     /* read buffer with additional sector */
         return(exit_status);
     k = 0;
     aincr = 1.0/(double)splicecnt;
@@ -460,7 +460,7 @@ int do_startsplice(int splicecnt,int startsamp,int *sampseek,int input_report,da
                     return(exit_status);
             }
             *sampseek += dz->ssampsread;
-            if((exit_status = read_samps(dz->bigbuf,dz))<0)		/*RWD added * */
+            if((exit_status = read_samps(dz->bigbuf,dz))<0)             /*RWD added * */
                 return(exit_status);
             if(dz->ssampsread <=0)
                 return(FINISHED);
@@ -638,7 +638,7 @@ int ggetenv(dataptr dz)
     display_virtual_time(0,dz);
     realend = dz->sampbuf[ENV] + dz->iparam[CUTGATE_NUMSECS];
     /* 1ST PASS : WHOLE BUFFERS */
-    for(n = 0; n < dz->iparam[CUTGATE_NBUFS]; n++)	{
+    for(n = 0; n < dz->iparam[CUTGATE_NBUFS]; n++)      {
         if((exit_status = read_samps(dz->bigbuf,dz))<0)
             return(exit_status);
         readenv(dz->buflen,&(dz->sbufptr[ENV]),dz);
@@ -653,8 +653,8 @@ int ggetenv(dataptr dz)
         return(PROGRAM_ERROR);
     }
     readenv(sampstoget,&(dz->sbufptr[ENV]),dz);
-    dz->sbufptr[ENVEND] = dz->sbufptr[ENV];			/* end of data */
-    while(dz->sbufptr[ENV] < realend + dz->iparam[CUTGATE_WINDOWS]) {	/* pad end of buffer with zeroes */
+    dz->sbufptr[ENVEND] = dz->sbufptr[ENV];                     /* end of data */
+    while(dz->sbufptr[ENV] < realend + dz->iparam[CUTGATE_WINDOWS]) {   /* pad end of buffer with zeroes */
         *dz->sbufptr[ENV] = 0;
         dz->sbufptr[ENV]++;
     }
@@ -671,7 +671,7 @@ void searchpars(dataptr dz)
 
     dz->iparam[CUTGATE_NUMSECS] = dz->insams[0]/dz->iparam[CUTGATE_SAMPBLOK];
     searchsize = dz->iparam[CUTGATE_NUMSECS] * dz->iparam[CUTGATE_SAMPBLOK];
-    dz->iparam[CUTGATE_NBUFS] = searchsize/dz->buflen;								/* no. of whole buffs to search */
+    dz->iparam[CUTGATE_NBUFS] = searchsize/dz->buflen;                                                          /* no. of whole buffs to search */
     dz->iparam[CUTGATE_NSEC]  = (searchsize%dz->buflen)/dz->iparam[CUTGATE_SAMPBLOK]; /* no. further secs to search */
     return;
 }
@@ -681,7 +681,7 @@ void searchpars(dataptr dz)
 void readenv(int samps_to_process,float **env,dataptr dz)
 {   int  d;
     for(d=0; d<samps_to_process; d+=dz->iparam[CUTGATE_SAMPBLOK]) {
-    	get_maxsamp(*env,d,dz);
+        get_maxsamp(*env,d,dz);
         (*env)++;
     }
 }
@@ -694,50 +694,50 @@ void get_maxsamp(float *env,int startsamp,dataptr dz)
     double thisenv = 0;
     for(i = startsamp; i<endsamp; i++)
         thisenv =  max(thisenv,fabs(dz->bigbuf[i]));
-    *env  = (float)min(thisenv,F_MAXSAMP);	/* avoids overflowing */
+    *env  = (float)min(thisenv,F_MAXSAMP);      /* avoids overflowing */
 }
 
 /**************************** FINDCUTS ********************************
  *
  * (1)
- * (2)	If we are NOT inside a sound-to-keep.
- * (3)	  If the level is below the gate level..
- * (4)	    Ignore and continue..
- * (5)	  If the sound is above gate level..
- *	    mark this as (potential) start of a sound-to-keep
- * (6)	    flag sound-to-keep
- * (7)	    set the maximum level in segment to a minimum (0)
- * (8)	If we are INSIDE a sound-to-keep
- * (9)	  If the sound level drops below gate
- * (10)	    Check that 'dz->iparam[CUTGATE_WINDOWS]' succeeding segments are below gate level..
- * (11)	    If this is true,
- * (12)	      if the maximum level in sound-to-keep exceeded dz->iparam[CUTGATE_THRESH]..
- * 	        save the sound start and end times..
+ * (2)  If we are NOT inside a sound-to-keep.
+ * (3)    If the level is below the gate level..
+ * (4)      Ignore and continue..
+ * (5)    If the sound is above gate level..
+ *          mark this as (potential) start of a sound-to-keep
+ * (6)      flag sound-to-keep
+ * (7)      set the maximum level in segment to a minimum (0)
+ * (8)  If we are INSIDE a sound-to-keep
+ * (9)    If the sound level drops below gate
+ * (10)     Check that 'dz->iparam[CUTGATE_WINDOWS]' succeeding segments are below gate level..
+ * (11)     If this is true,
+ * (12)       if the maximum level in sound-to-keep exceeded dz->iparam[CUTGATE_THRESH]..
+ *              save the sound start and end times..
  * (13)       In ANY case, mark that we are NO LONGER in a sound-to-keep.
- *	    If it is NOT true, we are still INSIDE a sound-to-keep..
- * (14)	  If however, the sound is above the gate
- * (15)	    Check level of sound, and readjust maxlevel, if necessary..
+ *          If it is NOT true, we are still INSIDE a sound-to-keep..
+ * (14)   If however, the sound is above the gate
+ * (15)     Check level of sound, and readjust maxlevel, if necessary..
  */
 
 int findcuts(int *ccnt,dataptr dz)
 {
     int exit_status, tooshort_segs = 0, tooquiet_segs = 0;
     int startsec = 0, endsec;
-    int	 inside_sound = FALSE, OK, n;
-    //	float maxlevel = 0, keepit = FALSE;
+    int  inside_sound = FALSE, OK, n;
+    //  float maxlevel = 0, keepit = FALSE;
     float maxlevel = 0;
     float *bak, *endbak;
     int minlen = max(dz->iparam[CUTGATE_SPLEN] * 2,dz->iparam[CUTGATE_MINLEN]);
-    double gate 	 = dz->param[CUTGATE_GATE] * (double)F_MAXSAMP;
-    double endgate 	 = dz->param[CUTGATE_ENDGATE] * (double)F_MAXSAMP;
+    double gate          = dz->param[CUTGATE_GATE] * (double)F_MAXSAMP;
+    double endgate       = dz->param[CUTGATE_ENDGATE] * (double)F_MAXSAMP;
     double initlevel = dz->param[CUTGATE_INITLEVEL] * (double)F_MAXSAMP;
     double threshold = dz->param[CUTGATE_THRESH] * (double)F_MAXSAMP;
 
     while(dz->sbufptr[ENV]<dz->sbufptr[ENVEND]) {
-        switch(inside_sound) {											/* 1 */
-        case(FALSE):													/* 2 */
-            if(*(dz->sbufptr[ENV]) <= gate)								/* 3 */
-                break;													/* 4 */
+        switch(inside_sound) {                                                                                  /* 1 */
+        case(FALSE):                                                                                                    /* 2 */
+            if(*(dz->sbufptr[ENV]) <= gate)                                                             /* 3 */
+                break;                                                                                                  /* 4 */
             if(dz->iparam[CUTGATE_BAKTRAK]) {
                 bak = dz->sbufptr[ENV];
                 if((endbak = dz->sbufptr[ENV] - dz->iparam[CUTGATE_BAKTRAK]) < dz->sampbuf[ENV])
@@ -750,25 +750,25 @@ int findcuts(int *ccnt,dataptr dz)
                 }
                 startsec = bak - dz->sampbuf[ENV];
             } else
-                startsec = dz->sbufptr[ENV] - dz->sampbuf[ENV];			/* 5 */
-            inside_sound  = /*1*/TRUE;											/* 6 */	 /*RWD was 1 */
-            maxlevel = *(dz->sbufptr[ENV]);								/* 7 */
+                startsec = dz->sbufptr[ENV] - dz->sampbuf[ENV];                 /* 5 */
+            inside_sound  = /*1*/TRUE;                                                                                  /* 6 */  /*RWD was 1 */
+            maxlevel = *(dz->sbufptr[ENV]);                                                             /* 7 */
             break;
-        case(TRUE):														/* 8 */
-            if(*(dz->sbufptr[ENV]) <= endgate) {						/* 9 */
+        case(TRUE):                                                                                                             /* 8 */
+            if(*(dz->sbufptr[ENV]) <= endgate) {                                                /* 9 */
                 OK = TRUE;
                 if(dz->iparam[CUTGATE_WINDOWS]>0) {
-                    for(n=1;n<dz->iparam[CUTGATE_WINDOWS];n++) {		/* 10 */
+                    for(n=1;n<dz->iparam[CUTGATE_WINDOWS];n++) {                /* 10 */
                         if(*(dz->sbufptr[ENV]+n)>endgate) {
                             OK = FALSE;
                             break;
                         }
                     }
                 }
-                if(OK) {												/* 11 */
+                if(OK) {                                                                                                /* 11 */
                     endsec = dz->sbufptr[ENV] - dz->sampbuf[ENV];
                     if((endsec - startsec) * dz->iparam[CUTGATE_SAMPBLOK] > minlen) {
-                        if(maxlevel >= threshold) {	/* 12 */
+                        if(maxlevel >= threshold) {     /* 12 */
                             if((exit_status = store_cut_positions_in_samples(*ccnt,startsec,endsec,dz))<0)
                                 return(exit_status);
                             (*ccnt)++;
@@ -778,20 +778,20 @@ int findcuts(int *ccnt,dataptr dz)
                     } else {
                         tooshort_segs++;
                     }
-                    inside_sound = FALSE;								/* 13 */
+                    inside_sound = FALSE;                                                               /* 13 */
                 }
-            } else {													/* 14 */
-                if(*(dz->sbufptr[ENV]) > maxlevel)						/* 15 */
+            } else {                                                                                                    /* 14 */
+                if(*(dz->sbufptr[ENV]) > maxlevel)                                              /* 15 */
                     maxlevel = *(dz->sbufptr[ENV]);
             }
             break;
         }
         (dz->sbufptr[ENV])++;
     }
-    if(inside_sound) {				/* Ensure any significant block at very end is grabbed */
+    if(inside_sound) {                          /* Ensure any significant block at very end is grabbed */
         endsec = dz->sbufptr[ENV] - dz->sampbuf[ENV];
         if((endsec - startsec) * dz->iparam[CUTGATE_SAMPBLOK] > minlen) {
-            if(maxlevel >= threshold) {	/* 12 */
+            if(maxlevel >= threshold) { /* 12 */
                 if((exit_status = store_cut_positions_in_samples(*ccnt,startsec,endsec,dz))<0)
                     return(exit_status);
                 (*ccnt)++;
@@ -824,22 +824,22 @@ int findcuts2(int *ccnt,dataptr dz)
 {
     int exit_status, tooshort_segs = 0;
     int oldstartsec = 0, startsec, endsec;
-    int	 inside_sound = FALSE, OK, n;
+    int  inside_sound = FALSE, OK, n;
     /*short maxlevel = 0, keepit = FALSE, *bak, *endbak;*/
     //TW UPDATE : prevents WARNING
     int keepit = FALSE;
     float maxlevel = 0.0f, *bak, *endbak;
     int minlen = max(dz->iparam[CUTGATE_SPLEN] * 2,dz->iparam[CUTGATE_MINLEN]);
-    double gate 	 = dz->param[CUTGATE_GATE] * (double)F_MAXSAMP;
-    double endgate 	 = dz->param[CUTGATE_ENDGATE] * (double)F_MAXSAMP;
+    double gate          = dz->param[CUTGATE_GATE] * (double)F_MAXSAMP;
+    double endgate       = dz->param[CUTGATE_ENDGATE] * (double)F_MAXSAMP;
     double threshold = dz->param[CUTGATE_THRESH] * (double)F_MAXSAMP;
     double initlevel = dz->param[CUTGATE_INITLEVEL] * (double)F_MAXSAMP;
 
     while(dz->sbufptr[ENV]<dz->sbufptr[ENVEND]) {
-        switch(inside_sound) {					/* 1 */
-        case(FALSE):						/* 2 */
-            if(*(dz->sbufptr[ENV]) <= gate)				/* 3 */
-                break;					/* 4 */
+        switch(inside_sound) {                                  /* 1 */
+        case(FALSE):                                            /* 2 */
+            if(*(dz->sbufptr[ENV]) <= gate)                             /* 3 */
+                break;                                  /* 4 */
             if(dz->iparam[CUTGATE_BAKTRAK]) {
                 bak = dz->sbufptr[ENV];
                 if((endbak = dz->sbufptr[ENV] - dz->iparam[CUTGATE_BAKTRAK]) < dz->sampbuf[ENV])
@@ -850,9 +850,9 @@ int findcuts2(int *ccnt,dataptr dz)
                     else
                         break;
                 }
-    	        startsec = bak - dz->sampbuf[ENV];
+                startsec = bak - dz->sampbuf[ENV];
             } else
-                startsec = dz->sbufptr[ENV] - dz->sampbuf[ENV];			/* 5 */
+                startsec = dz->sbufptr[ENV] - dz->sampbuf[ENV];                 /* 5 */
             if(keepit && ((endsec = startsec - dz->iparam[CUTGATE_SUSTAIN]) > oldstartsec)) {
                 if((endsec - oldstartsec) * dz->iparam[CUTGATE_SAMPBLOK] > minlen) {
                     if((exit_status =
@@ -865,29 +865,29 @@ int findcuts2(int *ccnt,dataptr dz)
             }
             keepit = FALSE;
             oldstartsec = startsec;
-            inside_sound  = /*1*/TRUE;											/* 6 */
-            maxlevel = *(dz->sbufptr[ENV]);								/* 7 */
+            inside_sound  = /*1*/TRUE;                                                                                  /* 6 */
+            maxlevel = *(dz->sbufptr[ENV]);                                                             /* 7 */
             break;
-        case(TRUE):														/* 8 */
-            if(*(dz->sbufptr[ENV]) <= endgate) {						/* 9 */
+        case(TRUE):                                                                                                             /* 8 */
+            if(*(dz->sbufptr[ENV]) <= endgate) {                                                /* 9 */
                 OK = TRUE;
                 if(dz->iparam[CUTGATE_WINDOWS]>0) {
-                    for(n=1;n<dz->iparam[CUTGATE_WINDOWS];n++) {		/* 10 */
+                    for(n=1;n<dz->iparam[CUTGATE_WINDOWS];n++) {                /* 10 */
                         if(*(dz->sbufptr[ENV]+n)>gate) {
                             OK = FALSE;
                             break;
                         }
                     }
                 }
-                if(OK) {												/* 11 */
-                    if(maxlevel > threshold)							/* 12 */
+                if(OK) {                                                                                                /* 11 */
+                    if(maxlevel > threshold)                                                    /* 12 */
                         keepit = TRUE;
                     else
                         keepit = FALSE;
-                    inside_sound = FALSE;								/* 13 */
+                    inside_sound = FALSE;                                                               /* 13 */
                 }
-            } else {													/* 14 */
-                if(*(dz->sbufptr[ENV]) > maxlevel)						/* 15 */
+            } else {                                                                                                    /* 14 */
+                if(*(dz->sbufptr[ENV]) > maxlevel)                                              /* 15 */
                     maxlevel = *(dz->sbufptr[ENV]);
             }
             break;
@@ -896,7 +896,7 @@ int findcuts2(int *ccnt,dataptr dz)
     }
     endsec = dz->sbufptr[ENVEND] - dz->sampbuf[ENV];
     if(keepit && ((endsec - oldstartsec) * dz->iparam[CUTGATE_SAMPBLOK]) > minlen) {
-        if(maxlevel >= threshold) {	/* 12 */
+        if(maxlevel >= threshold) {     /* 12 */
             if((exit_status = store_cut_positions_in_samples(*ccnt,oldstartsec,endsec,dz))<0)
                 return(exit_status);
         }
@@ -937,10 +937,10 @@ int create_outfile_name(int ccnt,char *thisfilename,dataptr dz)
 int output_cut_sndfile(int ccnt,char *filename,dataptr dz)
 {
     int exit_status;
-    //	int  firsttime = TRUE;
+    //  int  firsttime = TRUE;
     int sampseek, startsamp, endsamp, k, samps_to_write, samps_written;
 
-    dz->process_type = UNEQUAL_SNDFILE;	/* allow sndfile to be created */
+    dz->process_type = UNEQUAL_SNDFILE; /* allow sndfile to be created */
     if((exit_status = create_sized_outfile(filename,dz))<0) {
         fprintf(stdout, "WARNING: Soundfile %s already exists.\n", filename);
         fflush(stdout);
@@ -966,12 +966,12 @@ int output_cut_sndfile(int ccnt,char *filename,dataptr dz)
             return(exit_status);
     }
     display_virtual_time(startsamp + dz->total_samps_read,dz);
-    dz->outfiletype  = SNDFILE_OUT;			/* allows header to be written  */
+    dz->outfiletype  = SNDFILE_OUT;                     /* allows header to be written  */
 
     if((exit_status = headwrite(dz->ofd,dz))<0)
         return(exit_status);
-    dz->process_type = OTHER_PROCESS;		/* restore true status */
-    dz->outfiletype  = NO_OUTPUTFILE;		/* restore true status */
+    dz->process_type = OTHER_PROCESS;           /* restore true status */
+    dz->outfiletype  = NO_OUTPUTFILE;           /* restore true status */
     if((exit_status = reset_peak_finder(dz))<0)
         return(exit_status);
     if(sndcloseEx(dz->ofd) < 0) {
@@ -1035,7 +1035,7 @@ int do_rectify(dataptr dz)
     } else {
         fprintf(stdout,"INFO: Finding minimum sample in file.\n");
         fflush(stdout);
-        //		minsamp = MAXSAMP;
+        //              minsamp = MAXSAMP;
         minsamp = F_MAXSAMP;
         while(dz->samps_left > 0) {
             if((exit_status = read_samps(buf,dz))<0)
@@ -1073,30 +1073,30 @@ int do_rectify(dataptr dz)
 //
 //int do_by_hand(dataptr dz)
 //{
-//	int n = 0, all_fixes_done = 0, exit_status;
-//	int k, last_total_ssampsread = 0;
-//	double *la = dz->parray[0];
-//	float *buf = dz->sampbuf[0];
+//      int n = 0, all_fixes_done = 0, exit_status;
+//      int k, last_total_ssampsread = 0;
+//      double *la = dz->parray[0];
+//      float *buf = dz->sampbuf[0];
 //
-//	while(dz->samps_left > 0) {
-//		if((exit_status = read_samps(buf,dz))<0)
-//			return(exit_status);
-//		if(!all_fixes_done) {
-//			while(dz->total_samps_read > *la) {
-//				k = round(*la++) - last_total_ssampsread;
+//      while(dz->samps_left > 0) {
+//              if((exit_status = read_samps(buf,dz))<0)
+//                      return(exit_status);
+//              if(!all_fixes_done) {
+//                      while(dz->total_samps_read > *la) {
+//                              k = round(*la++) - last_total_ssampsread;
 /* NOT SHORT, IF BUFS NOT SHORT : 2000 */
-//				buf[k] = (float)(*la++);
-//				if(la >= dz->parray[1]) {
-//					all_fixes_done = 1;
-//					break;
-//				}
-//			}
-//			last_total_ssampsread = dz->total_samps_read;
-//		}
-//		if((exit_status = write_samps(buf,dz->ssampsread,dz))<0)
-//			return(exit_status);
-//	}
-//	return(FINISHED);
+//                              buf[k] = (float)(*la++);
+//                              if(la >= dz->parray[1]) {
+//                                      all_fixes_done = 1;
+//                                      break;
+//                              }
+//                      }
+//                      last_total_ssampsread = dz->total_samps_read;
+//              }
+//              if((exit_status = write_samps(buf,dz->ssampsread,dz))<0)
+//                      return(exit_status);
+//      }
+//      return(FINISHED);
 //}
 //
 
@@ -1108,13 +1108,13 @@ int find_onset_cuts(int *ccnt,dataptr dz)
 {
     int exit_status, tooshort_segs = 0, tooquiet_segs = 0;
     int startsec = 0, endsec;
-    int	 inside_sound = FALSE, OK, n = 0;
-    //	short keepit = FALSE;
+    int  inside_sound = FALSE, OK, n = 0;
+    //  short keepit = FALSE;
     float maxlevel = 0;
     float *bak, *endbak, *minpos, *here, minval;
-    int minlen 	 = dz->iparam[CUTGATE_MINLEN];
-    double gate 	 = dz->param[CUTGATE_GATE] * (double)F_MAXSAMP;
-    double endgate 	 = dz->param[CUTGATE_ENDGATE] * (double)F_MAXSAMP;
+    int minlen   = dz->iparam[CUTGATE_MINLEN];
+    double gate          = dz->param[CUTGATE_GATE] * (double)F_MAXSAMP;
+    double endgate       = dz->param[CUTGATE_ENDGATE] * (double)F_MAXSAMP;
     double initlevel = dz->param[CUTGATE_INITLEVEL] * (double)F_MAXSAMP;
     double threshold = dz->param[CUTGATE_THRESH] * (double)F_MAXSAMP;
 
@@ -1123,10 +1123,10 @@ int find_onset_cuts(int *ccnt,dataptr dz)
     int envstep = envlen/10, envmark = envstep;
 
     while(dz->sbufptr[ENV]<dz->sbufptr[ENVEND]) {
-        switch(inside_sound) {											/* 1 */
-        case(FALSE):													/* 2 */
-            if(*(dz->sbufptr[ENV]) <= gate)								/* 3 */
-                break;													/* 4 */
+        switch(inside_sound) {                                                                                  /* 1 */
+        case(FALSE):                                                                                                    /* 2 */
+            if(*(dz->sbufptr[ENV]) <= gate)                                                             /* 3 */
+                break;                                                                                                  /* 4 */
             if(dz->iparam[CUTGATE_BAKTRAK]) {
                 bak = dz->sbufptr[ENV];
                 if((endbak = dz->sbufptr[ENV] - dz->iparam[CUTGATE_BAKTRAK]) < dz->sampbuf[ENV])
@@ -1150,25 +1150,25 @@ int find_onset_cuts(int *ccnt,dataptr dz)
                 }
                 startsec = bak - dz->sampbuf[ENV];
             } else
-                startsec = dz->sbufptr[ENV] - dz->sampbuf[ENV];			/* 5 */
-            inside_sound  = 1;											/* 6 */
-            maxlevel = *(dz->sbufptr[ENV]);								/* 7 */
+                startsec = dz->sbufptr[ENV] - dz->sampbuf[ENV];                 /* 5 */
+            inside_sound  = 1;                                                                                  /* 6 */
+            maxlevel = *(dz->sbufptr[ENV]);                                                             /* 7 */
             break;
-        case(TRUE):														/* 8 */
-            if(*(dz->sbufptr[ENV]) <= endgate) {						/* 9 */
+        case(TRUE):                                                                                                             /* 8 */
+            if(*(dz->sbufptr[ENV]) <= endgate) {                                                /* 9 */
                 OK = TRUE;
                 if(dz->iparam[CUTGATE_WINDOWS]>0) {
-                    for(n=1;n<dz->iparam[CUTGATE_WINDOWS];n++) {		/* 10 */
+                    for(n=1;n<dz->iparam[CUTGATE_WINDOWS];n++) {                /* 10 */
                         if(*(dz->sbufptr[ENV]+n)>endgate) {
                             OK = FALSE;
                             break;
                         }
                     }
                 }
-                if(OK) {												/* 11 */
+                if(OK) {                                                                                                /* 11 */
                     endsec = dz->sbufptr[ENV] - dz->sampbuf[ENV];
                     if((endsec - startsec) * dz->iparam[CUTGATE_SAMPBLOK] > minlen) {
-                        if(maxlevel >= threshold) {							/* 12 */
+                        if(maxlevel >= threshold) {                                                     /* 12 */
                             if((exit_status = store_startcut_positions_in_samples(*ccnt,startsec,dz))<0)
                                 return(exit_status);
                             (*ccnt)++;
@@ -1178,10 +1178,10 @@ int find_onset_cuts(int *ccnt,dataptr dz)
                     } else {
                         tooshort_segs = 1;
                     }
-                    inside_sound = FALSE;									/* 13 */
+                    inside_sound = FALSE;                                                                       /* 13 */
                 }
-            } else {													/* 14 */
-                if(*(dz->sbufptr[ENV]) > maxlevel)						/* 15 */
+            } else {                                                                                                    /* 14 */
+                if(*(dz->sbufptr[ENV]) > maxlevel)                                              /* 15 */
                     maxlevel = *(dz->sbufptr[ENV]);
             }
             break;
@@ -1194,10 +1194,10 @@ int find_onset_cuts(int *ccnt,dataptr dz)
             }
         }
     }
-    if(inside_sound) {				/* Ensure any significant block at very end is grabbed */
+    if(inside_sound) {                          /* Ensure any significant block at very end is grabbed */
         endsec = dz->sbufptr[ENV] - dz->sampbuf[ENV];
         if((endsec - startsec) * dz->iparam[CUTGATE_SAMPBLOK] > minlen) {
-            if(maxlevel >= threshold) {	/* 12 */
+            if(maxlevel >= threshold) { /* 12 */
                 if((exit_status = store_cut_positions_in_samples(*ccnt,startsec,endsec,dz))<0)
                     return(exit_status);
                 (*ccnt)++;
@@ -1250,13 +1250,13 @@ int house_gate(dataptr dz)
 {
     int exit_status;
     int gotfirst = 0;
-    //	int zerosgot = 0, finished = 0, cutcount = 0, chans = dz->infile->channels;
+    //  int zerosgot = 0, finished = 0, cutcount = 0, chans = dz->infile->channels;
     int zerosgot = 0, finished = 0, chans = dz->infile->channels;
     int startsamp = 0, arraysize = BIGARRAY, n, i, j;
-    //	int samps_to_get = dz->buflen, samps_to_write;
+    //  int samps_to_get = dz->buflen, samps_to_write;
     int samps_to_write;
     int *cutpoint;
-    //	int total_samps_read = 0, cutcnt = 0, secseek;
+    //  int total_samps_read = 0, cutcnt = 0, secseek;
     int total_samps_read = 0, cutcnt = 0;
     char *thisfilename;
     int endsamp;
@@ -1373,7 +1373,7 @@ int house_gate(dataptr dz)
         reset_filedata_counters(dz);
         if((exit_status = create_outfile_name(n,thisfilename,dz))<0)
             return(exit_status);
-        dz->process_type = UNEQUAL_SNDFILE;	/* allow sndfile to be created */
+        dz->process_type = UNEQUAL_SNDFILE;     /* allow sndfile to be created */
         if((exit_status = create_sized_outfile(thisfilename,dz))<0) {
             fprintf(stdout, "WARNING: Soundfile %s already exists.\n", thisfilename);
             fflush(stdout);
@@ -1402,11 +1402,11 @@ int house_gate(dataptr dz)
             if((exit_status = write_samps(dz->sampbuf[0],samps_to_write,dz))<0)
                 return(exit_status);
         }
-        dz->outfiletype  = SNDFILE_OUT;			/* allows header to be written  */
+        dz->outfiletype  = SNDFILE_OUT;                 /* allows header to be written  */
         if((exit_status = headwrite(dz->ofd,dz))<0)
             return(exit_status);
-        dz->process_type = OTHER_PROCESS;		/* restore true status */
-        dz->outfiletype  = NO_OUTPUTFILE;		/* restore true status */
+        dz->process_type = OTHER_PROCESS;               /* restore true status */
+        dz->outfiletype  = NO_OUTPUTFILE;               /* restore true status */
         if((exit_status = reset_peak_finder(dz))<0)
             return(exit_status);
         if(sndcloseEx(dz->ofd) < 0) {
@@ -1424,10 +1424,10 @@ int house_gate(dataptr dz)
 
 /********************************** HOUSE_GATE2 ********************************/
 
-#define NOTHING_FOUND			0
-#define INTERGLITCH_FOUND		1
-#define MEASURING_GLITCH		2
-#define MEASURING_INTERGLITCH	3
+#define NOTHING_FOUND                   0
+#define INTERGLITCH_FOUND               1
+#define MEASURING_GLITCH                2
+#define MEASURING_INTERGLITCH   3
 
 int house_gate2(dataptr dz)
 {
@@ -1476,22 +1476,22 @@ int house_gate2(dataptr dz)
             cnt += chans;
             gotzero = 0;
             thissamp = 0.0;
-            for(m=0;m < chans ;m++) {				/* add samples cyclically to a buffer */
+            for(m=0;m < chans ;m++) {                           /* add samples cyclically to a buffer */
                 filtbuf[filt_index++] = ibuf[n+m];
                 thissamp += fabs(ibuf[n+m]);
             }
-            filt_index %= filtlen;					/* cycle around buffer */
+            filt_index %= filtlen;                                      /* cycle around buffer */
 
-            thissamp /= (double)chans;				/* average abs size of samples in all channels at this point */
+            thissamp /= (double)chans;                          /* average abs size of samples in all channels at this point */
             cnt = min(cnt,filtlen);
-            sum = 0.0;								/* sum over filt buffer len, or total no of samps read, whichever is smaller */
+            sum = 0.0;                                                          /* sum over filt buffer len, or total no of samps read, whichever is smaller */
             for(f = 0;f < cnt;f++)
                 sum += fabs(filtbuf[f]);
-            sum /= (double)cnt;						/* find average abs samp val over last 'filtlen' samps */
+            sum /= (double)cnt;                                         /* find average abs samp val over last 'filtlen' samps */
 
             if(sum <= dz->param[GATE2_LEVEL])
                 gotzero = 1;
-            if(thissamp > dz->param[GATE2_LEVEL]) {	/* note abs level of this sample */
+            if(thissamp > dz->param[GATE2_LEVEL]) {     /* note abs level of this sample */
                 possible_start = n + last_total_samps_read;
                 gotzero = 0;
             }
@@ -1499,38 +1499,38 @@ int house_gate2(dataptr dz)
                 nonzerosgot = 0;
                 zerosgot++;
                 switch(search_state) {
-                case(NOTHING_FOUND):			/* not yet enough pre-glitch sub-threshold signal */
+                case(NOTHING_FOUND):                    /* not yet enough pre-glitch sub-threshold signal */
                     if(zerosgot >= dz->iparam[GATE2_ZEROS])
                         search_state = INTERGLITCH_FOUND;
                     break;
-                case(INTERGLITCH_FOUND):		/* already got enough pre-glitch sub-threshold signal */
+                case(INTERGLITCH_FOUND):                /* already got enough pre-glitch sub-threshold signal */
                     break;
-                case(MEASURING_GLITCH):			/* found glitch: mark end, prepare to measure post-glitch */
+                case(MEASURING_GLITCH):                 /* found glitch: mark end, prepare to measure post-glitch */
                     endcut = last_total_samps_read + n;
                     search_state = MEASURING_INTERGLITCH;
                     break;
-                case(MEASURING_INTERGLITCH):	/* waiting for enough post-glitch, sub-threshold signal */
+                case(MEASURING_INTERGLITCH):    /* waiting for enough post-glitch, sub-threshold signal */
                     if(zerosgot >= dz->iparam[GATE2_ZEROS]) {
                         pos[k++] = startcut;
                         pos[k++] = endcut;
                         z++;
                         search_state = INTERGLITCH_FOUND;
-                    }							/* if enough found, also enough preglitch for next glitch */
+                    }                                                   /* if enough found, also enough preglitch for next glitch */
                     break;
                 }
             } else {
                 nonzerosgot++;
                 zerosgot = 0;
                 switch(search_state) {
-                case(NOTHING_FOUND):			/* not yet enough pre-glitch sub-threshold signal */
+                case(NOTHING_FOUND):                    /* not yet enough pre-glitch sub-threshold signal */
                     break;
-                case(INTERGLITCH_FOUND):		/* enough signal before threshold, mark start of excision */
+                case(INTERGLITCH_FOUND):                /* enough signal before threshold, mark start of excision */
                     startcut = possible_start;
                     if(dz->vflag[0]) {
                         f = filt_index - chans;
                         maxsamp[z] = 0.0f;
                         for(j = n + last_total_samps_read; j >= startcut; j-=chans, f -= chans) {
-                            if(f < 0)			/* use filtbuf to find maxsamp between here & possible_start */
+                            if(f < 0)                   /* use filtbuf to find maxsamp between here & possible_start */
                                 f += filtlen;
                             thissamp = 0.0;
                             for(m=0;m < chans ;m++)
@@ -1542,13 +1542,13 @@ int house_gate2(dataptr dz)
                     nonzerosgot += (n + last_total_samps_read - possible_start);
                     search_state = MEASURING_GLITCH;
                     break;
-                case(MEASURING_GLITCH):			/* measuring possible glitch: if too long, abandon */
+                case(MEASURING_GLITCH):                 /* measuring possible glitch: if too long, abandon */
                     if(dz->vflag[0])
                         maxsamp[z] = (float)max((double)maxsamp[z],thissamp);
                     if(nonzerosgot > dz->iparam[GATE2_DUR])
                         search_state = NOTHING_FOUND;
                     break;
-                case(MEASURING_INTERGLITCH):	/* was waiting for enough postglitch 'ZEROS' but not enough */
+                case(MEASURING_INTERGLITCH):    /* was waiting for enough postglitch 'ZEROS' but not enough */
                     search_state = NOTHING_FOUND;
                     break;
                 }
@@ -1612,10 +1612,10 @@ int house_gate2(dataptr dz)
             last_total_samps_read = dz->total_samps_read;
             if((exit_status = read_samps(ibuf,dz))<0)
                 return(exit_status);
-            n			-= dz->buflen;
-            endsplice	-= dz->buflen;
+            n                   -= dz->buflen;
+            endsplice   -= dz->buflen;
             startsplice -= dz->buflen;
-            endcut		-= dz->buflen;
+            endcut              -= dz->buflen;
         }
         while(n<endsplice) {
             spliceratio -= spliceincr;
@@ -1628,10 +1628,10 @@ int house_gate2(dataptr dz)
                 last_total_samps_read = dz->total_samps_read;
                 if((exit_status = read_samps(ibuf,dz))<0)
                     return(exit_status);
-                n			-= dz->buflen;
-                endsplice	-= dz->buflen;
+                n                       -= dz->buflen;
+                endsplice       -= dz->buflen;
                 startsplice -= dz->buflen;
-                endcut		-= dz->buflen;
+                endcut          -= dz->buflen;
             }
         }
         while(n < startsplice) {
@@ -1642,9 +1642,9 @@ int house_gate2(dataptr dz)
                 last_total_samps_read = dz->total_samps_read;
                 if((exit_status = read_samps(ibuf,dz))<0)
                     return(exit_status);
-                n			-= dz->buflen;
+                n                       -= dz->buflen;
                 startsplice -= dz->buflen;
-                endcut		-= dz->buflen;
+                endcut          -= dz->buflen;
             }
         }
         spliceratio = 0.0;
@@ -1659,8 +1659,8 @@ int house_gate2(dataptr dz)
                 last_total_samps_read = dz->total_samps_read;
                 if((exit_status = read_samps(ibuf,dz))<0)
                     return(exit_status);
-                n		-= dz->buflen;
-                endcut	-= dz->buflen;
+                n               -= dz->buflen;
+                endcut  -= dz->buflen;
             }
         }
     }

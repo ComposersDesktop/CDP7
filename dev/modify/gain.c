@@ -43,10 +43,10 @@ static void gain(long samples,double multiplier,double maxnoclip,long *numclippe
                  int do_clip,double *peak,dataptr dz);
 static int find_max(double *maxfound,dataptr dz);
 static int  find_maximum(int infile,long *maxloc,long *maxrep,double *maxsamp,dataptr dz);
-static void	get_max(double *,long,long,long *,long *,dataptr dz);
+static void     get_max(double *,long,long,long *,long *,dataptr dz);
 static int  balance(double mratio,dataptr dz);
 //TW replaced by peakchunk
-//static int	write_maxsamp_properties(double,long,long,dataptr dz);
+//static int    write_maxsamp_properties(double,long,long,dataptr dz);
 static int  do_balance(dataptr dz);
 static int  gain_process(dataptr dz);
 static int  get_normalisation_gain(dataptr dz);
@@ -56,7 +56,7 @@ static void find_maxsamp(double *maxfound,dataptr dz);
 static int  do_multifile_loudness(dataptr dz);
 
 
-#define	MAX_DBGAIN	 (90)
+#define MAX_DBGAIN       (90)
 
 //TW UPDATE: further updated for floatsams and new-style clipping detection
 int gainenv(long samples,long *last_total,double maxnoclip,long *numclipped,int do_clip,double *peak,dataptr dz);
@@ -88,11 +88,11 @@ int loudness_process(dataptr dz)
     }
     switch(dz->mode) {
     case(LOUDNESS_LOUDEST):
-    case(LOUDNESS_EQUALISE): 	return do_multifile_loudness(dz);
-    case(LOUDNESS_BALANCE): 	return do_balance(dz);
-    default:				 	return gain_process(dz);
+    case(LOUDNESS_EQUALISE):    return do_multifile_loudness(dz);
+    case(LOUDNESS_BALANCE):     return do_balance(dz);
+    default:                                    return gain_process(dz);
     }
-    return(FINISHED);	/* NOTREACHED */
+    return(FINISHED);   /* NOTREACHED */
 }
 
 /************************** GAIN_PROCESS *******************************/
@@ -196,9 +196,9 @@ void do_normalise(dataptr dz)
     float *buffer = dz->sampbuf[0];
     float dgain = (float) dz->param[LOUD_GAIN];
     for(i = 0; i < dz->ssampsread; i++) {
-        //TW	float sampl;
-        //TW   	sampl  = buffer[i] * dgain;
-        //TW   	buffer[i] =  sampl;
+        //TW    float sampl;
+        //TW    sampl  = buffer[i] * dgain;
+        //TW    buffer[i] =  sampl;
         //TW must cast to float anyway, as multiply gives double
         buffer[i] =  (float)(buffer[i] * dgain);
     }
@@ -211,9 +211,9 @@ void do_phase_invert(dataptr dz)
     double samplong;
     float *buffer = dz->sampbuf[0];
     for(i = 0; i < dz->ssampsread; i++) {
-    	samplong  = -buffer[i];
+        samplong  = -buffer[i];
         samplong = min(samplong,(double)F_MAXSAMP);
-    	buffer[i] = (float)(samplong);
+        buffer[i] = (float)(samplong);
     }
 }
 
@@ -247,8 +247,8 @@ void find_maxsamp(double *maxfound,dataptr dz)
     double k;
     float *buffer = dz->sampbuf[0];
     for(i = 0; i < dz->ssampsread; i++) {
-	if((k = fabs(buffer[i])) > *maxfound)
-	    *maxfound = k;
+        if((k = fabs(buffer[i])) > *maxfound)
+            *maxfound = k;
     }
     return;
 }
@@ -323,8 +323,8 @@ int do_balance(dataptr dz)
     if((exit_status = balance(mratio,dz))< 0)
         return(exit_status);
     //TW No longer required: takes place in PEAK procedure
-    //	if((exit_status = write_maxsamp_properties(max2,maxloc1,maxrep1,dz))<0)
-    //		return(exit_status);
+    //  if((exit_status = write_maxsamp_properties(max2,maxloc1,maxrep1,dz))<0)
+    //          return(exit_status);
     return(FINISHED);
 }
 
@@ -393,27 +393,27 @@ void get_max(double *maxsamp,long ssampsread,long last_total_ssampsread, long *m
 //int write_maxsamp_properties(double max1,long maxloc,long maxrep,dataptr dz)
 //{
 //
-//	float maxpfamp = (float)max1;
+//      float maxpfamp = (float)max1;
 //
-//	if(maxloc<0 || maxrep<0) {
-//		sprintf(errstr,"Failed to establish location and/or repetition-count of max-sample\n");
-//		return(GOAL_FAILED);
-//	}
+//      if(maxloc<0 || maxrep<0) {
+//              sprintf(errstr,"Failed to establish location and/or repetition-count of max-sample\n");
+//              return(GOAL_FAILED);
+//      }
 /* TODO: scrap all this for the PEAK chunk instead! */
 //* don't store in 'maxamp' as this is (long) in old files:
-//	if(sndputprop(dz->ofd, "maxpfamp", (char *)&maxpfamp, sizeof(float)) < 0) {
-//		sprintf(errstr,"Can't write new max-sample to sndfile.\n");
-//		return(PROGRAM_ERROR);
-//	}
-//	if(sndputprop(dz->ofd, "maxloc", (char *)&maxloc, sizeof(long)) < 0) {
-//		sprintf(errstr,"Can't write location of max-sample to sndfile.\n");
-//		return(PROGRAM_ERROR);
-//	}
-//	if(sndputprop(dz->ofd, "maxrep", (char *)&maxrep, sizeof(long)) < 0) {
-//		sprintf(errstr,"Can't write repeat-count of max-sample to sndfile.\n");
-//		return(PROGRAM_ERROR);
-//	}
-//	return(FINISHED);
+//      if(sndputprop(dz->ofd, "maxpfamp", (char *)&maxpfamp, sizeof(float)) < 0) {
+//              sprintf(errstr,"Can't write new max-sample to sndfile.\n");
+//              return(PROGRAM_ERROR);
+//      }
+//      if(sndputprop(dz->ofd, "maxloc", (char *)&maxloc, sizeof(long)) < 0) {
+//              sprintf(errstr,"Can't write location of max-sample to sndfile.\n");
+//              return(PROGRAM_ERROR);
+//      }
+//      if(sndputprop(dz->ofd, "maxrep", (char *)&maxrep, sizeof(long)) < 0) {
+//              sprintf(errstr,"Can't write repeat-count of max-sample to sndfile.\n");
+//              return(PROGRAM_ERROR);
+//      }
+//      return(FINISHED);
 //}
 
 /********************** DO_MULTIFILE_LOUDNESS ***************************/
@@ -429,10 +429,10 @@ int do_multifile_loudness(dataptr dz)
 
     int orig_ifd = dz->ifd[0];
     //TW REVISED Dec 2002
-    //	int n, do_gain, namelen, maxno = 0;
+    //  int n, do_gain, namelen, maxno = 0;
     int n, do_gain, maxno = 0;
     //TW REVISED Dec 2002
-    //	char outfilename[256], *outfilenumber;	   /* RWD fname was only [64] */
+    //  char outfilename[256], *outfilenumber;     /* RWD fname was only [64] */
     char outfilename[256];
     long numclipped = 0;
     double this_gain = 1.0, maxnoclip = 1.0;

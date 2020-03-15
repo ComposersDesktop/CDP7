@@ -61,16 +61,16 @@
 
 #define ROLLOFF (0.66)
 
-static int 	generate_perms(double ***combo,int **combolen,int *combocnt,dataptr dz);
-static int	set_element(int element_no,int total_elements,int field_cnt,int *element,
+static int      generate_perms(double ***combo,int **combolen,int *combocnt,dataptr dz);
+static int      set_element(int element_no,int total_elements,int field_cnt,int *element,
                             double ***combo,int **combolen,int *combocnt);
-static int 	store_combo(double ***combo,int *combocnt,int **combolen,int *element,int total_elements);
+static int      store_combo(double ***combo,int *combocnt,int **combolen,int *element,int total_elements);
 static void substitute_midivals_in_perms(double **combo,int *combolen,int combocnt,dataptr dz);
-static int 	generate_hfsets(int combocnt,double **combo,int *combolen,
-				double ***hfset,int **hfsetlen,int *hfsetcnt,dataptr dz);
-static int 	transpose_element(int element_no,double *thiscombo,int thiscombolen,double *origval,
+static int      generate_hfsets(int combocnt,double **combo,int *combolen,
+                                double ***hfset,int **hfsetlen,int *hfsetcnt,dataptr dz);
+static int      transpose_element(int element_no,double *thiscombo,int thiscombolen,double *origval,
                                   double ***hfset,int **hfsetlen,int *hfsetcnt,dataptr dz);
-static int 	store_transposition(double ***hfset,int **hfsetlen,int *hfsetcnt,double *thiscombo,int thiscombolen);
+static int      store_transposition(double ***hfset,int **hfsetlen,int *hfsetcnt,double *thiscombo,int thiscombolen);
 static int sort_hfsets(double **hfset,int *hfsetlen,int *hfsetcnt,int *grping,dataptr dz);
 static int gen_output(int hfsetcnt,double **hfset,int *hfsetlen,int *grping,dataptr dz);
 static int gen_outputs(int hfsetcnt,double **hfset,int *hfsetlen,int *grping,dataptr dz);
@@ -108,7 +108,7 @@ static void gen_note2(double *tabstart,double *tabend,double midival,
 static void gen_note3(double *tabstart,double *tabend,double midival,int tabsize,int splicelen, float *intab);
 int gen_dp_output(dataptr dz);
 
-#define LEAVESPACE	(10*1024)
+#define LEAVESPACE      (10*1024)
 
 int sorting_type = 0;
 
@@ -232,7 +232,7 @@ int generate_perms(double ***combo,int **combolen,int *combocnt,dataptr dz)
             maxsize = dz->iparam[HP1_HFCNT];
 
         for(n=dz->iparam[HP1_MINSET];n<=maxsize;n++) {
-            for(j=0;j<n;j++)	 	/* initialise perm elements */
+            for(j=0;j<n;j++)            /* initialise perm elements */
                 element[j] = j-1;
             if((exit_status = set_element(0,n,dz->iparam[HP1_HFCNT],element,combo,combolen,combocnt))<0) {
                 free(element);
@@ -254,26 +254,26 @@ int set_element(int element_no,int total_elements,int field_cnt,int *element,dou
     int exit_status, k;
     int limit = field_cnt - total_elements + element_no;
     for(;;) {
-        element[element_no]++;					/* incr the element number */
-        if(element[element_no] > limit) {		/* if it's now beyond max for this element */
-            if(element_no > 0) {				/* reset this, & all elements above it */
-                k = element_no;					/* to be in ascending sequence from element below */
-                while(k < total_elements) {		/* ready for incrementation of next lowest element */
+        element[element_no]++;                                  /* incr the element number */
+        if(element[element_no] > limit) {               /* if it's now beyond max for this element */
+            if(element_no > 0) {                                /* reset this, & all elements above it */
+                k = element_no;                                 /* to be in ascending sequence from element below */
+                while(k < total_elements) {             /* ready for incrementation of next lowest element */
                     element[k] = element[k-1] + 1;
                     k++;
                 }
             }
-            return(CONTINUE);					/* then return to next lowest element */
+            return(CONTINUE);                                   /* then return to next lowest element */
         }
-        if(element_no >= total_elements-1) {	/* if all elements have been set, store the combination */
+        if(element_no >= total_elements-1) {    /* if all elements have been set, store the combination */
             if((exit_status = store_combo(combo,combocnt,combolen,element,total_elements))<0)
                 return(exit_status);
-        } else  { 								/* but if not, go on to set the next element */
+        } else  {                                                               /* but if not, go on to set the next element */
             if((exit_status = set_element(element_no+1,total_elements,field_cnt,element,combo,combolen,combocnt))<0)
                 return(exit_status);
         }
     }
-    return(CONTINUE);	/* NOTREACHED */
+    return(CONTINUE);   /* NOTREACHED */
 }
 
 /************************** STORE_COMBO **************************/
@@ -282,12 +282,12 @@ int store_combo(double ***combo,int *combocnt,int **combolen,int *element,int to
 {
     int n, j;
     j = *combocnt;
-    (*combocnt)++;								/* incr count of combinations */
-    if(*combocnt == 1) {						/* create a new combo_store location */
+    (*combocnt)++;                                                              /* incr count of combinations */
+    if(*combocnt == 1) {                                                /* create a new combo_store location */
         if((*combo = (double **)malloc(sizeof(double *)))==NULL) {
             sprintf(errstr,"Out of memory for harmonic combinations.\n");
             return(MEMORY_ERROR);
-        }										/* create a new combo_store_cnt location */
+        }                                                                               /* create a new combo_store_cnt location */
         if((*combolen = (int *)malloc(sizeof(int)))==NULL) {
             sprintf(errstr,"Out of memory for harmonic combinations.\n");
             return(MEMORY_ERROR);
@@ -301,14 +301,14 @@ int store_combo(double ***combo,int *combocnt,int **combolen,int *element,int to
             sprintf(errstr,"Out of memory for harmonic combinations.\n");
             return(MEMORY_ERROR);
         }
-    }											/* create the new combo_store */
+    }                                                                                   /* create the new combo_store */
     if(((*combo)[j] = (double *)malloc(total_elements * sizeof(double)))==NULL) {
         sprintf(errstr,"Out of memory for harmonic combinations.\n");
         return(MEMORY_ERROR);
     }
-    for(n=0; n < total_elements; n++)			/* store the new combo */
+    for(n=0; n < total_elements; n++)                   /* store the new combo */
         (*combo)[j][n] = (double)element[n];
-    (*combolen)[j] = total_elements;			/* store the count of the new combo */
+    (*combolen)[j] = total_elements;                    /* store the count of the new combo */
     return(FINISHED);
 }
 
@@ -378,16 +378,16 @@ int transpose_element(int element_no,double *thiscombo,int thiscombolen,double *
             thiscombo[element_no] = origval[element_no];
             return CONTINUE;
         }
-        if(element_no >= thiscombolen-1) {	/* if all elements have been set, store the hfset */
+        if(element_no >= thiscombolen-1) {      /* if all elements have been set, store the hfset */
             if((exit_status = store_transposition(hfset,hfsetlen,hfsetcnt,thiscombo,thiscombolen))<0)
                 return(exit_status);
-        } else  { 								/* but if not, go on to set the next element */
+        } else  {                                                               /* but if not, go on to set the next element */
             if((exit_status =
                 transpose_element(element_no+1,thiscombo,thiscombolen,origval,hfset,hfsetlen,hfsetcnt,dz))<0)
                 return(exit_status);
         }
     }
-    return(CONTINUE);	/* NOTREACHED */
+    return(CONTINUE);   /* NOTREACHED */
 }
 
 /**************************** STORE_TRANSPOSITION *******************************/
@@ -396,12 +396,12 @@ int store_transposition(double ***hfset,int **hfsetlen,int *hfsetcnt,double *thi
 {
     int n, j;
     j = *hfsetcnt;
-    (*hfsetcnt)++;								/* incr count of hfset */
-    if(*hfsetcnt == 1) {						/* create a new hfset_store location */
+    (*hfsetcnt)++;                                                              /* incr count of hfset */
+    if(*hfsetcnt == 1) {                                                /* create a new hfset_store location */
         if((*hfset = (double **)malloc(sizeof(double *)))==NULL) {
             sprintf(errstr,"Out of memory for final sets.\n");
             return(MEMORY_ERROR);
-        }										/* create a new hfset_store_cnt location */
+        }                                                                               /* create a new hfset_store_cnt location */
         if((*hfsetlen = (int *)malloc(sizeof(int)))==NULL) {
             sprintf(errstr,"Out of memory for final sets.\n");
             return(MEMORY_ERROR);
@@ -415,14 +415,14 @@ int store_transposition(double ***hfset,int **hfsetlen,int *hfsetcnt,double *thi
             sprintf(errstr,"Out of memory for final sets.\n");
             return(MEMORY_ERROR);
         }
-    }											/* create the new hfset store */
+    }                                                                                   /* create the new hfset store */
     if(((*hfset)[j] = (double *)malloc(thiscombolen * sizeof(double)))==NULL) {
         sprintf(errstr,"Out of memory for final sets.\n");
         return(MEMORY_ERROR);
     }
-    for(n=0; n < thiscombolen; n++)			/* store the new hfset */
+    for(n=0; n < thiscombolen; n++)                     /* store the new hfset */
         (*hfset)[j][n] = thiscombo[n];
-    (*hfsetlen)[j] = thiscombolen;			/* store the count of the new hfset */
+    (*hfsetlen)[j] = thiscombolen;                      /* store the count of the new hfset */
     return(FINISHED);
 }
 
@@ -457,14 +457,14 @@ int sort_hfsets(double **hfset,int *hfsetlen,int *hfsetcnt,int *grping,dataptr d
     int itemp;
     double *intv, *intv2, *pich;
     int *intvcnt, *intvcnt2;
-    //	int grping_cnt = 0, in_grp = 0;
+    //  int grping_cnt = 0, in_grp = 0;
     int grping_cnt = 0;
     int *minint = NULL, *intcnt = NULL;
     int hfsetcount = *hfsetcnt;
 
-    grping[0] = -1;					/* flags output not to do grouping */
+    grping[0] = -1;                                     /* flags output not to do grouping */
 
-    for(j = 0;j<hfsetcount;j++) {		 /*	Sort the individual sets themselves, so pitches are in ascending order */
+    for(j = 0;j<hfsetcount;j++) {                /*     Sort the individual sets themselves, so pitches are in ascending order */
         for(n=0;n<hfsetlen[j]-1;n++) {
             for(m = n+1; m<hfsetlen[j]; m++) {
                 if(hfset[j][m] < hfset[j][n]) {
@@ -476,7 +476,7 @@ int sort_hfsets(double **hfset,int *hfsetlen,int *hfsetcnt,int *grping,dataptr d
         }
     }
     print_outmessage_flush("Sorting chords by note-count.\n");
-    for(n=0;n<hfsetcount-1;n++) {		 /*	Sort the sets by size */
+    for(n=0;n<hfsetcount-1;n++) {                /*     Sort the sets by size */
         for(m = n+1; m<hfsetcount; m++) {
             if(hfsetlen[m] < hfsetlen[n]) {
                 itemp = hfsetlen[n];
@@ -550,7 +550,7 @@ int sort_hfsets(double **hfset,int *hfsetlen,int *hfsetcnt,int *grping,dataptr d
 int gen_output(int hfsetcnt,double **hfset,int *hfsetlen,int *grping,dataptr dz)
 {
     int exit_status;
-    //	short *obuf = dz->sampbuf[0];
+    //  short *obuf = dz->sampbuf[0];
     float *obuf = dz->sampbuf[0];
     double *tab = (double *)dz->sampbuf[2];
     double *tabend = tab + dz->iparam[HP1_ELEMENT_SIZE];
@@ -591,20 +591,20 @@ int gen_output(int hfsetcnt,double **hfset,int *hfsetlen,int *grping,dataptr dz)
         if(grping!=NULL && grping[0] != -1) {
             if(grping[grping_cnt]==n) {
                 in_group = 1;
-                gap_size += dz->iparam[HP1_GGAP_SIZE];	 /* make gap at start */
+                gap_size += dz->iparam[HP1_GGAP_SIZE];   /* make gap at start */
                 grping_cnt++;
             } else if(grping[grping_cnt]==-n) {
                 in_group = 0;
-                gap_size += dz->iparam[HP1_GGAP_SIZE];		/* make gap at end */
-                grping_cnt++;				/* if grp end coincides with gp start */
+                gap_size += dz->iparam[HP1_GGAP_SIZE];          /* make gap at end */
+                grping_cnt++;                           /* if grp end coincides with gp start */
                 if(grping[grping_cnt]==n) { /* skip a grping value */
                     in_group = 1;
                     grping_cnt++;
                 }
             } else if (!in_group)
-                gap_size += dz->iparam[HP1_GGAP_SIZE]; 		/* make gap between non-grouped entries */
+                gap_size += dz->iparam[HP1_GGAP_SIZE];          /* make gap between non-grouped entries */
         }
-        if(n!=0) {							/* no gap at start */
+        if(n!=0) {                                                      /* no gap at start */
             while(gap_size >= samp_space_available) {
                 if((exit_status = write_samps(dz->sampbuf[0],dz->buflen,dz))<0)
                     return(exit_status);
@@ -623,11 +623,11 @@ int gen_output(int hfsetcnt,double **hfset,int *hfsetlen,int *grping,dataptr dz)
         while(i < samps_to_write) {
             if(samp_space_available > samps_to_write) {
                 while(i < samps_to_write)
-                    //					obuf[samps_written++] = (short)round(tab[i++] * MAXSAMP);
+                    //                                  obuf[samps_written++] = (short)round(tab[i++] * MAXSAMP);
                     obuf[samps_written++] = (float)tab[i++];
             } else {
                 while(samps_written < dz->buflen)
-                    //					obuf[samps_written++] = (short)round(tab[i++] * MAXSAMP);
+                    //                                  obuf[samps_written++] = (short)round(tab[i++] * MAXSAMP);
                     obuf[samps_written++] = (float)tab[i++];
                 if((exit_status = write_samps(dz->sampbuf[0],dz->buflen,dz))<0)
                     return(exit_status);
@@ -681,7 +681,7 @@ int gen_outputs(int hfsetcnt,double **hfset,int *hfsetlen,int *grping,dataptr dz
         return(exit_status);
     if((exit_status = create_outfile_name(0,thisfilename,dz))<0)
         return(exit_status);
-    dz->process_type = UNEQUAL_SNDFILE;	/* allow sndfile to be created */
+    dz->process_type = UNEQUAL_SNDFILE; /* allow sndfile to be created */
     if((exit_status = create_sized_outfile(thisfilename,dz))<0) {
         fprintf(stdout, "WARNING: Soundfile %s already exists.\n", thisfilename);
         fflush(stdout);
@@ -723,21 +723,21 @@ int gen_outputs(int hfsetcnt,double **hfset,int *hfsetlen,int *grping,dataptr dz
                 }
                 in_group = 1;
                 grping_cnt++;
-            } else if(grping[grping_cnt]==-n) {	/* if at end of group */
+            } else if(grping[grping_cnt]==-n) { /* if at end of group */
                 in_group = 0;
                 if((exit_status = next_file(&samps_written,thisfilename,&ccnt,&space_needed,&samp_space_available,dz))<0)
                     return(exit_status);
-                grping_cnt++;				/* if grp end coincides with gp start */
+                grping_cnt++;                           /* if grp end coincides with gp start */
                 if(grping[grping_cnt]==n) { /* skip a grping value */
                     in_group = 1;
                     grping_cnt++;
                 }
-            } else if(in_group == 0 && n!=0) {	/* if not a grouped chord */
+            } else if(in_group == 0 && n!=0) {  /* if not a grouped chord */
                 if((exit_status = next_file(&samps_written,thisfilename,&ccnt,&space_needed,&samp_space_available,dz))<0)
                     return(exit_status);
             }
         }
-        if(n!=0) {							/* no gap at start */
+        if(n!=0) {                                                      /* no gap at start */
             while(gap_size >= samp_space_available) {
                 if((exit_status = write_samps(dz->sampbuf[0],dz->buflen,dz))<0)
                     return(exit_status);
@@ -781,7 +781,7 @@ int gen_outputs(int hfsetcnt,double **hfset,int *hfsetlen,int *grping,dataptr dz
             return(exit_status);
     }
     /* CLOSE FILE */
-    dz->outfiletype  = SNDFILE_OUT;			/* allows header to be written  */
+    dz->outfiletype  = SNDFILE_OUT;                     /* allows header to be written  */
     if((exit_status = headwrite(dz->ofd,dz))<0)
         return(exit_status);
     dz->process_type = OTHER_PROCESS;
@@ -816,9 +816,9 @@ int gen_text_output(int hfsetcnt,double **hfset,int *hfsetlen,int *grping,datapt
             if(grping[grping_cnt]==n) {
                 //in_group = 1;
                 grping_cnt++;
-            } else if(grping[grping_cnt]==-n) {	/* if at end of group */
+            } else if(grping[grping_cnt]==-n) { /* if at end of group */
                 //in_group = 0;
-                grping_cnt++;				/* if grp end coincides with gp start */
+                grping_cnt++;                           /* if grp end coincides with gp start */
                 if(grping[grping_cnt]==n) { /* skip a grping value */
                     //in_group = 1;
                     grping_cnt++;
@@ -838,7 +838,7 @@ int gen_text_output(int hfsetcnt,double **hfset,int *hfsetlen,int *grping,datapt
 int gen_midi_output(int hfsetcnt,double **hfset,int *hfsetlen,int *grping,dataptr dz)
 {
     int n, j, grping_cnt = 0;
-    //	int in_group = 0, in_grp = 0;
+    //  int in_group = 0, in_grp = 0;
     //int in_group = 0;
 
     for(n=0;n<hfsetcnt;n++) {
@@ -850,9 +850,9 @@ int gen_midi_output(int hfsetcnt,double **hfset,int *hfsetlen,int *grping,datapt
             if(grping[grping_cnt]==n) {
                 //in_group = 1;
                 grping_cnt++;
-            } else if(grping[grping_cnt]==-n) {	/* if at end of group, or not a grouped chord */
+            } else if(grping[grping_cnt]==-n) { /* if at end of group, or not a grouped chord */
                 //in_group = 0;
-                grping_cnt++;				/* if grp end coincides with gp start */
+                grping_cnt++;                           /* if grp end coincides with gp start */
                 if(grping[grping_cnt]==n) { /* skip a grping value */
                     //in_group = 1;
                     grping_cnt++;
@@ -868,19 +868,19 @@ int gen_midi_output(int hfsetcnt,double **hfset,int *hfsetlen,int *grping,datapt
 
 void print_grouping_structure(int n,int *grping,int *grping_cnt,int *in_grp,int hfsetcnt)
 {
-    if(grping[*grping_cnt]==-n && (n!=0)) {	  	/* if end of group marked */
+    if(grping[*grping_cnt]==-n && (n!=0)) {             /* if end of group marked */
         *in_grp = 0;
         print_outmessage_flush("))- - - - - - -\n");
-        if(grping[(*grping_cnt)+1]==n) {		/* if start of group ALSO marked */
+        if(grping[(*grping_cnt)+1]==n) {                /* if start of group ALSO marked */
             *in_grp = 1;
             print_outmessage_flush("-------------((\n");
         }
-    } else if(grping[*grping_cnt]==n) {			/* if start of group marked */
+    } else if(grping[*grping_cnt]==n) {                 /* if start of group marked */
         *in_grp = 1;
         print_outmessage_flush("-------------((\n");
-    } else if(!(*in_grp)) {						/* not inside a group */
+    } else if(!(*in_grp)) {                                             /* not inside a group */
         print_outmessage_flush("-----\n");
-    } else if(n >= hfsetcnt) {					/* inside a group at end of whole pass */
+    } else if(n >= hfsetcnt) {                                  /* inside a group at end of whole pass */
         print_outmessage_flush("))- - - - - - -\n");
     }
 }
@@ -889,23 +889,23 @@ void print_grouping_structure(int n,int *grping,int *grping_cnt,int *in_grp,int 
 
 void printout_grouping_structure(int n,int *grping,int *grping_cnt,int *in_grp,int hfsetcnt,dataptr dz)
 {
-    if(grping[*grping_cnt]==-n && (n!=0)) {	  	/* if end of group marked */
+    if(grping[*grping_cnt]==-n && (n!=0)) {             /* if end of group marked */
         *in_grp = 0;
         print_outmessage_flush("))- - - - - - -\n");
         fprintf(dz->fp,"))- - - - - - -\n");
-        if(grping[(*grping_cnt)+1]==n) {		/* if start of group ALSO marked */
+        if(grping[(*grping_cnt)+1]==n) {                /* if start of group ALSO marked */
             *in_grp = 1;
             print_outmessage_flush("-------------((\n");
             fprintf(dz->fp,"-------------((\n");
         }
-    } else if(grping[*grping_cnt]==n) {			/* if start of group marked */
+    } else if(grping[*grping_cnt]==n) {                 /* if start of group marked */
         *in_grp = 1;
         print_outmessage_flush("-------------((\n");
         fprintf(dz->fp,"-------------((\n");
-    } else if(!(*in_grp)) {						/* not inside a group */
+    } else if(!(*in_grp)) {                                             /* not inside a group */
         print_outmessage_flush("-----\n");
         fprintf(dz->fp,"-----\n");
-    } else if(n >= hfsetcnt) {					/* inside a group at end of whole pass */
+    } else if(n >= hfsetcnt) {                                  /* inside a group at end of whole pass */
         print_outmessage_flush("))- - - - - - -\n");
         fprintf(dz->fp,"))- - - - - - -\n");
     }
@@ -919,18 +919,18 @@ void set_pitch_to_print(int midi)
     char temp[12];
     midi = midi%12;
     switch(midi) {
-    case(0):	sprintf(temp,"C%d  ",oct);	break;
-    case(1):	sprintf(temp,"C#%d ",oct);	break;
-    case(2):	sprintf(temp,"D%d  ",oct);	break;
-    case(3):	sprintf(temp,"Eb%d ",oct);	break;
-    case(4):	sprintf(temp,"E%d  ",oct);	break;
-    case(5):	sprintf(temp,"F%d  ",oct);	break;
-    case(6):	sprintf(temp,"F#%d ",oct);	break;
-    case(7):	sprintf(temp,"G%d  ",oct);	break;
-    case(8):	sprintf(temp,"Ab%d ",oct);	break;
-    case(9):	sprintf(temp,"A%d  ",oct);	break;
-    case(10):	sprintf(temp,"Bb%d ",oct);	break;
-    case(11):	sprintf(temp,"B%d  ",oct);	break;
+    case(0):    sprintf(temp,"C%d  ",oct);      break;
+    case(1):    sprintf(temp,"C#%d ",oct);      break;
+    case(2):    sprintf(temp,"D%d  ",oct);      break;
+    case(3):    sprintf(temp,"Eb%d ",oct);      break;
+    case(4):    sprintf(temp,"E%d  ",oct);      break;
+    case(5):    sprintf(temp,"F%d  ",oct);      break;
+    case(6):    sprintf(temp,"F#%d ",oct);      break;
+    case(7):    sprintf(temp,"G%d  ",oct);      break;
+    case(8):    sprintf(temp,"Ab%d ",oct);      break;
+    case(9):    sprintf(temp,"A%d  ",oct);      break;
+    case(10):   sprintf(temp,"Bb%d ",oct);      break;
+    case(11):   sprintf(temp,"B%d  ",oct);      break;
     }
     if(oct>=0)
         strcat(temp," ");
@@ -969,7 +969,7 @@ void printout_pitchset(dataptr dz)
 
 /************************** SORT_BY_CHORD ***************************
  *
- *	Sort size-ordered then pitch-ordered sets, by equivalence of chords they make up.
+ *      Sort size-ordered then pitch-ordered sets, by equivalence of chords they make up.
  */
 
 int sort_by_chord(double **hfset,int *hfsetlen,double *intv,int *hfsetcnt,int *grping,dataptr dz)
@@ -980,15 +980,15 @@ int sort_by_chord(double **hfset,int *hfsetlen,double *intv,int *hfsetcnt,int *g
 
     for(n=0;n<(*hfsetcnt)-1;n++) {
         for(j = 0; j<hfsetlen[n]-1; j++)
-            intv[j] = hfset[n][j+1] - hfset[n][j];			/* set up intervals of first set as a comparison set */
+            intv[j] = hfset[n][j+1] - hfset[n][j];                      /* set up intervals of first set as a comparison set */
         lastmatch = n;
         was_a_match = 0;
         for(m = n+1; m<=*hfsetcnt; m++) {
-            if(m==*hfsetcnt || hfsetlen[m] != hfsetlen[n]){	/* if got to end of group-of-sets of same size */
+            if(m==*hfsetcnt || hfsetlen[m] != hfsetlen[n]){     /* if got to end of group-of-sets of same size */
 
-                if(was_a_match) {							/* if a matching-group has just been put together */
+                if(was_a_match) {                                                       /* if a matching-group has just been put together */
                     for(a=n;a<lastmatch;a++) {
-                        for(b = a+1; b<=lastmatch; b++) {	/* sort matching chords into pitch-ascending order */
+                        for(b = a+1; b<=lastmatch; b++) {       /* sort matching chords into pitch-ascending order */
                             if(hfset[b][0] < hfset[a][0]) {
                                 tempoint = hfset[a];
                                 hfset[a] = hfset[b];
@@ -997,41 +997,41 @@ int sort_by_chord(double **hfset,int *hfsetlen,double *intv,int *hfsetcnt,int *g
                         }
                     }
                     if(grping!=NULL && n!=0) {
-                        grping[grping_cnt++] = n;				/* ....mark group start */
-                        grping[grping_cnt++] = -(lastmatch+1);		/* mark group end */
+                        grping[grping_cnt++] = n;                               /* ....mark group start */
+                        grping[grping_cnt++] = -(lastmatch+1);          /* mark group end */
                     }
-                    if(lastmatch != m-1) {					/* if match-group didn't end at end of last samesize-group */
-                        n = lastmatch+1;					/* baktrak n to position AFTER END of matching set */
-                        for(j = 0; j<hfsetlen[n]-1; j++)	/* set this set's intervals as comparison intervals */
+                    if(lastmatch != m-1) {                                      /* if match-group didn't end at end of last samesize-group */
+                        n = lastmatch+1;                                        /* baktrak n to position AFTER END of matching set */
+                        for(j = 0; j<hfsetlen[n]-1; j++)        /* set this set's intervals as comparison intervals */
                             intv[j] = hfset[n][j+1] - hfset[n][j];
-                        m = n;								/* reset m to run over sets after n */
+                        m = n;                                                          /* reset m to run over sets after n */
                         lastmatch = n;
-                        was_a_match = 0;					/* search for further matching sets */
+                        was_a_match = 0;                                        /* search for further matching sets */
                         continue;
                         /* ELSE last match ended at end of group-of-sets */
-                    } else if(m < (*hfsetcnt)-1) {			/* SO, if we're not at last set */
-                        for(j = 0; j<hfsetlen[m]-1; j++)	/* establish interval comparison set for new setsize */
+                    } else if(m < (*hfsetcnt)-1) {                      /* SO, if we're not at last set */
+                        for(j = 0; j<hfsetlen[m]-1; j++)        /* establish interval comparison set for new setsize */
                             intv[j] = hfset[m][j+1] - hfset[m][j];
-                        lastmatch = m;						/* reset the base pointer of matching sets */
+                        lastmatch = m;                                          /* reset the base pointer of matching sets */
                         was_a_match = 0;
-                        n = m;								/* skip n-index to base of next group samesize sets */
+                        n = m;                                                          /* skip n-index to base of next group samesize sets */
                     }
-                } else {									/* matching set not been made in this pass */
-                    m = *hfsetcnt;							/* force n to advance */
+                } else {                                                                        /* matching set not been made in this pass */
+                    m = *hfsetcnt;                                                      /* force n to advance */
                 }
             } else {
-                matching_intervals = 1;						/* compare samesize (sorted) sets for matching intervals */
+                matching_intervals = 1;                                         /* compare samesize (sorted) sets for matching intervals */
                 for(j = 0; j<hfsetlen[m]-1; j++) {
                     if (!flteq(intv[j],hfset[m][j+1] - hfset[m][j])) {
                         matching_intervals = 0;
                         break;
                     }
                 }
-                if(matching_intervals) {					/* if all intervals match */
-                    was_a_match = 1;						/* note tha a match has been found in this pass */
-                    lastmatch++;							/* incr pointer to last match position */
-                    if(m != lastmatch) {					/* if the matching set is not AT this position */
-                        tempoint = hfset[lastmatch];		/* move it to that position */
+                if(matching_intervals) {                                        /* if all intervals match */
+                    was_a_match = 1;                                            /* note tha a match has been found in this pass */
+                    lastmatch++;                                                        /* incr pointer to last match position */
+                    if(m != lastmatch) {                                        /* if the matching set is not AT this position */
+                        tempoint = hfset[lastmatch];            /* move it to that position */
                         hfset[lastmatch] = hfset[m];
                         hfset[m] = tempoint;
                     }
@@ -1056,7 +1056,7 @@ int sort_by_chord(double **hfset,int *hfsetlen,double *intv,int *hfsetcnt,int *g
 
 /************************** SORT_BY_PITCHCLASS_EQUIVALENCE ***************************
  *
- *	Sort size-ordered THEN pitch-ordered sets, by pitch-class equivalence of root note in each size-group.
+ *      Sort size-ordered THEN pitch-ordered sets, by pitch-class equivalence of root note in each size-group.
  */
 
 
@@ -1070,11 +1070,11 @@ int sort_by_pitchclass_equivalence
     n = 0;
     setlen = hfsetlen[n];
     for(j = 0; j<setlen; j++)
-        pich[j] = fmod(hfset[n][j],12.0);			/* set up pitches of first set, as a comparison set */
+        pich[j] = fmod(hfset[n][j],12.0);                       /* set up pitches of first set, as a comparison set */
     for(m=1;m<hfsetcnt;m++) {
         if(hfsetlen[m] != setlen) {
             if(in_grp) {
-                grping[grping_cnt++] = -m;			/* mark end of group */
+                grping[grping_cnt++] = -m;                      /* mark end of group */
                 in_grp = 0;
             }
             if(intcnt != NULL) {
@@ -1086,10 +1086,10 @@ int sort_by_pitchclass_equivalence
             n = m;
             setlen = hfsetlen[n];
             for(j = 0; j<setlen; j++)
-                pich[j] = fmod(hfset[n][j],12.0);	/* set up pitches of new comparison set */
+                pich[j] = fmod(hfset[n][j],12.0);       /* set up pitches of new comparison set */
             continue;
         }
-        matching_pitches = 1;			   			/* no pitch-class duplication in sets */
+        matching_pitches = 1;                                           /* no pitch-class duplication in sets */
         for(j=0;j<hfsetlen[m];j++) {
             matching_pitches = 0;
             for(k=0;k<hfsetlen[m];k++) {
@@ -1103,12 +1103,12 @@ int sort_by_pitchclass_equivalence
         }
         if(matching_pitches) {
             if(!in_grp) {
-                grping[grping_cnt++] = (m-1);		/* mark start of group */
+                grping[grping_cnt++] = (m-1);           /* mark start of group */
                 in_grp = 1;
             }
         } else {
             if(in_grp) {
-                grping[grping_cnt++] = -m;			/* mark end of group */
+                grping[grping_cnt++] = -m;                      /* mark end of group */
                 in_grp = 0;
             }
             if(intcnt != NULL) {
@@ -1120,7 +1120,7 @@ int sort_by_pitchclass_equivalence
             n = m;
             setlen = hfsetlen[n];
             for(j = 0; j<setlen; j++)
-                pich[j] = fmod(hfset[n][j],12.0);	/* set up pitches of new comparison set */
+                pich[j] = fmod(hfset[n][j],12.0);       /* set up pitches of new comparison set */
             continue;
         }
     }
@@ -1135,7 +1135,7 @@ int sort_by_pitchclass_equivalence
 
 /************************** SORT_BY_REFERENCE_NOTE_EQUIVALENCE ***************************
  *
- *	Sort pitch-ordered by pitch-class equivalence of root note.
+ *      Sort pitch-ordered by pitch-class equivalence of root note.
  */
 
 int sort_by_reference_note_equivalence(double **hfset,int *hfsetlen,int hfsetcnt,int *grping,dataptr dz)
@@ -1150,14 +1150,14 @@ int sort_by_reference_note_equivalence(double **hfset,int *hfsetlen,int hfsetcnt
         setlen = hfsetlen[n];
         end = setlen - 1;
         switch(dz->iparam[HP1_SORT1]) {
-        case(ROOT):		note = 0; 	break;
-        case(TOP):		note = end;	break;
+        case(ROOT):             note = 0;       break;
+        case(TOP):              note = end;     break;
         }
-        while(hfsetlen[m] == setlen) {			/* find sets of same size */
+        while(hfsetlen[m] == setlen) {                  /* find sets of same size */
             if(++m >= hfsetcnt)
                 break;
         }
-        for(j=n;j<m-1;j++) {					/* sort all these samesize sets into root pitchclass order */
+        for(j=n;j<m-1;j++) {                                    /* sort all these samesize sets into root pitchclass order */
             if(dz->process == HF_PERM1)
                 thispitch = fmod(hfset[j][note],12.0);
             else
@@ -1174,7 +1174,7 @@ int sort_by_reference_note_equivalence(double **hfset,int *hfsetlen,int hfsetcnt
                 }
             }
         }
-        k = n;										/* sort all these into same-root sets */
+        k = n;                                                                          /* sort all these into same-root sets */
         j = k+1;
         if(j >= hfsetcnt)
             break;
@@ -1189,7 +1189,7 @@ int sort_by_reference_note_equivalence(double **hfset,int *hfsetlen,int hfsetcnt
             }
             while(flteq(thatpitch,thispitch)) {
                 if(!in_grp) {
-                    grping[grping_cnt++] = k;		/* mark start of group */
+                    grping[grping_cnt++] = k;           /* mark start of group */
                     in_grp = 1;
                 }
                 if(++j >= m)
@@ -1202,10 +1202,10 @@ int sort_by_reference_note_equivalence(double **hfset,int *hfsetlen,int hfsetcnt
                     thatpitch = hfset[j][note];
                 }
             }
-            if(in_grp) {							/* sort all these into density:tessitura order */
-                grping[grping_cnt++] = -j;			/* mark end of group */
+            if(in_grp) {                                                        /* sort all these into density:tessitura order */
+                grping[grping_cnt++] = -j;                      /* mark end of group */
                 sort_by_maxint(hfset,k,j,setlen,dz);
-                in_grp = 0;							/* sort same-root sets into interval size and stack order */
+                in_grp = 0;                                                     /* sort same-root sets into interval size and stack order */
             }
             k = j;
             j = k+1;
@@ -1218,7 +1218,7 @@ int sort_by_reference_note_equivalence(double **hfset,int *hfsetlen,int hfsetcnt
 
 /********************************* SORT_BY_MAXINT *********************************
  *
- *	Sort pitch-ordered sets of FIXED SIZE by size of largest interval, then by interval density
+ *      Sort pitch-ordered sets of FIXED SIZE by size of largest interval, then by interval density
  */
 
 void sort_by_maxint(double **hfset,int n,int m,int setlen,dataptr dz)
@@ -1228,7 +1228,7 @@ void sort_by_maxint(double **hfset,int n,int m,int setlen,dataptr dz)
     int end = setlen - 1;
     int in_grp;
 
-    for(j=n;j<m-1;j++) {					/* sort all by size of largest interval */
+    for(j=n;j<m-1;j++) {                                        /* sort all by size of largest interval */
         j_maxint = hfset[j][end] - hfset[j][0];
         for(k=j+1;k<m;k++) {
             k_maxint = hfset[k][end] - hfset[k][0];
@@ -1255,7 +1255,7 @@ void sort_by_maxint(double **hfset,int n,int m,int setlen,dataptr dz)
     k = n;
     j = k+1;
     in_grp = 0;
-    while(j < m) {							/* sort largest-interval sets  by internal interval arrangement */
+    while(j < m) {                                                      /* sort largest-interval sets  by internal interval arrangement */
         in_grp = 0;
         k_maxint = hfset[k][end] - hfset[k][0];
         j_maxint = hfset[j][end] - hfset[j][0];
@@ -1267,8 +1267,8 @@ void sort_by_maxint(double **hfset,int n,int m,int setlen,dataptr dz)
         }
         if(in_grp) {
             switch(dz->vflag[HP1_DENS]) {
-            case(DENSE_SORT): 	sort_by_density(hfset,k,j,setlen,0);			break;
-            case(OTHER_SORT):	sort_by_interval_stacking(hfset,k,j,setlen,0);	break;
+            case(DENSE_SORT):   sort_by_density(hfset,k,j,setlen,0);                    break;
+            case(OTHER_SORT):   sort_by_interval_stacking(hfset,k,j,setlen,0);  break;
             }
             sort_by_octave_equivalence(hfset,n,m,setlen);
         }
@@ -1279,7 +1279,7 @@ void sort_by_maxint(double **hfset,int n,int m,int setlen,dataptr dz)
 
 /********************************* SORT_BY_DENSITY *********************************
  *
- *	Sort pitch-ordered sets of FIXED SIZE , WITH FIXED MAX INTERVAL by density...
+ *      Sort pitch-ordered sets of FIXED SIZE , WITH FIXED MAX INTERVAL by density...
  *  measure the deviation from the mean inteval size between adjacent notes.
  *  Minimum deviation = minimum density.
  */
@@ -1297,14 +1297,14 @@ void sort_by_density(double **hfset,int n,int m,int setlen,int lowest)
         for(x = 1; x < setlen; x++) {
             y = hfset[j][x] - hfset[j][x-1];
             y = fabs(y - average_intsize);
-            j_deviation += y;		/* no advantage in taking rms */
+            j_deviation += y;           /* no advantage in taking rms */
         }
         for(k=j+1;k<m;k++) {
             k_deviation = 0;
             for(x = 1; x < setlen; x++) {
                 y = hfset[k][x] - hfset[k][x-1];
                 y = fabs(y - average_intsize);
-                k_deviation += y;	/* no advantage in taking rms */
+                k_deviation += y;       /* no advantage in taking rms */
             }
             if(lowest) {
                 if(k_deviation < j_deviation) {
@@ -1327,7 +1327,7 @@ void sort_by_density(double **hfset,int n,int m,int setlen,int lowest)
 
 /********************************* SORT_BY_MAXINTSIZE_AND_DENSITY *********************************
  *
- *	Sort pitch-ordered sets of FIXED SIZE , NOT of FIXED MAX INTERVAL by density...
+ *      Sort pitch-ordered sets of FIXED SIZE , NOT of FIXED MAX INTERVAL by density...
  *  measure the deviation from the mean inteval size between adjacent notes.
  *  Minimum deviation = minimum density.
  */
@@ -1338,7 +1338,7 @@ void sort_by_maxintsize_and_density(double **hfset,int n,int m,int setlen,int lo
     double j_intsize, k_intsize;
     double *tempoint;
 
-    for(j=n;j<m-1;j++) {				  		/* sort by max-intsize */
+    for(j=n;j<m-1;j++) {                                                /* sort by max-intsize */
         j_intsize = hfset[j][end] - hfset[j][0];
         for(k=j+1;k<m;k++) {
             k_intsize = hfset[k][end] - hfset[k][0];
@@ -1369,7 +1369,7 @@ void sort_by_maxintsize_and_density(double **hfset,int n,int m,int setlen,int lo
 
 /********************************* SORT_BY_OCTAVE_EQUIVALENCE *********************************
  *
- *	Sort pitch-ordered sets of FIXED SIZE by equivalence at octave transposition, putting lower tessitura item first.
+ *      Sort pitch-ordered sets of FIXED SIZE by equivalence at octave transposition, putting lower tessitura item first.
  */
 
 void sort_by_octave_equivalence
@@ -1380,7 +1380,7 @@ void sort_by_octave_equivalence
 
     for(j=n;j<m-1;j++) {
         j_base = j;
-        j_adj = j+1;								/* if sets are separate by multiple of an octave */
+        j_adj = j+1;                                                            /* if sets are separate by multiple of an octave */
         for(k=j+1;k<m;k++) {
             if(flteq(fmod((int_diff = hfset[k][0] - hfset[j][0]),12.0),0.0)) {
                 oct_equivalence = 1;
@@ -1390,10 +1390,10 @@ void sort_by_octave_equivalence
                         break;
                     }
                 }
-                if(oct_equivalence) {				/* if oct-equivalent */
-                    if(k != j_adj) {				/* if NOT adjacent */
+                if(oct_equivalence) {                           /* if oct-equivalent */
+                    if(k != j_adj) {                            /* if NOT adjacent */
                         tempoint = hfset[j_adj];
-                        hfset[j_adj] = hfset[k];	/* move oct-equiv set to be adjacent to j */
+                        hfset[j_adj] = hfset[k];        /* move oct-equiv set to be adjacent to j */
                         hfset[k] = tempoint;
                     }
                     i = j;
@@ -1404,10 +1404,10 @@ void sort_by_octave_equivalence
                     i++;
                     if(i<=j) {
                         tempoint = hfset[i];
-                        hfset[i] = hfset[j_adj];	/* move lower register item to correct place in group */
+                        hfset[i] = hfset[j_adj];        /* move lower register item to correct place in group */
                         hfset[j_adj] = tempoint;
                     }
-                    j++;							/* advance to new oct-equiv position */
+                    j++;                                                        /* advance to new oct-equiv position */
                     j_adj++;
                 }
             }
@@ -1417,7 +1417,7 @@ void sort_by_octave_equivalence
 
 /********************************* SORT_BY_INTERVAL_STACKING *********************************
  *
- *	Sort pitch-ordered sets of FIXED SIZE , WITH FIXED MAX INTERVAL by sequnce of pitches within...
+ *      Sort pitch-ordered sets of FIXED SIZE , WITH FIXED MAX INTERVAL by sequnce of pitches within...
  *  NORMALLY - start with chord having the lowest pitches (on average)
  *  ... if 'highest-first' flag set, start with chord with highest pitches (on average)
  */
@@ -1457,7 +1457,7 @@ void sort_by_interval_stacking(double **hfset,int n,int m,int setlen,int highest
 
 /********************************* ELIMINATE_OCT_DUPLICATED_SETS *********************************
  *
- *	Sort ordered-by-size, then pitch-ordered sets, eliniating stes dupliated at 8vas.
+ *      Sort ordered-by-size, then pitch-ordered sets, eliniating stes dupliated at 8vas.
  */
 
 void eliminate_oct_duplicated_sets(double **hfset,int *hfsetcnt,int *hfsetlen,int *grping,int *grping_cnt,int type)
@@ -1469,7 +1469,7 @@ void eliminate_oct_duplicated_sets(double **hfset,int *hfsetcnt,int *hfsetlen,in
     m = n+1;
     setlen = hfsetlen[n];
     while(n < *hfsetcnt) {
-        while(hfsetlen[m] == setlen) {							/* find equal-size sets */
+        while(hfsetlen[m] == setlen) {                                                  /* find equal-size sets */
             if(++m >= *hfsetcnt)
                 break;
         }
@@ -1490,41 +1490,41 @@ void eliminate_oct_duplicated_sets(double **hfset,int *hfsetcnt,int *hfsetlen,in
                             break;
                         }
                     }
-                    if(oct_equivalence) {					/* if oct-equivalent */
+                    if(oct_equivalence) {                                       /* if oct-equivalent */
                         if(type == TOPNOTE) {
                             if(hfset[k][0] > hfset[j][0]) {
                                 tempoint = hfset[j];
-                                hfset[j] = hfset[k];		/* keep the higher-register item */
+                                hfset[j] = hfset[k];            /* keep the higher-register item */
                                 hfset[k] = tempoint;
                             }
                         } else {
                             if(hfset[k][0] < hfset[j][0]) {
                                 tempoint = hfset[j];
-                                hfset[j] = hfset[k];		/* keep the lower-register item */
+                                hfset[j] = hfset[k];            /* keep the lower-register item */
                                 hfset[k] = tempoint;
                             }
                         }
-                        for(a=k,b=k+1;b<*hfsetcnt;a++,b++)	/* delete unwanted set */
+                        for(a=k,b=k+1;b<*hfsetcnt;a++,b++)      /* delete unwanted set */
                             hfset[a] = hfset[b];
-                        if(grping != NULL) {				/* reposition grouping marks */
+                        if(grping != NULL) {                            /* reposition grouping marks */
                             for(a=0;a<*grping_cnt;a++) {
                                 /* if start or end of short group */
                                 if(((grping[a] == k)   && (a+1 < *grping_cnt) && (grping[a+1] >= -(k+2)))
                                    || ((grping[a] == k-1) && (a+1 < *grping_cnt) && (grping[a+1] >= -(k+1)))) {
-                                    if(a+2 < *grping_cnt) {	/* eliminate both */
+                                    if(a+2 < *grping_cnt) {     /* eliminate both */
                                         for(b = a+2; b < *grping_cnt;b++)
                                             grping[b-2] = grping[b];
                                     }
                                     *grping_cnt -= 2;
-                                    a -= 1;					/* step back to resume parse */
+                                    a -= 1;                                     /* step back to resume parse */
                                 }
-                                else if(grping[a] > k)		/* decrement all markers beyond */
+                                else if(grping[a] > k)          /* decrement all markers beyond */
                                     grping[a]--;
                                 else if(grping[a] < -k)
                                     grping[a]++;
                             }
                         }
-                        (*hfsetcnt)--;						/* decrement all counters */
+                        (*hfsetcnt)--;                                          /* decrement all counters */
                         m--;
                         k--;
                     }
@@ -1540,8 +1540,8 @@ void eliminate_oct_duplicated_sets(double **hfset,int *hfsetcnt,int *hfsetlen,in
 
 /********************************* SORT_BY_DENSITY_REGARDLESS_OF_SIZE *********************************
  *
- *	Sort pitch-ordered sets of FIXED LENGTH . by density, regardless of MAX INTERVAL...
- *	.... sort on basis of maximum number of minsize intervals.
+ *      Sort pitch-ordered sets of FIXED LENGTH . by density, regardless of MAX INTERVAL...
+ *      .... sort on basis of maximum number of minsize intervals.
  */
 
 void sort_by_density_regardless_of_size
@@ -1558,15 +1558,15 @@ void sort_by_density_regardless_of_size
     for(j=n;j<m-1;j++) {
         intsetlen1 = setlen - 1;
         for(x=1;x<setlen;x++) {
-            intv[x-1] = hfset[j][x] - hfset[j][x-1];   	/* find each interval and count it */
+            intv[x-1] = hfset[j][x] - hfset[j][x-1];    /* find each interval and count it */
             intvcnt[x-1] = 1;
         }
         for(x=0;x<intsetlen1-1;x++) {
             for(q=x+1;q<intsetlen1;q++) {
-                if(flteq(intv[q],intv[x])) {			/* compare intervals */
-                    intvcnt[x]++;						/* if same, incr count of first */
+                if(flteq(intv[q],intv[x])) {                    /* compare intervals */
+                    intvcnt[x]++;                                               /* if same, incr count of first */
                     a = q;
-                    while(a< intsetlen1-1)	{			/* and eliminate other from set */
+                    while(a< intsetlen1-1)      {                       /* and eliminate other from set */
                         intv[a] = intv[a+1];
                         a++;
                     }
@@ -1575,7 +1575,7 @@ void sort_by_density_regardless_of_size
                 }
             }
         }
-        for(x=0;x<intsetlen1-1;x++) {					/* sort intervals by size */
+        for(x=0;x<intsetlen1-1;x++) {                                   /* sort intervals by size */
             for(q=x+1;q<intsetlen1;q++) {
                 if(intv[q] < intv[x]) {
                     tempdb = intv[q];
@@ -1663,10 +1663,10 @@ void sort_by_density_regardless_of_size
                     }
                 }
             }
-            if((!do_swap) && equivalent) {	/* swap if total range is greater */
+            if((!do_swap) && equivalent) {      /* swap if total range is greater */
                 if(hfset[j][end] - hfset[j][0] > hfset[k][end] - hfset[k][0])
                     do_swap = 1;
-                else if(hfset[j][0] > hfset[k][0])	/* swap if root is lower */
+                else if(hfset[j][0] > hfset[k][0])      /* swap if root is lower */
                     do_swap = 1;
             }
             if(do_swap) {
@@ -1726,7 +1726,7 @@ void gen_note(int maxjitter,double *tabstart,double *tabend,double **tabmin, dou
     this_tabend = tabend + jitter;
     *tabmin = min(tab,*tabmin);
     *tabmax = max(this_tabend,*tabmax);
-    tab++;			/* 1st val = 0 */
+    tab++;                      /* 1st val = 0 */
     /* START POSITION IN TABLE TO READ TO GENERATE SOUND */
     initial_phase = (int)round(drand48() * HFP_TABSIZE);
     sintabincr = (miditohz(hfset[n][j]) * tabscale);
@@ -1796,12 +1796,12 @@ int next_file(int *samps_written,char *thisfilename,int *ccnt,unsigned int *spac
             return(exit_status);
     }
     /* CLOSE FILE */
-    dz->outfiletype  = SNDFILE_OUT;			/* allows header to be written  */
+    dz->outfiletype  = SNDFILE_OUT;                     /* allows header to be written  */
     if((exit_status = headwrite(dz->ofd,dz))<0)
         return(exit_status);
-    dz->process_type = OTHER_PROCESS;		/* restore true status */
-    dz->outfiletype  = NO_OUTPUTFILE;		/* restore true status */
-    superzargo += dz->total_samps_written;	/* accumulator of total samples written */
+    dz->process_type = OTHER_PROCESS;           /* restore true status */
+    dz->outfiletype  = NO_OUTPUTFILE;           /* restore true status */
+    superzargo += dz->total_samps_written;      /* accumulator of total samples written */
     if((exit_status = reset_peak_finder(dz))<0)
         return(exit_status);
     if(sndcloseEx(dz->ofd) < 0) {
@@ -1813,7 +1813,7 @@ int next_file(int *samps_written,char *thisfilename,int *ccnt,unsigned int *spac
     /* OPEN NEW FILE */
     if((exit_status = create_outfile_name(*ccnt,thisfilename,dz))<0)
         return(exit_status);
-    dz->process_type = UNEQUAL_SNDFILE;	/* allow sndfile to be created */
+    dz->process_type = UNEQUAL_SNDFILE; /* allow sndfile to be created */
     if((exit_status = create_sized_outfile(thisfilename,dz))<0) {
         fprintf(stdout, "WARNING: Soundfile %s already exists.\n",thisfilename);
         fflush(stdout);
@@ -1878,7 +1878,7 @@ int gen_dp_output(dataptr dz)
     dz->tempsize = dz->iparam[DP_DUR] * (dz->iparam[DP_NOTECNT] + dz->iparam[DP_CYCCNT]);
 
     if((permset =
-	(double *)malloc((unsigned int)round(pow(dz->iparam[DP_PERMCNT],dz->iparam[DP_CYCCNT])) * sizeof(double))) == NULL) {
+        (double *)malloc((unsigned int)round(pow(dz->iparam[DP_PERMCNT],dz->iparam[DP_CYCCNT])) * sizeof(double))) == NULL) {
         sprintf(errstr,"No memory for permutations of notes\n");
         return(MEMORY_ERROR);
     }
@@ -1926,7 +1926,7 @@ int gen_dp_output(dataptr dz)
                         tabend = tab + thislen;
                         memset((char *)tab,0,element_byte_len);
 
-                        gen_note2(tab,tabend,permset[i],tabscale,sintabsize,splicelen,sintab);	break;
+                        gen_note2(tab,tabend,permset[i],tabscale,sintabsize,splicelen,sintab);  break;
                     case(DEL_PERM2):
                         thistranspos = pow(2.0,(permset[i]/12.0));
                         thislen = (int)round(len/thistranspos);
@@ -1937,7 +1937,7 @@ int gen_dp_output(dataptr dz)
                         }
                         tabend = tab + thislen;
                         memset((char *)tab,0,element_byte_len);
-                        gen_note3(tab,tabend,thistranspos,intabsize,splicelen,intab);			break;
+                        gen_note3(tab,tabend,thistranspos,intabsize,splicelen,intab);                   break;
                     }
                     accumtabstart = accumtabstart + thislen;
                     accumtabend = accumtabstart + thislen;
@@ -1949,8 +1949,8 @@ int gen_dp_output(dataptr dz)
                 tabend = tab + len;
                 memset(tab,0,element_byte_len);
                 switch(dz->process) {
-                case(DEL_PERM):  gen_note2(tab,tabend,permset[0],tabscale,sintabsize,splicelen,sintab);	break;
-                case(DEL_PERM2): gen_note3(tab,tabend,permset[0],intabsize,splicelen,intab);			break;
+                case(DEL_PERM):  gen_note2(tab,tabend,permset[0],tabscale,sintabsize,splicelen,sintab); break;
+                case(DEL_PERM2): gen_note3(tab,tabend,permset[0],intabsize,splicelen,intab);                    break;
                 }
                 accumtabend = accumtabstart + len;
                 for(a=accumtabstart, b = 0; a < accumtabend;a++,b++)
@@ -2001,7 +2001,7 @@ void gen_note2(double *tabstart,double *tabend,double midival,
     double frac, vallo, valhi, valdif;
 
     tab = tabstart;
-    *tab++ = 0;		/* 1st val = 0 */
+    *tab++ = 0;         /* 1st val = 0 */
     /* START POSITION IN TABLE TO READ TO GENERATE SOUND */
     initial_phase = (int)round(drand48() * HFP_TABSIZE);
     sintabincr = (miditohz(midival) * tabscale);
@@ -2065,7 +2065,7 @@ void gen_note3(double *tabstart,double *tabend,double midival,int intabsize,int 
     double frac, vallo, valhi, valdif;
 
     tab = tabstart;
-    *tab++ = 0;		/* 1st val = 0 */
+    *tab++ = 0;         /* 1st val = 0 */
     tabincr = (miditohz(midival)/miditohz(60.0));
     effective_len = (double)(tabend - tabstart);
     if(effective_len * tabincr > (double)intabsize) {

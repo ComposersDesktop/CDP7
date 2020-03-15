@@ -1,7 +1,7 @@
 /** @file patest_converters.c
-	@ingroup test_src
-	@brief Tests the converter functions in pa_converters.c
-	@author Ross Bencina <rossb@audiomulch.com>
+    @ingroup test_src
+    @brief Tests the converter functions in pa_converters.c
+    @author Ross Bencina <rossb@audiomulch.com>
 
     Link with pa_dither.c and pa_converters.c
 
@@ -35,13 +35,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 #include <stdio.h>
@@ -65,23 +65,23 @@
 
 #define SAMPLE_FORMAT_COUNT (6)
 
-static PaSampleFormat sampleFormats_[ SAMPLE_FORMAT_COUNT ] = 
+static PaSampleFormat sampleFormats_[ SAMPLE_FORMAT_COUNT ] =
     { paFloat32, paInt32, paInt24, paInt16, paInt8, paUInt8 }; /* all standard PA sample formats */
 
-static const char* sampleFormatNames_[SAMPLE_FORMAT_COUNT] = 
+static const char* sampleFormatNames_[SAMPLE_FORMAT_COUNT] =
     { "paFloat32", "paInt32", "paInt24", "paInt16", "paInt8", "paUInt8" };
 
 
-static const char* abbreviatedSampleFormatNames_[SAMPLE_FORMAT_COUNT] = 
+static const char* abbreviatedSampleFormatNames_[SAMPLE_FORMAT_COUNT] =
     { "f32", "i32", "i24", "i16", " i8", "ui8" };
 
 
 PaError My_Pa_GetSampleSize( PaSampleFormat format );
 
 /*
-    available flags are paClipOff and paDitherOff
-    clipping is usually applied for float -> int conversions
-    dither is usually applied for all downconversions (ie anything but 8bit->8bit conversions
+  available flags are paClipOff and paDitherOff
+  clipping is usually applied for float -> int conversions
+  dither is usually applied for all downconversions (ie anything but 8bit->8bit conversions
 */
 
 static int CanClip( PaSampleFormat sourceFormat, PaSampleFormat destinationFormat )
@@ -114,76 +114,76 @@ static void GenerateOneCycleSine( PaSampleFormat format, void *buffer, int frame
 {
     switch( format ){
 
-        case paFloat32:
-            {
-                int i;
-                float *out = (float*)buffer;
-                for( i=0; i < frameCount; ++i ){
-                    *out = (float).9 * sin( ((double)i/(double)frameCount) * 2. * M_PI );
-                    out += strideFrames;
-                }
+    case paFloat32:
+        {
+            int i;
+            float *out = (float*)buffer;
+            for( i=0; i < frameCount; ++i ){
+                *out = (float).9 * sin( ((double)i/(double)frameCount) * 2. * M_PI );
+                out += strideFrames;
             }
-            break;
-        case paInt32:
-            {
-                int i;
-                PaInt32 *out = (PaInt32*)buffer;
-                for( i=0; i < frameCount; ++i ){
-                    *out = (PaInt32)(.9 * sin( ((double)i/(double)frameCount) * 2. * M_PI ) * 0x7FFFFFFF);
-                    out += strideFrames;
-                }
+        }
+        break;
+    case paInt32:
+        {
+            int i;
+            PaInt32 *out = (PaInt32*)buffer;
+            for( i=0; i < frameCount; ++i ){
+                *out = (PaInt32)(.9 * sin( ((double)i/(double)frameCount) * 2. * M_PI ) * 0x7FFFFFFF);
+                out += strideFrames;
             }
-            break;
-        case paInt24:
-            {
-                int i;
-                unsigned char *out = (unsigned char*)buffer;
-                for( i=0; i < frameCount; ++i ){
-                    signed long temp = (PaInt32)(.9 * sin( ((double)i/(double)frameCount) * 2. * M_PI ) * 0x7FFFFFFF);
-                    
-                    #if defined(PA_LITTLE_ENDIAN)
-                            out[0] = (unsigned char)(temp >> 8) & 0xFF;
-                            out[1] = (unsigned char)(temp >> 16) & 0xFF;
-                            out[2] = (unsigned char)(temp >> 24) & 0xFF;
-                    #elif defined(PA_BIG_ENDIAN)
-                            out[0] = (unsigned char)(temp >> 24) & 0xFF;
-                            out[1] = (unsigned char)(temp >> 16) & 0xFF;
-                            out[2] = (unsigned char)(temp >> 8) & 0xFF;
-                    #endif
-                    out += 3;
-                }
+        }
+        break;
+    case paInt24:
+        {
+            int i;
+            unsigned char *out = (unsigned char*)buffer;
+            for( i=0; i < frameCount; ++i ){
+                signed long temp = (PaInt32)(.9 * sin( ((double)i/(double)frameCount) * 2. * M_PI ) * 0x7FFFFFFF);
+
+#if defined(PA_LITTLE_ENDIAN)
+                out[0] = (unsigned char)(temp >> 8) & 0xFF;
+                out[1] = (unsigned char)(temp >> 16) & 0xFF;
+                out[2] = (unsigned char)(temp >> 24) & 0xFF;
+#elif defined(PA_BIG_ENDIAN)
+                out[0] = (unsigned char)(temp >> 24) & 0xFF;
+                out[1] = (unsigned char)(temp >> 16) & 0xFF;
+                out[2] = (unsigned char)(temp >> 8) & 0xFF;
+#endif
+                out += 3;
             }
-            break;
-        case paInt16:
-            {
-                int i;
-                PaInt16 *out = (PaInt16*)buffer;
-                for( i=0; i < frameCount; ++i ){
-                    *out = (PaInt16)(.9 * sin( ((double)i/(double)frameCount) * 2. * M_PI ) * 0x7FFF );
-                    out += strideFrames;
-                }
+        }
+        break;
+    case paInt16:
+        {
+            int i;
+            PaInt16 *out = (PaInt16*)buffer;
+            for( i=0; i < frameCount; ++i ){
+                *out = (PaInt16)(.9 * sin( ((double)i/(double)frameCount) * 2. * M_PI ) * 0x7FFF );
+                out += strideFrames;
             }
-            break;
-        case paInt8:
-            {
-                int i;
-                signed char *out = (signed char*)buffer;
-                for( i=0; i < frameCount; ++i ){
-                    *out = (signed char)(.9 * sin( ((double)i/(double)frameCount) * 2. * M_PI ) * 0x7F );
-                    out += strideFrames;
-                }
+        }
+        break;
+    case paInt8:
+        {
+            int i;
+            signed char *out = (signed char*)buffer;
+            for( i=0; i < frameCount; ++i ){
+                *out = (signed char)(.9 * sin( ((double)i/(double)frameCount) * 2. * M_PI ) * 0x7F );
+                out += strideFrames;
             }
-            break;
-        case paUInt8:
-            {
-                int i;
-                unsigned char *out = (unsigned char*)buffer;
-                for( i=0; i < frameCount; ++i ){
-                    *out = (unsigned char)( .5 * (1. + (.9 * sin( ((double)i/(double)frameCount) * 2. * M_PI ))) * 0xFF  );
-                    out += strideFrames;
-                }
+        }
+        break;
+    case paUInt8:
+        {
+            int i;
+            unsigned char *out = (unsigned char*)buffer;
+            for( i=0; i < frameCount; ++i ){
+                *out = (unsigned char)( .5 * (1. + (.9 * sin( ((double)i/(double)frameCount) * 2. * M_PI ))) * 0xFF  );
+                out += strideFrames;
             }
-            break;
+        }
+        break;
     }
 }
 
@@ -193,11 +193,11 @@ int TestNonZeroPresent( void *buffer, int size )
     int i;
 
     for( i=0; i < size; ++i ){
-    
+
         if( *p != 0 )
             return 1;
         ++p;
-    }   
+    }
 
     return 0;
 }
@@ -213,7 +213,7 @@ float MaximumAbsDifference( float* sourceBuffer, float* referenceBuffer, int cou
     }
 
     return result;
-}  
+}
 
 int main( const char **argv, int argc )
 {
@@ -243,7 +243,7 @@ int main( const char **argv, int argc )
 
 
     /* the first round of tests simply iterates through the buffer combinations testing
-        that putting something in gives something out */
+       that putting something in gives something out */
 
     printf( "= Sine wave in, something out =\n" );
 
@@ -273,11 +273,11 @@ int main( const char **argv, int argc )
 
                 (*converter)( destinationBuffer, 1, sourceBuffer, 1, MAX_PER_CHANNEL_FRAME_COUNT, &ditherState );
 
-    /*
-    Other ways we could test this would be:
-        - pass a constant, check for a constant (wouldn't work with dither)
-        - pass alternating +/-, check for the same...
-    */
+                /*
+                  Other ways we could test this would be:
+                  - pass a constant, check for a constant (wouldn't work with dither)
+                  - pass alternating +/-, check for the same...
+                */
                 if( TestNonZeroPresent( destinationBuffer, MAX_PER_CHANNEL_FRAME_COUNT * My_Pa_GetSampleSize( destinationFormat ) ) ){
                     //printf( "PASSED\n" );
                     passFailMatrix[sourceFormatIndex][destinationFormatIndex] = 1;
@@ -286,7 +286,7 @@ int main( const char **argv, int argc )
                     passFailMatrix[sourceFormatIndex][destinationFormatIndex] = 0;
                 }
 
-                
+
                 /* try to measure the noise floor (comparing output signal to a float32 sine wave) */
 
                 if( passFailMatrix[sourceFormatIndex][destinationFormatIndex] ){
@@ -298,9 +298,9 @@ int main( const char **argv, int argc )
                     (*converter)( sourceBuffer, 1, destinationBuffer, 1, MAX_PER_CHANNEL_FRAME_COUNT, &ditherState );
 
                     if( TestNonZeroPresent( sourceBuffer, MAX_PER_CHANNEL_FRAME_COUNT * My_Pa_GetSampleSize( paFloat32 ) ) ){
-    
+
                         noiseAmplitudeMatrix[sourceFormatIndex][destinationFormatIndex] = MaximumAbsDifference( (float*)sourceBuffer, (float*)referenceBuffer, MAX_PER_CHANNEL_FRAME_COUNT );
-                        
+
                     }else{
                         /* can't test noise floor because there is no conversion from dest format to float available */
                         noiseAmplitudeMatrix[sourceFormatIndex][destinationFormatIndex] = -1; // mark as failed
@@ -366,30 +366,30 @@ PaError My_Pa_GetSampleSize( PaSampleFormat format )
     int result;
 
     switch( format & ~paNonInterleaved )
-    {
+        {
 
-    case paUInt8:
-    case paInt8:
-        result = 1;
-        break;
+        case paUInt8:
+        case paInt8:
+            result = 1;
+            break;
 
-    case paInt16:
-        result = 2;
-        break;
+        case paInt16:
+            result = 2;
+            break;
 
-    case paInt24:
-        result = 3;
-        break;
+        case paInt24:
+            result = 3;
+            break;
 
-    case paFloat32:
-    case paInt32:
-        result = 4;
-        break;
+        case paFloat32:
+        case paInt32:
+            result = 4;
+            break;
 
-    default:
-        result = paSampleFormatNotSupported;
-        break;
-    }
+        default:
+            result = paSampleFormatNotSupported;
+            break;
+        }
 
     return (PaError) result;
 }

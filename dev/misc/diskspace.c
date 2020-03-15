@@ -33,11 +33,11 @@
 
 char errstr[2400];
 
-#define	MONO		(1)
-#define	STEREO		(2)
-#define	ENDOFSTR	('\0')
+#define MONO            (1)
+#define STEREO          (2)
+#define ENDOFSTR        ('\0')
 
-#define LEAVESPACE	(10*1024)
+#define LEAVESPACE      (10*1024)
 
 void splice_multiline_string(char *str,char *prefix);
 const char* cdp_version = "7.1.0";
@@ -90,10 +90,10 @@ int main(int argc,char *argv[])
     while (kk < 4) {
         errstr[0] = ENDOFSTR;
         switch(kk) {
-        case(0): outsamps = freespace/2;	break;
-        case(1): outsamps = freespace/3;	break;
-        case(2): outsamps = freespace/4;	break;
-        case(3): outsamps = freespace/sizeof(float);	break;
+        case(0): outsamps = freespace/2;        break;
+        case(1): outsamps = freespace/3;        break;
+        case(2): outsamps = freespace/4;        break;
+        case(3): outsamps = freespace/sizeof(float);    break;
         }
         sprintf(temp,"%d",outsamps);
         strcat(errstr,temp);
@@ -101,16 +101,16 @@ int main(int argc,char *argv[])
         for(k=0;k<spacecnt;k++)
             strcat(errstr," ");
         switch(kk) {
-        case(0): strcat(errstr,"16-bit samples\n");	break;
-        case(1): strcat(errstr,"24-bit samples\n");	break;
-        case(2): strcat(errstr,"32-bit samples\n");	break;
-        case(3): strcat(errstr,"float  samples\n");	break;
+        case(0): strcat(errstr,"16-bit samples\n");     break;
+        case(1): strcat(errstr,"24-bit samples\n");     break;
+        case(2): strcat(errstr,"32-bit samples\n");     break;
+        case(3): strcat(errstr,"float  samples\n");     break;
         }
         orig_outsamps = outsamps;
         for(m=MONO;m<=STEREO;m++) {
             switch(m) {
             case(MONO):
-                    outsamps = orig_outsamps;
+                outsamps = orig_outsamps;
                 sprintf(temp,"IN MONO    : ");
                 strcat(errstr,temp);
                 break;

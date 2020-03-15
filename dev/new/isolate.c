@@ -44,7 +44,7 @@
 #include <string.h>
 #include <srates.h>
 
-#define	ISO_WINLEN 10 //    envelope search-window 10 mS
+#define ISO_WINLEN 10 //    envelope search-window 10 mS
 
 #ifdef unix
 #define round(x) lround((x))
@@ -96,7 +96,7 @@ static int reverse_sndread(float *buf,int n, dataptr dz);
 int main(int argc,char *argv[])
 {
     int exit_status;
-                                           dataptr dz = NULL;
+    dataptr dz = NULL;
     char **cmdline;
     int  cmdlinecnt;
     int n;
@@ -1154,49 +1154,49 @@ int usage2(char *str)
     if(!strcmp(str,"isolate")) {
         fprintf(stdout,
                 "USAGE:\n"
-        "isolate isolate 1-2 inf outnam cutsfile [-ssplice] [-x] [-r]\n"
-        "isolate isolate 3   inf outnam dBon dBoff [-ssplice] [-mmin] [-llen] [-x] [-r]\n"
-        "isolate isolate 4   inf outnam slicefile [-ssplice] [-x] [-r]\n"
+                "isolate isolate 1-2 inf outnam cutsfile [-ssplice] [-x] [-r]\n"
+                "isolate isolate 3   inf outnam dBon dBoff [-ssplice] [-mmin] [-llen] [-x] [-r]\n"
+                "isolate isolate 4   inf outnam slicefile [-ssplice] [-x] [-r]\n"
                 "isolate isolate 5   inf outnam slicefile [-ssplice] [-ddovetail] [-x] [-r]\n"
-        "\n"
-        "Cut specified segments from input file, but retain silent surrounds\n"
-        "so chunks occur at same time in the outfiles, as in the input file.\n"
+                "\n"
+                "Cut specified segments from input file, but retain silent surrounds\n"
+                "so chunks occur at same time in the outfiles, as in the input file.\n"
                 "Modes 1, 2 & 3 also generate file of all material left over after the cutting.\n"
                 "Original file reconstructible by mixing all these components.\n"
-        "INF       Input soundfile\n"
-        "OUTNAM    Generic outfile name. Outfiles numbered from 0\n"
-        "CUTSFILE/SLICEFILE  \n"
-        "Mode 1    Creates SEVERAL output files each containing ONE segment of src. \n"
-        "          Cutsfile is list of time-pairs,(start and end of each segment)\n"
-        "          in time order, and not time-overlapped.\n"
-        "Mode 2    Can create output files each containing SEVERAL segment of src.\n"
-        "          If a cutsfile line lists several time-pairs (start+end of segs),\n"
-        "          ALL segments on that line will be output in a single file.\n"
-        "          No time-pairs must overlap. Time-pairs on a line must be in time order.\n"
-        "Mode 3    Creates ONE output file consisting of SEVERAL disjunct segments.\n"
-        "          Segment starts and ends located using threshold-on and -off parameters.\n"
-        "          if \"len\" set, only start portion of segment (length \"len\") is kept.\n"
-        "\n"
-        "          In modes 1-3, an EXTRA FILE OF REMNANTS (if any) is created.\n"
-        "          Also, if cuts abutt or are so close that end+start splices overlap,\n"
-        "          end of first cut moved back, and start of 2nd moved forward\n"
-        "          so that they overlap by a single splicelength.\n"
-        "\n"
-        "Mode 4    Cuts the ENTIRE file into disjunct segments\n"
-        "          Creating SEVERAL output files each containing ONE segment of src.\n"
-        "          Slicefile is list of (increasing) times where sound is to be cut.\n"
-        "Mode 5    As mode 4: segments overlapped slightly (separates speech syllables).\n"
-        "\n"
-        "SPLICE    Length of splice in mS (range 0 - 500 default 15)\n"
-        "DBON      (Mode 3) dB level at which a segment is recognised to begin.\n"
-        "DBOFF     (Mode 3) dB level where recognised seg triggered to end (less than DBON).\n"
-        "MIN       (Mode 3) min duration in mS of segs to accept (> 2 * splicelen)\n"
-        "LEN       (Mode 3) duration in mS of (part-)segment to actually keep (> 0)\n"
-        "          If \"len\" not set, or set to zero, entire original segments are kept.\n"
-        "DOVETAIL  (Mode 5) overlap of cut segments in mS (range 0 -20 default 5)\n"
-        "-x        Add silence to ends of segments files, so they are same length as src\n"
-        "-r        Reverse all cut-segment files (but not the remnant file)\n"
-        "\n");
+                "INF       Input soundfile\n"
+                "OUTNAM    Generic outfile name. Outfiles numbered from 0\n"
+                "CUTSFILE/SLICEFILE  \n"
+                "Mode 1    Creates SEVERAL output files each containing ONE segment of src. \n"
+                "          Cutsfile is list of time-pairs,(start and end of each segment)\n"
+                "          in time order, and not time-overlapped.\n"
+                "Mode 2    Can create output files each containing SEVERAL segment of src.\n"
+                "          If a cutsfile line lists several time-pairs (start+end of segs),\n"
+                "          ALL segments on that line will be output in a single file.\n"
+                "          No time-pairs must overlap. Time-pairs on a line must be in time order.\n"
+                "Mode 3    Creates ONE output file consisting of SEVERAL disjunct segments.\n"
+                "          Segment starts and ends located using threshold-on and -off parameters.\n"
+                "          if \"len\" set, only start portion of segment (length \"len\") is kept.\n"
+                "\n"
+                "          In modes 1-3, an EXTRA FILE OF REMNANTS (if any) is created.\n"
+                "          Also, if cuts abutt or are so close that end+start splices overlap,\n"
+                "          end of first cut moved back, and start of 2nd moved forward\n"
+                "          so that they overlap by a single splicelength.\n"
+                "\n"
+                "Mode 4    Cuts the ENTIRE file into disjunct segments\n"
+                "          Creating SEVERAL output files each containing ONE segment of src.\n"
+                "          Slicefile is list of (increasing) times where sound is to be cut.\n"
+                "Mode 5    As mode 4: segments overlapped slightly (separates speech syllables).\n"
+                "\n"
+                "SPLICE    Length of splice in mS (range 0 - 500 default 15)\n"
+                "DBON      (Mode 3) dB level at which a segment is recognised to begin.\n"
+                "DBOFF     (Mode 3) dB level where recognised seg triggered to end (less than DBON).\n"
+                "MIN       (Mode 3) min duration in mS of segs to accept (> 2 * splicelen)\n"
+                "LEN       (Mode 3) duration in mS of (part-)segment to actually keep (> 0)\n"
+                "          If \"len\" not set, or set to zero, entire original segments are kept.\n"
+                "DOVETAIL  (Mode 5) overlap of cut segments in mS (range 0 -20 default 5)\n"
+                "-x        Add silence to ends of segments files, so they are same length as src\n"
+                "-r        Reverse all cut-segment files (but not the remnant file)\n"
+                "\n");
     } else
         fprintf(stdout,"Unknown option '%s'\n",str);
     return(USAGE_ONLY);

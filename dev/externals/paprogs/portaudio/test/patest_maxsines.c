@@ -1,8 +1,8 @@
 /** @file patest_maxsines.c
-	@ingroup test_src
-	@brief How many sine waves can we calculate and play in less than 80% CPU Load.
-	@author Ross Bencina <rossb@audiomulch.com>
-	@author Phil Burk <philburk@softsynth.com>
+    @ingroup test_src
+    @brief How many sine waves can we calculate and play in less than 80% CPU Load.
+    @author Ross Bencina <rossb@audiomulch.com>
+    @author Phil Burk <philburk@softsynth.com>
 */
 /*
  * $Id: patest_maxsines.c 1368 2008-03-01 00:38:27Z rossb $
@@ -32,13 +32,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -68,7 +68,7 @@ typedef struct paTestData
     float sine[TABLE_SIZE + 1]; /* add one for guard point for interpolation */
     float phases[MAX_SINES];
 }
-paTestData;
+    paTestData;
 
 /* Convert phase between and 1.0 to sine value
  * using linear interpolation.
@@ -110,30 +110,30 @@ static int patestCallback(const void*                     inputBuffer,
     numForScale = data->numSines;
     if( numForScale < 8 ) numForScale = 8;  /* prevent pops at beginning */
     scaler = 1.0f / numForScale;
-    
+
     for( i=0; i<framesPerBuffer; i++ )
-    {
-        float output = 0.0;
-        float phaseInc = MIN_PHASE_INC;
-        float phase;
-        for( j=0; j<data->numSines; j++ )
         {
-            /* Advance phase of next oscillator. */
-            phase = data->phases[j];
-            phase += phaseInc;
-            if( phase >= 1.0 ) phase -= 1.0;
+            float output = 0.0;
+            float phaseInc = MIN_PHASE_INC;
+            float phase;
+            for( j=0; j<data->numSines; j++ )
+                {
+                    /* Advance phase of next oscillator. */
+                    phase = data->phases[j];
+                    phase += phaseInc;
+                    if( phase >= 1.0 ) phase -= 1.0;
 
-            output += LookupSine(data, phase); 
-            data->phases[j] = phase;
-            
-            phaseInc *= 1.02f;
-            if( phaseInc > MAX_PHASE_INC ) phaseInc = MIN_PHASE_INC;
+                    output += LookupSine(data, phase);
+                    data->phases[j] = phase;
+
+                    phaseInc *= 1.02f;
+                    if( phaseInc > MAX_PHASE_INC ) phaseInc = MIN_PHASE_INC;
+                }
+
+            outSample = (float) (output * scaler);
+            *out++ = outSample; /* Left */
+            *out++ = outSample; /* Right */
         }
-
-        outSample = (float) (output * scaler);
-        *out++ = outSample; /* Left */
-        *out++ = outSample; /* Right */
-    }
     return finished;
 }
 
@@ -141,7 +141,7 @@ static int patestCallback(const void*                     inputBuffer,
 int main(void);
 int main(void)
 {
-	int                 i;
+    int                 i;
     PaStream*           stream;
     PaStreamParameters  outputParameters;
     PaError             err;
@@ -152,9 +152,9 @@ int main(void)
 
     /* initialise sinusoidal wavetable */
     for( i=0; i<TABLE_SIZE; i++ )
-    {
-        data.sine[i] = (float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. );
-    }
+        {
+            data.sine[i] = (float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. );
+        }
     data.sine[TABLE_SIZE] = data.sine[0]; /* set guard point */
 
     err = Pa_Initialize();
@@ -162,14 +162,14 @@ int main(void)
         goto error;
     outputParameters.device                    = Pa_GetDefaultOutputDevice(); /* Default output device. */
     if (outputParameters.device == paNoDevice) {
-      fprintf(stderr,"Error: No default output device.\n");
-      goto error;
+        fprintf(stderr,"Error: No default output device.\n");
+        goto error;
     }
     outputParameters.channelCount              = 2;                           /* Stereo output. */
     outputParameters.sampleFormat              = paFloat32;                   /* 32 bit floating point output. */
     outputParameters.hostApiSpecificStreamInfo = NULL;
     outputParameters.suggestedLatency          = Pa_GetDeviceInfo(outputParameters.device)
-                                                 ->defaultHighOutputLatency;
+        ->defaultHighOutputLatency;
     err = Pa_OpenStream(&stream,
                         NULL,               /* no input */
                         &outputParameters,
@@ -192,7 +192,7 @@ int main(void)
         load = Pa_GetStreamCpuLoad(stream);
         printf("numSines = %d, CPU load = %f\n", data.numSines, load );
         fflush(stdout);
-        } while((load < MAX_USAGE) && (data.numSines < MAX_SINES));
+    } while((load < MAX_USAGE) && (data.numSines < MAX_SINES));
 
     Pa_Sleep(2000);     /* Stay for 2 seconds around 80% CPU. */
 
@@ -207,7 +207,7 @@ int main(void)
     Pa_Terminate();
     printf("Test finished.\n");
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

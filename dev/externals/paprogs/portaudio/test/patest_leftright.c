@@ -1,12 +1,12 @@
 /** @file patest_leftright.c
-	@ingroup test_src
-	@brief Play different tone sine waves that 
-		alternate between left and right channel.
+    @ingroup test_src
+    @brief Play different tone sine waves that
+    alternate between left and right channel.
 
-	The low tone should be on the left channel.
+    The low tone should be on the left channel.
 
-	@author Ross Bencina <rossb@audiomulch.com>
-	@author Phil Burk <philburk@softsynth.com>
+    @author Ross Bencina <rossb@audiomulch.com>
+    @author Phil Burk <philburk@softsynth.com>
 */
 /*
  * $Id: patest_leftright.c 1609 2011-02-27 00:06:07Z philburk $
@@ -36,13 +36,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -87,25 +87,25 @@ static int patestCallback( const void *inputBuffer,
     (void) inputBuffer;
 
     for( i=0; i<framesPerBuffer; i++ )
-    {
-		// Smoothly pan between left and right.
-		if( data->currentBalance < data->targetBalance )
-		{
-			data->currentBalance += BALANCE_DELTA;
-		}
-		else if( data->currentBalance > data->targetBalance )
-		{
-			data->currentBalance -= BALANCE_DELTA;
-		}
-		// Apply left/right balance.
-        *out++ = data->sine[data->left_phase] * (1.0f - data->currentBalance);  /* left */
-		*out++ = data->sine[data->right_phase] * data->currentBalance;  /* right */
-		
-        data->left_phase += 1;
-        if( data->left_phase >= TABLE_SIZE ) data->left_phase -= TABLE_SIZE;
-        data->right_phase += 3; /* higher pitch so we can distinguish left and right. */
-        if( data->right_phase >= TABLE_SIZE ) data->right_phase -= TABLE_SIZE;
-    }
+        {
+            // Smoothly pan between left and right.
+            if( data->currentBalance < data->targetBalance )
+                {
+                    data->currentBalance += BALANCE_DELTA;
+                }
+            else if( data->currentBalance > data->targetBalance )
+                {
+                    data->currentBalance -= BALANCE_DELTA;
+                }
+            // Apply left/right balance.
+            *out++ = data->sine[data->left_phase] * (1.0f - data->currentBalance);  /* left */
+            *out++ = data->sine[data->right_phase] * data->currentBalance;  /* right */
+
+            data->left_phase += 1;
+            if( data->left_phase >= TABLE_SIZE ) data->left_phase -= TABLE_SIZE;
+            data->right_phase += 3; /* higher pitch so we can distinguish left and right. */
+            if( data->right_phase >= TABLE_SIZE ) data->right_phase -= TABLE_SIZE;
+        }
 
     return finished;
 }
@@ -118,15 +118,15 @@ int main(void)
     PaStreamParameters outputParameters;
     PaError err;
     paTestData data;
-    int i;    
+    int i;
     printf("Play different tone sine waves that alternate between left and right channel.\n");
     printf("The low tone should be on the left channel.\n");
-    
+
     /* initialise sinusoidal wavetable */
     for( i=0; i<TABLE_SIZE; i++ )
-    {
-        data.sine[i] = (float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. );
-    }
+        {
+            data.sine[i] = (float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. );
+        }
     data.left_phase = data.right_phase = 0;
     data.currentBalance = 0.0;
     data.targetBalance = 0.0;
@@ -136,8 +136,8 @@ int main(void)
 
     outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
     if (outputParameters.device == paNoDevice) {
-      fprintf(stderr,"Error: No default output device.\n");
-      goto error;
+        fprintf(stderr,"Error: No default output device.\n");
+        goto error;
     }
     outputParameters.channelCount = 2;       /* stereo output */
     outputParameters.sampleFormat = paFloat32; /* 32 bit floating point output */
@@ -153,21 +153,21 @@ int main(void)
                          patestCallback,
                          &data );
     if( err != paNoError ) goto error;
-    
+
     err = Pa_StartStream( stream );
     if( err != paNoError ) goto error;
-    
+
     printf("Play for several seconds.\n");
     for( i=0; i<4; i++ )
-	{
-		printf("Hear low sound on left side.\n");
-		data.targetBalance = 0.01;
-        Pa_Sleep( 1000 );
-		
-		printf("Hear high sound on right side.\n");
-		data.targetBalance = 0.99;
-        Pa_Sleep( 1000 ); 
-	}
+        {
+            printf("Hear low sound on left side.\n");
+            data.targetBalance = 0.01;
+            Pa_Sleep( 1000 );
+
+            printf("Hear high sound on right side.\n");
+            data.targetBalance = 0.99;
+            Pa_Sleep( 1000 );
+        }
 
     err = Pa_StopStream( stream );
     if( err != paNoError ) goto error;
@@ -176,7 +176,7 @@ int main(void)
     Pa_Terminate();
     printf("Test finished.\n");
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

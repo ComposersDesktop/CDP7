@@ -1,7 +1,7 @@
 /** @file patest_multi_sine.c
-	@ingroup test_src
-	@brief Play a different sine wave on each channel.
-	@author Phil Burk  http://www.softsynth.com
+    @ingroup test_src
+    @brief Play a different sine wave on each channel.
+    @author Phil Burk  http://www.softsynth.com
 */
 /*
  * $Id: patest_multi_sine.c 1368 2008-03-01 00:38:27Z rossb $
@@ -31,16 +31,16 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
- 
+
 #include <stdio.h>
 #include <math.h>
 
@@ -61,7 +61,7 @@ typedef struct
     int     numChannels;          /* Actually used. */
     double  phases[MAX_CHANNELS]; /* Each channel gets its' own frequency. */
 }
-paTestData;
+    paTestData;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
@@ -81,34 +81,34 @@ static int patestCallback(const void*                     inputBuffer,
     (void) inputBuffer;     /* Prevent unused arg warning. */
     if (data->interleaved)
         {
-        float *out = (float*)outputBuffer;      /* interleaved version */
-        for( frameIndex=0; frameIndex<(int)framesPerBuffer; frameIndex++ )
-            {
-            for( channelIndex=0; channelIndex<data->numChannels; channelIndex++ )
+            float *out = (float*)outputBuffer;      /* interleaved version */
+            for( frameIndex=0; frameIndex<(int)framesPerBuffer; frameIndex++ )
                 {
-                /* Output sine wave on every channel. */
-                *out++ = (float) sin(data->phases[channelIndex]);
+                    for( channelIndex=0; channelIndex<data->numChannels; channelIndex++ )
+                        {
+                            /* Output sine wave on every channel. */
+                            *out++ = (float) sin(data->phases[channelIndex]);
 
-                /* Play each channel at a higher frequency. */
-                data->phases[channelIndex] += FREQ_INCR * (4 + channelIndex);
-                if( data->phases[channelIndex] >= (2.0 * M_PI) ) data->phases[channelIndex] -= (2.0 * M_PI);
+                            /* Play each channel at a higher frequency. */
+                            data->phases[channelIndex] += FREQ_INCR * (4 + channelIndex);
+                            if( data->phases[channelIndex] >= (2.0 * M_PI) ) data->phases[channelIndex] -= (2.0 * M_PI);
+                        }
                 }
-            }
         }
     else
         {
-        for( frameIndex=0; frameIndex<(int)framesPerBuffer; frameIndex++ )
-            {
-            for( channelIndex=0; channelIndex<data->numChannels; channelIndex++ )
+            for( frameIndex=0; frameIndex<(int)framesPerBuffer; frameIndex++ )
                 {
-                /* Output sine wave on every channel. */
-                outputs[channelIndex][frameIndex] = (float) sin(data->phases[channelIndex]);
+                    for( channelIndex=0; channelIndex<data->numChannels; channelIndex++ )
+                        {
+                            /* Output sine wave on every channel. */
+                            outputs[channelIndex][frameIndex] = (float) sin(data->phases[channelIndex]);
 
-                /* Play each channel at a higher frequency. */
-                data->phases[channelIndex] += FREQ_INCR * (4 + channelIndex);
-                if( data->phases[channelIndex] >= (2.0 * M_PI) ) data->phases[channelIndex] -= (2.0 * M_PI);
+                            /* Play each channel at a higher frequency. */
+                            data->phases[channelIndex] += FREQ_INCR * (4 + channelIndex);
+                            if( data->phases[channelIndex] >= (2.0 * M_PI) ) data->phases[channelIndex] -= (2.0 * M_PI);
+                        }
                 }
-            }
         }
     return 0;
 }
@@ -125,8 +125,8 @@ int test(short interleaved)
 
     outputParameters.device = Pa_GetDefaultOutputDevice();  /* Default output device, max channels. */
     if (outputParameters.device == paNoDevice) {
-      fprintf(stderr,"Error: No default output device.\n");
-      return paInvalidDevice;
+        fprintf(stderr,"Error: No default output device.\n");
+        return paInvalidDevice;
     }
     pdi = Pa_GetDeviceInfo(outputParameters.device);
     outputParameters.channelCount = pdi->maxOutputChannels;
@@ -135,7 +135,7 @@ int test(short interleaved)
     outputParameters.sampleFormat = paFloat32;              /* 32 bit floating point output */
     outputParameters.suggestedLatency = pdi->defaultLowOutputLatency;
     outputParameters.hostApiSpecificStreamInfo = NULL;
-    
+
     data.interleaved = interleaved;
     data.numChannels = outputParameters.channelCount;
     for (n = 0; n < data.numChannels; n++)
@@ -145,8 +145,8 @@ int test(short interleaved)
         printf("interleaved ");
     else
         {
-        printf(" non-interleaved ");
-        outputParameters.sampleFormat |= paNonInterleaved;
+            printf(" non-interleaved ");
+            outputParameters.sampleFormat |= paNonInterleaved;
         }
     printf("channels.\n");
 
@@ -160,16 +160,16 @@ int test(short interleaved)
                         &data);
     if (err == paNoError)
         {
-        err = Pa_StartStream(stream);
-        if (err == paNoError)
-            {
-            printf("Hit ENTER to stop this test.\n");
-            getchar();
-            err = Pa_StopStream(stream);
-            }
-        Pa_CloseStream( stream );
+            err = Pa_StartStream(stream);
+            if (err == paNoError)
+                {
+                    printf("Hit ENTER to stop this test.\n");
+                    getchar();
+                    err = Pa_StopStream(stream);
+                }
+            Pa_CloseStream( stream );
         }
-    return err;    
+    return err;
 }
 
 
@@ -193,12 +193,12 @@ int main(void)
         goto done;
 
     printf("Test finished.\n");
-done:
+ done:
     if (err)
         {
-        fprintf(stderr, "An error occured while using the portaudio stream\n");
-        fprintf(stderr, "Error number: %d\n", err );
-        fprintf(stderr, "Error message: %s\n", Pa_GetErrorText(err));
+            fprintf(stderr, "An error occured while using the portaudio stream\n");
+            fprintf(stderr, "Error number: %d\n", err );
+            fprintf(stderr, "Error message: %s\n", Pa_GetErrorText(err));
         }
     Pa_Terminate();
     return 0;

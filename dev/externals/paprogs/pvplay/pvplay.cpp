@@ -365,8 +365,10 @@ void usage(void){
         fmhdecodefunc decodefunc = NULL;
         /* chorder facility not included in pvplay - use paplay! */
         unsigned int flags[FLAG_NFLAGS] = {0};
-        //int speakermask = 0;
+#ifdef WIN32
+        int speakermask = 0;
         int do_speakermask = 0;
+#endif
         int do_updatemessages = 1;
 #ifdef unix
         struct itimerval tout_val;
@@ -529,9 +531,11 @@ void usage(void){
           case 'u':
             do_updatemessages = 0;
             break;
+#ifdef WIN32
           case 'x':
             do_speakermask = 1;
             break;
+#endif
           case 'B':
             if(flags[FLAG_BM]){
               printf("error: multiple -B flags\n");
@@ -822,7 +826,7 @@ void usage(void){
             //framesize_factor = (long) (48000/ props.srate);
             //framesize_factor += 1;
             filesize /= inchans;
-
+#if WIN32
             if(props.format == WAVE_EX){
               if(do_speakermask){
                 int mask;
@@ -833,12 +837,14 @@ void usage(void){
                   mask = sndgetchanmask(sfdata.ifd);
                   if(mask < 0){
                     printf("Could not read speaker mask. Using 0\n");
+                    speakermask = 0;
                   }
                   else
                     speakermask = mask;
                 }
               }
             }
+#endif
             from_frame = (long)(fromdur * props.srate);
             if(from_frame >= filesize){
               printf("Error: start is beyond end of file\n");

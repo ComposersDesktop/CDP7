@@ -1,13 +1,13 @@
 /** @file patest_suggested_vs_streaminfo_latency.c
-	@ingroup test_src
-	@brief Print suggested vs. PaStreamInfo reported actual latency
-	@author Ross Bencina <rossb@audiomulch.com>
+    @ingroup test_src
+    @brief Print suggested vs. PaStreamInfo reported actual latency
+    @author Ross Bencina <rossb@audiomulch.com>
 
-	Opens streams with a sequence of suggested latency values 
-	from 0 to 2 seconds in .5ms intervals and gathers the resulting actual 
-	latency values. Output a csv file and graph suggested vs. actual. Run 
-	with framesPerBuffer unspecified, powers of 2 and multiples of 50 and 
-	prime number buffer sizes.
+    Opens streams with a sequence of suggested latency values
+    from 0 to 2 seconds in .5ms intervals and gathers the resulting actual
+    latency values. Output a csv file and graph suggested vs. actual. Run
+    with framesPerBuffer unspecified, powers of 2 and multiples of 50 and
+    prime number buffer sizes.
 */
 /*
  * $Id: patest_sine.c 1368 2008-03-01 00:38:27Z rossb $
@@ -37,13 +37,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 #include <stdio.h>
@@ -63,10 +63,10 @@
 
 /* dummy callback. does nothing. never gets called */
 static int patestCallback( const void *inputBuffer, void *outputBuffer,
-                            unsigned long framesPerBuffer,
-                            const PaStreamCallbackTimeInfo* timeInfo,
-                            PaStreamCallbackFlags statusFlags,
-                            void *userData )
+                           unsigned long framesPerBuffer,
+                           const PaStreamCallbackTimeInfo* timeInfo,
+                           PaStreamCallbackFlags statusFlags,
+                           void *userData )
 {
     return paContinue;
 }
@@ -129,8 +129,8 @@ int main( int argc, const char* argv[] )
     if( inputParameters.device == -1 ){
         inputParameters.device = Pa_GetDefaultInputDevice();
         if (inputParameters.device == paNoDevice) {
-          fprintf(stderr,"Error: No default input device available.\n");
-          goto error;
+            fprintf(stderr,"Error: No default input device available.\n");
+            goto error;
         }
     }else{
         deviceInfo = Pa_GetDeviceInfo(inputParameters.device);
@@ -143,7 +143,7 @@ int main( int argc, const char* argv[] )
             usage();
         }
     }
-    
+
     inputParameters.channelCount = NUM_CHANNELS;
     inputParameters.sampleFormat = paFloat32; /* 32 bit floating point output */
     inputParameters.hostApiSpecificStreamInfo = NULL;
@@ -158,8 +158,8 @@ int main( int argc, const char* argv[] )
     if( outputParameters.device == -1 ){
         outputParameters.device = Pa_GetDefaultOutputDevice();
         if (outputParameters.device == paNoDevice) {
-          fprintf(stderr,"Error: No default output device available.\n");
-          goto error;
+            fprintf(stderr,"Error: No default output device available.\n");
+            goto error;
         }
     }else{
         deviceInfo = Pa_GetDeviceInfo(outputParameters.device);
@@ -193,14 +193,14 @@ int main( int argc, const char* argv[] )
         /* ------------------------------ output ------------------------------ */
 
         err = Pa_OpenStream(
-                  &stream,
-                  NULL, /* no input */
-                  &outputParameters,
-                  sampleRate,
-                  framesPerBuffer,
-                  paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-                  patestCallback,
-                  0 );
+                            &stream,
+                            NULL, /* no input */
+                            &outputParameters,
+                            sampleRate,
+                            framesPerBuffer,
+                            paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+                            patestCallback,
+                            0 );
         if( err != paNoError ) goto error;
 
         streamInfo = Pa_GetStreamInfo( stream );
@@ -213,14 +213,14 @@ int main( int argc, const char* argv[] )
         /* ------------------------------ input ------------------------------ */
 
         err = Pa_OpenStream(
-                  &stream,
-                  &inputParameters, 
-                  NULL, /* no output */
-                  sampleRate,
-                  framesPerBuffer,
-                  paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-                  patestCallback,
-                  0 );
+                            &stream,
+                            &inputParameters,
+                            NULL, /* no output */
+                            sampleRate,
+                            framesPerBuffer,
+                            paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+                            patestCallback,
+                            0 );
         if( err != paNoError ) goto error;
 
         streamInfo = Pa_GetStreamInfo( stream );
@@ -233,14 +233,14 @@ int main( int argc, const char* argv[] )
         /* ------------------------------ full duplex ------------------------------ */
 
         err = Pa_OpenStream(
-                  &stream,
-                  &inputParameters, 
-                  &outputParameters,
-                  sampleRate,
-                  framesPerBuffer,
-                  paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-                  patestCallback,
-                  0 );
+                            &stream,
+                            &inputParameters,
+                            &outputParameters,
+                            sampleRate,
+                            framesPerBuffer,
+                            paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+                            patestCallback,
+                            0 );
         if( err != paNoError ) goto error;
 
         streamInfo = Pa_GetStreamInfo( stream );
@@ -258,9 +258,9 @@ int main( int argc, const char* argv[] )
 
     Pa_Terminate();
     printf("# Test finished.\n");
-    
+
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

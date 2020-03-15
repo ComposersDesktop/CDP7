@@ -68,7 +68,7 @@ int filter_preprocess(dataptr dz)
         if((exit_status = setup_lphp_filter(dz))<0)
             return(exit_status);
         break;
-    case(FLTBANKC):			
+    case(FLTBANKC):
         return calc_frqs(dz);
     case(FLTBANKN):
         if((exit_status = calc_frqs(dz))<0)
@@ -99,7 +99,7 @@ int setup_lphp_filter(dataptr dz)
     int exit_status;
     int filter_order;
     double signd = 1.0;
-    if (dz->param[FLT_PASSFRQ] < dz->param[FLT_STOPFRQ])	/* low pass */
+    if (dz->param[FLT_PASSFRQ] < dz->param[FLT_STOPFRQ])        /* low pass */
         signd = -1.0;
     filter_order = establish_order_of_filter(dz);
 
@@ -126,27 +126,27 @@ int calc_frqs(dataptr dz)
         break;
     case(FLT_EQUALINT):
         dz->parray[FLT_FRQ][0] = dz->param[FLT_LOFRQ];
-        for(n=1;n<dz->iparam[FLT_CNT];n++)   
+        for(n=1;n<dz->iparam[FLT_CNT];n++)
             dz->parray[FLT_FRQ][n] =  dz->parray[FLT_FRQ][n-1] * dz->param[FLT_INTSIZE];
         break;
-    case(FLT_HARMONIC):	/* offset = 0.0 */
+    case(FLT_HARMONIC): /* offset = 0.0 */
     case(FLT_LINOFFSET):
         dz->parray[FLT_FRQ][0] = dz->param[FLT_LOFRQ];
-        for(n=1;n<dz->iparam[FLT_CNT];n++)   
+        for(n=1;n<dz->iparam[FLT_CNT];n++)
             dz->parray[FLT_FRQ][n] = (dz->param[FLT_LOFRQ] * (double)(n+1))+dz->param[FLT_OFFSET];
         break;
     case(FLT_ALTERNATE):
         dz->parray[FLT_FRQ][0] = dz->param[FLT_LOFRQ];
-        for(n=1;n<dz->iparam[FLT_CNT];n++)   
+        for(n=1;n<dz->iparam[FLT_CNT];n++)
             dz->parray[FLT_FRQ][n] =  dz->param[FLT_LOFRQ] * (double)((n*2)+1);
         break;
-    case(FLT_SUBHARM):	/* dz->param[FLT_LOFRQ] already reset at top */
+    case(FLT_SUBHARM):  /* dz->param[FLT_LOFRQ] already reset at top */
         dz->parray[FLT_FRQ][0] = dz->param[FLT_HIFRQ];
-        for(n=1;n<dz->iparam[FLT_CNT];n++)   
+        for(n=1;n<dz->iparam[FLT_CNT];n++)
             dz->parray[FLT_FRQ][n] =  dz->param[FLT_HIFRQ]/(double)(n+1);
         break;
     default:
-        sprintf(errstr,"Unknown mode in	calc_frqs()\n");
+        sprintf(errstr,"Unknown mode in calc_frqs()\n");
         return(PROGRAM_ERROR);
     }
     if(!flteq(dz->param[FLT_RANDFACT],0.0))
@@ -161,17 +161,17 @@ void randomise_frqs(dataptr dz)
     int n;
     double thisrand, frqratio, interval;
     for(n=1;n<dz->iparam[FLT_CNT]-1;n++) {
-        thisrand = drand48();						/*  RANGE 0 - 1      */
-        if(thisrand >= 0.5) {						/* IF IN TOP 1/2     */
-            thisrand -= 0.5;						/* REDUCE BY 1/2     */
-            thisrand *= dz->param[FLT_RANDFACT];	/* SCALE BY randfact */
+        thisrand = drand48();                                           /*  RANGE 0 - 1      */
+        if(thisrand >= 0.5) {                                           /* IF IN TOP 1/2     */
+            thisrand -= 0.5;                                            /* REDUCE BY 1/2     */
+            thisrand *= dz->param[FLT_RANDFACT];        /* SCALE BY randfact */
             frqratio = dz->parray[FLT_FRQ][n+1]/dz->parray[FLT_FRQ][n];
             interval = log(frqratio) * thisrand;
             frqratio = exp(interval);
             dz->parray[FLT_FRQ][n] *= frqratio;
             /* SCATTER FRQ IN 1/2 INTERVAL ABOVE CURRENT VAL */
         } else {
-            thisrand *= dz->param[FLT_RANDFACT];	/* SCALE BY randfact */
+            thisrand *= dz->param[FLT_RANDFACT];        /* SCALE BY randfact */
             frqratio = dz->parray[FLT_FRQ][n]/dz->parray[FLT_FRQ][n-1];
             interval = log(frqratio) * (1.0 - thisrand);
             frqratio = exp(interval);
@@ -185,26 +185,26 @@ void randomise_frqs(dataptr dz)
 
 //int allocate_internal_params_lphp(int chans,dataptr dz)
 //{
-//	if((dz->parray[FLT_DEN1] = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
-//	|| (dz->parray[FLT_DEN2] = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
-//	|| (dz->parray[FLT_CN]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
-//	|| (dz->parray[FLT_S1]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
-//	|| (dz->parray[FLT_E1]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
-//	|| (dz->parray[FLT_S2]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
-//	|| (dz->parray[FLT_E2]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL) {
-//		sprintf(errstr,"INSUFFICIENT MEMORY for arrays of filter parameters.\n");
-//		return(MEMORY_ERROR);
-//	}
-//	if(chans==2) {
-//		if((dz->parray[FLT_S1S]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
-//		|| (dz->parray[FLT_E1S]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
-//		|| (dz->parray[FLT_S2S]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
-//		|| (dz->parray[FLT_E2S]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL) {
-//			sprintf(errstr,"INSUFFICIENT MEMORY for arrays of filter stereo parameters.\n");
-//			return(MEMORY_ERROR);
-//		}
-//	}
-//	return(FINISHED);
+//      if((dz->parray[FLT_DEN1] = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
+//      || (dz->parray[FLT_DEN2] = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
+//      || (dz->parray[FLT_CN]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
+//      || (dz->parray[FLT_S1]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
+//      || (dz->parray[FLT_E1]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
+//      || (dz->parray[FLT_S2]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
+//      || (dz->parray[FLT_E2]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL) {
+//              sprintf(errstr,"INSUFFICIENT MEMORY for arrays of filter parameters.\n");
+//              return(MEMORY_ERROR);
+//      }
+//      if(chans==2) {
+//              if((dz->parray[FLT_S1S]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
+//              || (dz->parray[FLT_E1S]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
+//              || (dz->parray[FLT_S2S]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL
+//              || (dz->parray[FLT_E2S]   = (double *)malloc(dz->iparam[FLT_CNT] * sizeof(double)))==NULL) {
+//                      sprintf(errstr,"INSUFFICIENT MEMORY for arrays of filter stereo parameters.\n");
+//                      return(MEMORY_ERROR);
+//              }
+//      }
+//      return(FINISHED);
 //}
 //
 
@@ -262,21 +262,21 @@ void calculate_filter_poles_lphp(double  signd,int filter_order,dataptr dz)
 
 //void initialise_filter_coeffs_lphp(int chans,dataptr dz)
 //{
-//	int k;
-//	for (k = 0 ; k < dz->iparam[FLT_CNT]; k++) {
-//		dz->parray[FLT_S1][k] = 0.0;
-//		dz->parray[FLT_S2][k] = 0.0;
-//		dz->parray[FLT_E1][k] = 0.0;
-//		dz->parray[FLT_E2][k] = 0.0;
-//	}
-//	if(chans==STEREO)	{
-//		for (k = 0 ; k < dz->iparam[FLT_CNT]; k++) {
-//			dz->parray[FLT_S1S][k] = 0.0;
-//			dz->parray[FLT_S2S][k] = 0.0;
-//			dz->parray[FLT_E1S][k] = 0.0;
-//			dz->parray[FLT_E2S][k] = 0.0;
-//		}
-//	}
+//      int k;
+//      for (k = 0 ; k < dz->iparam[FLT_CNT]; k++) {
+//              dz->parray[FLT_S1][k] = 0.0;
+//              dz->parray[FLT_S2][k] = 0.0;
+//              dz->parray[FLT_E1][k] = 0.0;
+//              dz->parray[FLT_E2][k] = 0.0;
+//      }
+//      if(chans==STEREO)       {
+//              for (k = 0 ; k < dz->iparam[FLT_CNT]; k++) {
+//                      dz->parray[FLT_S1S][k] = 0.0;
+//                      dz->parray[FLT_S2S][k] = 0.0;
+//                      dz->parray[FLT_E1S][k] = 0.0;
+//                      dz->parray[FLT_E2S][k] = 0.0;
+//              }
+//      }
 //}
 //
 
@@ -292,7 +292,7 @@ void initialise_filter_coeffs_lphp(int chans,dataptr dz)
         dz->parray[FLT_E2_BASE][k] = 0.0;
     }
     for(i=1;i < chans; i++){
-        //index = i *	FLT_LPHP_ARRAYS_PER_FILTER;
+        //index = i *   FLT_LPHP_ARRAYS_PER_FILTER;
         for (k = 0 ; k < dz->iparam[FLT_CNT]; k++) {
             dz->parray[FLT_S1_BASE + i][k] = 0.0;
             dz->parray[FLT_S2_BASE + i][k] = 0.0;
@@ -345,7 +345,7 @@ int initialise_filter_params(dataptr dz)
             }
             dz->parray[FLT_Y][k]  = 0.0;
             dz->parray[FLT_Z][k]  = 0.0;
-        }	
+        }
     }
     return(FINISHED);
 }
@@ -357,7 +357,7 @@ int establish_order_of_filter(dataptr dz)
     int filter_order;
     double tc, tp, tt, pii, xx, yy;
     double sr = (double)dz->infile->srate;
-    if (dz->param[FLT_PASSFRQ] < dz->param[FLT_STOPFRQ])		/* low pass */
+    if (dz->param[FLT_PASSFRQ] < dz->param[FLT_STOPFRQ])                /* low pass */
         dz->param[FLT_MUL] = 2.0;
     else {
         dz->param[FLT_MUL] = -2.0;
@@ -379,7 +379,7 @@ int establish_order_of_filter(dataptr dz)
     if ((xx - yy) == 0.0 )
         yy = yy - 1.0 ;
     filter_order = ((int)yy) + 1;
-    if (filter_order <= 1) 
+    if (filter_order <= 1)
         filter_order = 2;
     dz->iparam[FLT_CNT] = filter_order/2 ;
     filter_order = 2 * dz->iparam[FLT_CNT] ;
@@ -399,8 +399,8 @@ int initialise_fltbankv2(dataptr dz)
     memset((char *)dz->parray[FLT_INFRQ],0,dz->iparam[FLT_CNT] * sizeof(double));
     memset((char *)dz->parray[FLT_INAMP],0,dz->iparam[FLT_CNT] * sizeof(double));
     for(n = 1,k = 0; n < dz->iparam[FLT_ENTRYCNT];n+=2,k += dz->iparam[FLT_HARMCNT]) {
-        dz->parray[FLT_INFRQ][k] = dz->parray[FLT_FBRK][n];		/* Get frqs of fundamentals into array, leaving space for harmonics */
-        dz->parray[FLT_INAMP][k] = dz->parray[FLT_FBRK][n+1];	/* Get amps of fundamentals into array, leaving space for harmonics */
+        dz->parray[FLT_INFRQ][k] = dz->parray[FLT_FBRK][n];             /* Get frqs of fundamentals into array, leaving space for harmonics */
+        dz->parray[FLT_INAMP][k] = dz->parray[FLT_FBRK][n+1];   /* Get amps of fundamentals into array, leaving space for harmonics */
     }
     for(n = 1,k=0; n < dz->iparam[HRM_ENTRYCNT];n+=2,k++) {
         dz->parray[HARM_FRQ_CALC][k] = dz->parray[FLT_HBRK][n];
@@ -408,11 +408,10 @@ int initialise_fltbankv2(dataptr dz)
     }
     for(n=0;n<dz->iparam[FLT_CNT];n+=dz->iparam[FLT_HARMCNT]) {
         //z = 0;
-        for(k=0; k < dz->iparam[FLT_HARMCNT];k++) {	/* calc vals for partials from basefrq vals */
+        for(k=0; k < dz->iparam[FLT_HARMCNT];k++) {     /* calc vals for partials from basefrq vals */
             dz->parray[FLT_INFRQ][n+k] = dz->parray[FLT_INFRQ][n] * dz->parray[HARM_FRQ_CALC][k];
             dz->parray[FLT_INAMP][n+k] = dz->parray[FLT_INAMP][n] * dz->parray[HARM_AMP_CALC][k];
         }
     }
     return(FINISHED);
 }
-

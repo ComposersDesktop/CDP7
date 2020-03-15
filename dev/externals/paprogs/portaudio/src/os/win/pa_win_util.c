@@ -27,22 +27,22 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
 /** @file
- @ingroup win_src
+    @ingroup win_src
 
- @brief Win32 implementation of platform-specific PaUtil support functions.
+    @brief Win32 implementation of platform-specific PaUtil support functions.
 */
- 
+
 #include <windows.h>
 #include <mmsystem.h> /* for timeGetTime() */
 
@@ -54,8 +54,8 @@
 
 
 /*
-   Track memory allocations to avoid leaks.
- */
+  Track memory allocations to avoid leaks.
+*/
 
 #if PA_TRACK_MEMORY
 static int numAllocations_ = 0;
@@ -76,13 +76,13 @@ void *PaUtil_AllocateMemory( long size )
 void PaUtil_FreeMemory( void *block )
 {
     if( block != NULL )
-    {
-        GlobalFree( block );
+        {
+            GlobalFree( block );
 #if PA_TRACK_MEMORY
-        numAllocations_ -= 1;
+            numAllocations_ -= 1;
 #endif
 
-    }
+        }
 }
 
 
@@ -109,14 +109,14 @@ void PaUtil_InitializeClock( void )
     LARGE_INTEGER ticksPerSecond;
 
     if( QueryPerformanceFrequency( &ticksPerSecond ) != 0 )
-    {
-        usePerformanceCounter_ = 1;
-        secondsPerTick_ = 1.0 / (double)ticksPerSecond.QuadPart;
-    }
+        {
+            usePerformanceCounter_ = 1;
+            secondsPerTick_ = 1.0 / (double)ticksPerSecond.QuadPart;
+        }
     else
-    {
-        usePerformanceCounter_ = 0;
-    }
+        {
+            usePerformanceCounter_ = 0;
+        }
 }
 
 
@@ -125,29 +125,29 @@ double PaUtil_GetTime( void )
     LARGE_INTEGER time;
 
     if( usePerformanceCounter_ )
-    {
-        /*
-            Note: QueryPerformanceCounter has a known issue where it can skip forward
-            by a few seconds (!) due to a hardware bug on some PCI-ISA bridge hardware.
-            This is documented here:
-            http://support.microsoft.com/default.aspx?scid=KB;EN-US;Q274323&
+        {
+            /*
+              Note: QueryPerformanceCounter has a known issue where it can skip forward
+              by a few seconds (!) due to a hardware bug on some PCI-ISA bridge hardware.
+              This is documented here:
+              http://support.microsoft.com/default.aspx?scid=KB;EN-US;Q274323&
 
-            The work-arounds are not very paletable and involve querying GetTickCount 
-            at every time step.
+              The work-arounds are not very paletable and involve querying GetTickCount
+              at every time step.
 
-            Using rdtsc is not a good option on multi-core systems.
+              Using rdtsc is not a good option on multi-core systems.
 
-            For now we just use QueryPerformanceCounter(). It's good, most of the time.
-        */
-        QueryPerformanceCounter( &time );
-        return time.QuadPart * secondsPerTick_;
-    }
+              For now we just use QueryPerformanceCounter(). It's good, most of the time.
+            */
+            QueryPerformanceCounter( &time );
+            return time.QuadPart * secondsPerTick_;
+        }
     else
-    {
-#ifndef UNDER_CE    	
-        return timeGetTime() * .001;
+        {
+#ifndef UNDER_CE
+            return timeGetTime() * .001;
 #else
-        return GetTickCount() * .001;
-#endif                
-    }
+            return GetTickCount() * .001;
+#endif
+        }
 }

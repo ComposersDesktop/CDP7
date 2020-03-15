@@ -1,8 +1,8 @@
 /** @file pa_minlat.c
-	@ingroup test_src
+    @ingroup test_src
     @brief Experiment with different numbers of buffers to determine the
-	minimum latency for a computer.
-	@author Phil Burk  http://www.softsynth.com
+    minimum latency for a computer.
+    @author Phil Burk  http://www.softsynth.com
 */
 /*
  * $Id: pa_minlat.c 1612 2011-02-28 23:56:48Z philburk $
@@ -32,13 +32,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -60,7 +60,7 @@ typedef struct
     double left_phase;
     double right_phase;
 }
-paTestData;
+    paTestData;
 
 /* Very simple synthesis routine to generate two sine waves. */
 static int paminlatCallback( const void *inputBuffer, void *outputBuffer,
@@ -79,15 +79,15 @@ static int paminlatCallback( const void *inputBuffer, void *outputBuffer,
     double right_phase = data->right_phase;
 
     for( i=0; i<framesPerBuffer; i++ )
-    {
-        left_phase += left_phaseInc;
-        if( left_phase > TWOPI ) left_phase -= TWOPI;
-        *out++ = (float) sin( left_phase );
+        {
+            left_phase += left_phaseInc;
+            if( left_phase > TWOPI ) left_phase -= TWOPI;
+            *out++ = (float) sin( left_phase );
 
-        right_phase += right_phaseInc;
-        if( right_phase > TWOPI ) right_phase -= TWOPI;
-        *out++ = (float) sin( right_phase );
-    }
+            right_phase += right_phaseInc;
+            if( right_phase > TWOPI ) right_phase -= TWOPI;
+            *out++ = (float) sin( right_phase );
+        }
 
     data->left_phase = left_phase;
     data->right_phase = right_phase;
@@ -107,7 +107,7 @@ int main( int argc, char **argv )
     int    framesPerBuffer;
     double sampleRate = 44100.0;
     char   str[256];
-	char  *line;
+    char  *line;
 
     printf("pa_minlat - Determine minimum latency for your computer.\n");
     printf("  usage:         pa_minlat {userBufferSize}\n");
@@ -130,73 +130,73 @@ int main( int argc, char **argv )
     /* Try different numBuffers in a loop. */
     go = 1;
     while( go )
-    {
-        outputParameters.device                    = Pa_GetDefaultOutputDevice(); /* Default output device. */
-        outputParameters.channelCount              = 2;                           /* Stereo output */
-        outputParameters.sampleFormat              = paFloat32;                   /* 32 bit floating point output. */
-        outputParameters.suggestedLatency          = (double)outLatency / sampleRate; /* In seconds. */
-        outputParameters.hostApiSpecificStreamInfo = NULL;
-        
-        printf("Latency = %d frames = %6.1f msec.\n", outLatency, outputParameters.suggestedLatency * 1000.0 );
+        {
+            outputParameters.device                    = Pa_GetDefaultOutputDevice(); /* Default output device. */
+            outputParameters.channelCount              = 2;                           /* Stereo output */
+            outputParameters.sampleFormat              = paFloat32;                   /* 32 bit floating point output. */
+            outputParameters.suggestedLatency          = (double)outLatency / sampleRate; /* In seconds. */
+            outputParameters.hostApiSpecificStreamInfo = NULL;
 
-        err = Pa_OpenStream(
-                  &stream,
-                  NULL, /* no input */
-                  &outputParameters,
-                  sampleRate,
-                  framesPerBuffer,
-                  paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-                  paminlatCallback,
-                  &data );
-        if( err != paNoError ) goto error;
-        if( stream == NULL ) goto error;
+            printf("Latency = %d frames = %6.1f msec.\n", outLatency, outputParameters.suggestedLatency * 1000.0 );
 
-        /* Start audio. */
-        err = Pa_StartStream( stream );
-        if( err != paNoError ) goto error;
+            err = Pa_OpenStream(
+                                &stream,
+                                NULL, /* no input */
+                                &outputParameters,
+                                sampleRate,
+                                framesPerBuffer,
+                                paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+                                paminlatCallback,
+                                &data );
+            if( err != paNoError ) goto error;
+            if( stream == NULL ) goto error;
 
-        /* Ask user for a new nlatency. */
-        printf("\nMove windows around to see if the sound glitches.\n");
-        printf("Latency now %d, enter new number of frames, or 'q' to quit: ", outLatency );
-        line = fgets( str, 256, stdin );
-		if( line == NULL )
-		{
-			go = 0;
-		}
-		else
-		{
-			{
-				/* Get rid of newline */
-				size_t l = strlen( str ) - 1;
-				if( str[ l ] == '\n')
-					str[ l ] = '\0';
-			}
-			
-			
-			if( str[0] == 'q' ) go = 0;
-			else
-			{
-				outLatency = atol( str );
-				if( outLatency < minLatency )
-				{
-					printf( "Latency below minimum of %d! Set to minimum!!!\n", minLatency );
-					outLatency = minLatency;
-				}
-			}
-			
-		}
-		/* Stop sound until ENTER hit. */
-        err = Pa_StopStream( stream );
-        if( err != paNoError ) goto error;
-        err = Pa_CloseStream( stream );
-        if( err != paNoError ) goto error;
-    }
+            /* Start audio. */
+            err = Pa_StartStream( stream );
+            if( err != paNoError ) goto error;
+
+            /* Ask user for a new nlatency. */
+            printf("\nMove windows around to see if the sound glitches.\n");
+            printf("Latency now %d, enter new number of frames, or 'q' to quit: ", outLatency );
+            line = fgets( str, 256, stdin );
+            if( line == NULL )
+                {
+                    go = 0;
+                }
+            else
+                {
+                    {
+                        /* Get rid of newline */
+                        size_t l = strlen( str ) - 1;
+                        if( str[ l ] == '\n')
+                            str[ l ] = '\0';
+                    }
+
+
+                    if( str[0] == 'q' ) go = 0;
+                    else
+                        {
+                            outLatency = atol( str );
+                            if( outLatency < minLatency )
+                                {
+                                    printf( "Latency below minimum of %d! Set to minimum!!!\n", minLatency );
+                                    outLatency = minLatency;
+                                }
+                        }
+
+                }
+            /* Stop sound until ENTER hit. */
+            err = Pa_StopStream( stream );
+            if( err != paNoError ) goto error;
+            err = Pa_CloseStream( stream );
+            if( err != paNoError ) goto error;
+        }
     printf("A good setting for latency would be somewhat higher than\n");
     printf("the minimum latency that worked.\n");
     printf("PortAudio: Test finished.\n");
     Pa_Terminate();
     return 0;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

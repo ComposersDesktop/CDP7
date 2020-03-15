@@ -27,20 +27,20 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
 /** @file
- @ingroup common_src
+    @ingroup common_src
 
- @brief Real-time safe event trace logging facility for debugging.
+    @brief Real-time safe event trace logging facility for debugging.
 */
 
 
@@ -74,10 +74,10 @@ void PaUtil_DumpTraceMessages()
 
     printf("DumpTraceMessages: traceIndex = %d\n", traceIndex );
     for( i=0; i<messageCount; i++ )
-    {
-        printf("%3d: %s = 0x%08X\n",
-               i, traceTextArray[i], traceIntArray[i] );
-    }
+        {
+            printf("%3d: %s = 0x%08X\n",
+                   i, traceTextArray[i], traceIntArray[i] );
+        }
     PaUtil_ResetTraceMessages();
     fflush(stdout);
 }
@@ -86,16 +86,16 @@ void PaUtil_DumpTraceMessages()
 void PaUtil_AddTraceMessage( const char *msg, int data )
 {
     if( (traceIndex == PA_MAX_TRACE_RECORDS) && (traceBlock == 0) )
-    {
-        traceBlock = 1;
-        /*  PaUtil_DumpTraceMessages(); */
-    }
+        {
+            traceBlock = 1;
+            /*  PaUtil_DumpTraceMessages(); */
+        }
     else if( traceIndex < PA_MAX_TRACE_RECORDS )
-    {
-        traceTextArray[traceIndex] = msg;
-        traceIntArray[traceIndex] = data;
-        traceIndex++;
-    }
+        {
+            traceTextArray[traceIndex] = msg;
+            traceIntArray[traceIndex] = data;
+            traceIndex++;
+        }
 }
 
 /************************************************************************/
@@ -122,18 +122,18 @@ int PaUtil_InitializeHighSpeedLog( LogHandle* phLog, unsigned maxSizeInBytes )
 {
     PaHighPerformanceLog* pLog = (PaHighPerformanceLog*)PaUtil_AllocateMemory(sizeof(PaHighPerformanceLog));
     if (pLog == 0)
-    {
-        return paInsufficientMemory;
-    }
+        {
+            return paInsufficientMemory;
+        }
     assert(phLog != 0);
     *phLog = pLog;
 
     pLog->data = (char*)PaUtil_AllocateMemory(maxSizeInBytes);
     if (pLog->data == 0)
-    {
-        PaUtil_FreeMemory(pLog);
-        return paInsufficientMemory;
-    }
+        {
+            PaUtil_FreeMemory(pLog);
+            return paInsufficientMemory;
+        }
     pLog->magik = kMagik;
     pLog->size = maxSizeInBytes;
     pLog->refTime = PaUtil_GetTime();
@@ -165,35 +165,35 @@ int PaUtil_AddHighSpeedLogMessage( LogHandle hLog, const char* fmt, ... )
     int n = 0;
     PaHighPerformanceLog* pLog = (PaHighPerformanceLog*)hLog;
     if (pLog != 0)
-    {
-        PaLogEntryHeader* pHeader;
-        char* p;
-        int maxN;
-        assert(pLog->magik == kMagik);
-        pHeader = (PaLogEntryHeader*)( pLog->data + pLog->writePtr );
-        p = (char*)( pHeader + 1 );
-        maxN = pLog->size - pLog->writePtr - 2 * sizeof(PaLogEntryHeader);
-
-        pHeader->timeStamp = PaUtil_GetTime() - pLog->refTime;
-        if (maxN > 0)
         {
-            if (maxN > 32)
-            {
-                va_start(l, fmt);
-                n = _vsnprintf(p, min(1024, maxN), fmt, l);
-                va_end(l);
-            }
-            else {
-                n = sprintf(p, "End of log...");
-            }
-            n = ((n + sizeof(unsigned)) & ~(sizeof(unsigned)-1)) + sizeof(PaLogEntryHeader);
-            pHeader->size = n;
+            PaLogEntryHeader* pHeader;
+            char* p;
+            int maxN;
+            assert(pLog->magik == kMagik);
+            pHeader = (PaLogEntryHeader*)( pLog->data + pLog->writePtr );
+            p = (char*)( pHeader + 1 );
+            maxN = pLog->size - pLog->writePtr - 2 * sizeof(PaLogEntryHeader);
+
+            pHeader->timeStamp = PaUtil_GetTime() - pLog->refTime;
+            if (maxN > 0)
+                {
+                    if (maxN > 32)
+                        {
+                            va_start(l, fmt);
+                            n = _vsnprintf(p, min(1024, maxN), fmt, l);
+                            va_end(l);
+                        }
+                    else {
+                        n = sprintf(p, "End of log...");
+                    }
+                    n = ((n + sizeof(unsigned)) & ~(sizeof(unsigned)-1)) + sizeof(PaLogEntryHeader);
+                    pHeader->size = n;
 #if 0
-            PaUtil_DebugPrint("%05u.%03u: %s\n", pHeader->timeStamp/1000, pHeader->timeStamp%1000, p);
+                    PaUtil_DebugPrint("%05u.%03u: %s\n", pHeader->timeStamp/1000, pHeader->timeStamp%1000, p);
 #endif
-            pLog->writePtr += n;
+                    pLog->writePtr += n;
+                }
         }
-    }
     return n;
 }
 
@@ -205,18 +205,18 @@ void PaUtil_DumpHighSpeedLog( LogHandle hLog, const char* fileName )
     assert(pLog->magik == kMagik);
     localWritePtr = pLog->writePtr;
     while (pLog->readPtr != localWritePtr)
-    {
-        const PaLogEntryHeader* pHeader = (const PaLogEntryHeader*)( pLog->data + pLog->readPtr );
-        const char* p = (const char*)( pHeader + 1 );
-        const PaUint64 ts = (const PaUint64)( pHeader->timeStamp * USEC_PER_SEC );
-        assert(pHeader->size < (1024+sizeof(unsigned)+sizeof(PaLogEntryHeader)));
-        fprintf(f, "%05u.%03u: %s\n", (unsigned)(ts/1000), (unsigned)(ts%1000), p);
-        pLog->readPtr += pHeader->size;
-    }
+        {
+            const PaLogEntryHeader* pHeader = (const PaLogEntryHeader*)( pLog->data + pLog->readPtr );
+            const char* p = (const char*)( pHeader + 1 );
+            const PaUint64 ts = (const PaUint64)( pHeader->timeStamp * USEC_PER_SEC );
+            assert(pHeader->size < (1024+sizeof(unsigned)+sizeof(PaLogEntryHeader)));
+            fprintf(f, "%05u.%03u: %s\n", (unsigned)(ts/1000), (unsigned)(ts%1000), p);
+            pLog->readPtr += pHeader->size;
+        }
     if (f != stdout)
-    {
-        fclose(f);
-    }
+        {
+            fclose(f);
+        }
 }
 
 void PaUtil_DiscardHighSpeedLog( LogHandle hLog )
@@ -233,6 +233,6 @@ void PaUtil_DiscardHighSpeedLog( LogHandle hLog )
  */
 int PaUtil_TraceStubToSatisfyLinker(void)
 {
-	return 0;
+    return 0;
 }
 #endif /* TRACE_REALTIME_EVENTS */

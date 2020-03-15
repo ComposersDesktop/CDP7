@@ -1,7 +1,7 @@
 /** @file paex_record_file.c
-	@ingroup examples_src
-	@brief Record input into a file, then playback recorded data from file (Windows only at the moment) 
-	@author Robert Bielik
+    @ingroup examples_src
+    @brief Record input into a file, then playback recorded data from file (Windows only at the moment)
+    @author Robert Bielik
 */
 /*
  * $Id: paex_record_file.c 1752 2011-09-08 03:21:55Z philburk $
@@ -31,13 +31,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -95,7 +95,7 @@ typedef struct
     FILE               *file;
     void               *threadHandle;
 }
-paTestData;
+    paTestData;
 
 /* This routine is run in a separate thread to write data from the ring buffer into a file (during Recording) */
 static int threadFunctionWriteToRawFile(void* ptr)
@@ -106,35 +106,35 @@ static int threadFunctionWriteToRawFile(void* ptr)
     pData->threadSyncFlag = 0;
 
     while (1)
-    {
-        ring_buffer_size_t elementsInBuffer = PaUtil_GetRingBufferReadAvailable(&pData->ringBuffer);
-        if ( (elementsInBuffer >= pData->ringBuffer.bufferSize / NUM_WRITES_PER_BUFFER) ||
-             pData->threadSyncFlag )
         {
-            void* ptr[2] = {0};
-            ring_buffer_size_t sizes[2] = {0};
-
-            /* By using PaUtil_GetRingBufferReadRegions, we can read directly from the ring buffer */
-            ring_buffer_size_t elementsRead = PaUtil_GetRingBufferReadRegions(&pData->ringBuffer, elementsInBuffer, ptr + 0, sizes + 0, ptr + 1, sizes + 1);
-            if (elementsRead > 0)
-            {
-                int i;
-                for (i = 0; i < 2 && ptr[i] != NULL; ++i)
+            ring_buffer_size_t elementsInBuffer = PaUtil_GetRingBufferReadAvailable(&pData->ringBuffer);
+            if ( (elementsInBuffer >= pData->ringBuffer.bufferSize / NUM_WRITES_PER_BUFFER) ||
+                 pData->threadSyncFlag )
                 {
-                    fwrite(ptr[i], pData->ringBuffer.elementSizeBytes, sizes[i], pData->file);
+                    void* ptr[2] = {0};
+                    ring_buffer_size_t sizes[2] = {0};
+
+                    /* By using PaUtil_GetRingBufferReadRegions, we can read directly from the ring buffer */
+                    ring_buffer_size_t elementsRead = PaUtil_GetRingBufferReadRegions(&pData->ringBuffer, elementsInBuffer, ptr + 0, sizes + 0, ptr + 1, sizes + 1);
+                    if (elementsRead > 0)
+                        {
+                            int i;
+                            for (i = 0; i < 2 && ptr[i] != NULL; ++i)
+                                {
+                                    fwrite(ptr[i], pData->ringBuffer.elementSizeBytes, sizes[i], pData->file);
+                                }
+                            PaUtil_AdvanceRingBufferReadIndex(&pData->ringBuffer, elementsRead);
+                        }
+
+                    if (pData->threadSyncFlag)
+                        {
+                            break;
+                        }
                 }
-                PaUtil_AdvanceRingBufferReadIndex(&pData->ringBuffer, elementsRead);
-            }
 
-            if (pData->threadSyncFlag)
-            {
-                break;
-            }
+            /* Sleep a little while... */
+            Pa_Sleep(20);
         }
-
-        /* Sleep a little while... */
-        Pa_Sleep(20);
-    }
 
     pData->threadSyncFlag = 0;
 
@@ -148,41 +148,41 @@ static int threadFunctionReadFromRawFile(void* ptr)
     paTestData* pData = (paTestData*)ptr;
 
     while (1)
-    {
-        ring_buffer_size_t elementsInBuffer = PaUtil_GetRingBufferWriteAvailable(&pData->ringBuffer);
-
-        if (elementsInBuffer >= pData->ringBuffer.bufferSize / NUM_WRITES_PER_BUFFER)
         {
-            void* ptr[2] = {0};
-            ring_buffer_size_t sizes[2] = {0};
+            ring_buffer_size_t elementsInBuffer = PaUtil_GetRingBufferWriteAvailable(&pData->ringBuffer);
 
-            /* By using PaUtil_GetRingBufferWriteRegions, we can write directly into the ring buffer */
-            PaUtil_GetRingBufferWriteRegions(&pData->ringBuffer, elementsInBuffer, ptr + 0, sizes + 0, ptr + 1, sizes + 1);
-
-            if (!feof(pData->file))
-            {
-                ring_buffer_size_t itemsReadFromFile = 0;
-                int i;
-                for (i = 0; i < 2 && ptr[i] != NULL; ++i)
+            if (elementsInBuffer >= pData->ringBuffer.bufferSize / NUM_WRITES_PER_BUFFER)
                 {
-                    itemsReadFromFile += (ring_buffer_size_t)fread(ptr[i], pData->ringBuffer.elementSizeBytes, sizes[i], pData->file);
+                    void* ptr[2] = {0};
+                    ring_buffer_size_t sizes[2] = {0};
+
+                    /* By using PaUtil_GetRingBufferWriteRegions, we can write directly into the ring buffer */
+                    PaUtil_GetRingBufferWriteRegions(&pData->ringBuffer, elementsInBuffer, ptr + 0, sizes + 0, ptr + 1, sizes + 1);
+
+                    if (!feof(pData->file))
+                        {
+                            ring_buffer_size_t itemsReadFromFile = 0;
+                            int i;
+                            for (i = 0; i < 2 && ptr[i] != NULL; ++i)
+                                {
+                                    itemsReadFromFile += (ring_buffer_size_t)fread(ptr[i], pData->ringBuffer.elementSizeBytes, sizes[i], pData->file);
+                                }
+                            PaUtil_AdvanceRingBufferWriteIndex(&pData->ringBuffer, itemsReadFromFile);
+
+                            /* Mark thread started here, that way we "prime" the ring buffer before playback */
+                            pData->threadSyncFlag = 0;
+                        }
+                    else
+                        {
+                            /* No more data to read */
+                            pData->threadSyncFlag = 1;
+                            break;
+                        }
                 }
-                PaUtil_AdvanceRingBufferWriteIndex(&pData->ringBuffer, itemsReadFromFile);
 
-                /* Mark thread started here, that way we "prime" the ring buffer before playback */
-                pData->threadSyncFlag = 0;
-            }
-            else
-            {
-                /* No more data to read */
-                pData->threadSyncFlag = 1;
-                break;
-            }
+            /* Sleep a little while... */
+            Pa_Sleep(20);
         }
-
-        /* Sleep a little while... */
-        Pa_Sleep(20);
-    }
 
     return 0;
 }
@@ -297,7 +297,7 @@ int main(void);
 int main(void)
 {
     PaStreamParameters  inputParameters,
-                        outputParameters;
+        outputParameters;
     PaStream*           stream;
     PaError             err = paNoError;
     paTestData          data = {0};
@@ -312,16 +312,16 @@ int main(void)
     numBytes = numSamples * sizeof(SAMPLE);
     data.ringBufferData = (SAMPLE *) PaUtil_AllocateMemory( numBytes );
     if( data.ringBufferData == NULL )
-    {
-        printf("Could not allocate ring buffer data.\n");
-        goto done;
-    }
+        {
+            printf("Could not allocate ring buffer data.\n");
+            goto done;
+        }
 
     if (PaUtil_InitializeRingBuffer(&data.ringBuffer, sizeof(SAMPLE), numSamples, data.ringBufferData) < 0)
-    {
-        printf("Failed to initialize ring buffer. Size is not power of 2 ??\n");
-        goto done;
-    }
+        {
+            printf("Failed to initialize ring buffer. Size is not power of 2 ??\n");
+            goto done;
+        }
 
     err = Pa_Initialize();
     if( err != paNoError ) goto done;
@@ -338,14 +338,14 @@ int main(void)
 
     /* Record some audio. -------------------------------------------- */
     err = Pa_OpenStream(
-              &stream,
-              &inputParameters,
-              NULL,                  /* &outputParameters, */
-              SAMPLE_RATE,
-              FRAMES_PER_BUFFER,
-              paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-              recordCallback,
-              &data );
+                        &stream,
+                        &inputParameters,
+                        NULL,                  /* &outputParameters, */
+                        SAMPLE_RATE,
+                        FRAMES_PER_BUFFER,
+                        paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+                        recordCallback,
+                        &data );
     if( err != paNoError ) goto done;
 
     /* Open the raw audio 'cache' file... */
@@ -364,10 +364,10 @@ int main(void)
        increase NUM_SECONDS until you run out of disk */
     delayCntr = 0;
     while( delayCntr++ < NUM_SECONDS )
-    {
-        printf("index = %d\n", data.frameIndex ); fflush(stdout);
-        Pa_Sleep(1000);
-    }
+        {
+            printf("index = %d\n", data.frameIndex ); fflush(stdout);
+            Pa_Sleep(1000);
+        }
     if( err < 0 ) goto done;
 
     err = Pa_CloseStream( stream );
@@ -396,58 +396,57 @@ int main(void)
 
     printf("\n=== Now playing back from file '" FILE_NAME "' until end-of-file is reached ===\n"); fflush(stdout);
     err = Pa_OpenStream(
-              &stream,
-              NULL, /* no input */
-              &outputParameters,
-              SAMPLE_RATE,
-              FRAMES_PER_BUFFER,
-              paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-              playCallback,
-              &data );
+                        &stream,
+                        NULL, /* no input */
+                        &outputParameters,
+                        SAMPLE_RATE,
+                        FRAMES_PER_BUFFER,
+                        paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+                        playCallback,
+                        &data );
     if( err != paNoError ) goto done;
 
     if( stream )
-    {
-        /* Open file again for reading */
-        data.file = fopen(FILE_NAME, "rb");
-        if (data.file != 0)
         {
-            /* Start the file reading thread */
-            err = startThread(&data, threadFunctionReadFromRawFile);
+            /* Open file again for reading */
+            data.file = fopen(FILE_NAME, "rb");
+            if (data.file != 0)
+                {
+                    /* Start the file reading thread */
+                    err = startThread(&data, threadFunctionReadFromRawFile);
+                    if( err != paNoError ) goto done;
+
+                    err = Pa_StartStream( stream );
+                    if( err != paNoError ) goto done;
+
+                    printf("Waiting for playback to finish.\n"); fflush(stdout);
+
+                    /* The playback will end when EOF is reached */
+                    while( ( err = Pa_IsStreamActive( stream ) ) == 1 ) {
+                        printf("index = %d\n", data.frameIndex ); fflush(stdout);
+                        Pa_Sleep(1000);
+                    }
+                    if( err < 0 ) goto done;
+                }
+
+            err = Pa_CloseStream( stream );
             if( err != paNoError ) goto done;
 
-            err = Pa_StartStream( stream );
-            if( err != paNoError ) goto done;
+            fclose(data.file);
 
-            printf("Waiting for playback to finish.\n"); fflush(stdout);
-
-            /* The playback will end when EOF is reached */
-            while( ( err = Pa_IsStreamActive( stream ) ) == 1 ) {
-                printf("index = %d\n", data.frameIndex ); fflush(stdout);
-                Pa_Sleep(1000);
-            }
-            if( err < 0 ) goto done;
+            printf("Done.\n"); fflush(stdout);
         }
-        
-        err = Pa_CloseStream( stream );
-        if( err != paNoError ) goto done;
 
-        fclose(data.file);
-        
-        printf("Done.\n"); fflush(stdout);
-    }
-
-done:
+ done:
     Pa_Terminate();
     if( data.ringBufferData )       /* Sure it is NULL or valid. */
         PaUtil_FreeMemory( data.ringBufferData );
     if( err != paNoError )
-    {
-        fprintf( stderr, "An error occured while using the portaudio stream\n" );
-        fprintf( stderr, "Error number: %d\n", err );
-        fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
-        err = 1;          /* Always return 0 or 1, but no other return codes. */
-    }
+        {
+            fprintf( stderr, "An error occured while using the portaudio stream\n" );
+            fprintf( stderr, "Error number: %d\n", err );
+            fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
+            err = 1;          /* Always return 0 or 1, but no other return codes. */
+        }
     return err;
 }
-

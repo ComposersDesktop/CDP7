@@ -27,7 +27,7 @@
 /* floatsam version */
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>				/*RWD Nov 2003 */
+#include <string.h>                             /*RWD Nov 2003 */
 #include <structures.h>
 #include <tkglobals.h>
 #include <globcon.h>
@@ -45,17 +45,17 @@
 #endif
 
 //TW UPDATES
-#define SMALLARRAY	20
-#define	ONE_dB		1.22018
+#define SMALLARRAY      20
+#define ONE_dB          1.22018
 
-#define BSIZE		(128)
-#define ROOT2		(1.4142136)
+#define BSIZE           (128)
+#define ROOT2           (1.4142136)
 #define SIGNAL_TO_LEFT  (0)
 #define SIGNAL_TO_RIGHT (1)
 
-#define	NARROW_IT	(1)
-#define	MONO_IT		(0)
-#define	MIRROR_IT	(-1)
+#define NARROW_IT       (1)
+#define MONO_IT         (0)
+#define MIRROR_IT       (-1)
 
 static long newpar(int *brkindex,double *par,double *parincr,long *total_sams,dataptr dz);
 static void pancalc(double position,double *leftgain,double *rightgain);
@@ -140,7 +140,7 @@ int modspace_preprocess(dataptr dz)
     if(dz->mode==MOD_PAN){
         /* create stereo outfile here! */
         /* RWD 4:2002  now we can open outfile with corect params! */
-        dz->infile->channels = STEREO;	/* ARRGH! */
+        dz->infile->channels = STEREO;  /* ARRGH! */
         if((exit_status = create_sized_outfile(dz->outfilename,dz))<0)
             return(exit_status);
     }
@@ -154,14 +154,14 @@ int modspace_preprocess(dataptr dz)
 int dopan(dataptr dz)
 {
     int exit_status;
-    int 	i;
-    int		brkindex = 1;
-    long	block = 0, sams = 0, total_sams = 0;
+    int         i;
+    int         brkindex = 1;
+    long        block = 0, sams = 0, total_sams = 0;
     float  *inbuf = dz->sampbuf[0], *bufptr;
-    double	leftgain,rightgain;
-    double	lcoef = 0.0, rcoef = 0.0;
-    double	par = 0.0, parincr = 0.0;
-    /*	double	fdist = 1.0;*/		/* fdist is for listener distance: not used yet */
+    double      leftgain,rightgain;
+    double      lcoef = 0.0, rcoef = 0.0;
+    double      par = 0.0, parincr = 0.0;
+    /*  double  fdist = 1.0;*/          /* fdist is for listener distance: not used yet */
 
     if(!dz->brksize[PAN_PAN]) {
         pancalc(dz->param[PAN_PAN],&leftgain,&rightgain);
@@ -169,13 +169,13 @@ int dopan(dataptr dz)
         rcoef = rightgain * dz->param[PAN_PRESCALE];
     }
     display_virtual_time(0L,dz);
-    dz->infile->channels = STEREO;	/* affects output only */
+    dz->infile->channels = STEREO;      /* affects output only */
     do {
         if((exit_status = read_samps(inbuf,dz))<0) {
             sprintf(errstr,"Failed to read data from sndfile.\n");
             return(DATA_ERROR);
         }
-        bufptr = dz->sampbuf[1];	/* reset output buffer pointer */
+        bufptr = dz->sampbuf[1];        /* reset output buffer pointer */
 
         for (i = 0 ; i < dz->ssampsread; i++ ) {
             if(dz->brksize[PAN_PAN]) {
@@ -254,8 +254,8 @@ int narrow_sound(dataptr dz)
         sprintf(errstr, "WARNING: Narrowing of 1.0 has no effect on input file.\n");
         return(DATA_ERROR);
     }
-    if(flteq(narrow,-1.0)) 		narrowing = MIRROR_IT;
-    else if(flteq(narrow,0.0))	narrowing = MONO_IT;
+    if(flteq(narrow,-1.0))              narrowing = MIRROR_IT;
+    else if(flteq(narrow,0.0))  narrowing = MONO_IT;
     narrow = dz->param[NARROW] + 1.0;
     narrow /= 2.0;
     one_less_narrow = narrow;
@@ -266,9 +266,9 @@ int narrow_sound(dataptr dz)
             return(PROGRAM_ERROR);
         }
         switch(narrowing) {
-        case(NARROW_IT):	do_narrow(narrow,one_less_narrow,dz);	break;
-        case(MIRROR_IT):	do_mirror(buffer,dz);					break;
-        case(MONO_IT):		do_mono(dz);							break;
+        case(NARROW_IT):        do_narrow(narrow,one_less_narrow,dz);   break;
+        case(MIRROR_IT):        do_mirror(buffer,dz);                                   break;
+        case(MONO_IT):          do_mono(dz);                                                    break;
         }
         if(dz->ssampsread > 0) {
             if((exit_status= write_exact_samps(buffer,dz->ssampsread,dz))<0)
@@ -313,7 +313,7 @@ void pancalc(double position,double *leftgain,double *rightgain)
     double reldist, invsquare;
 
     if(position < 0.0)
-        dirflag = SIGNAL_TO_LEFT;		/* signal on left */
+        dirflag = SIGNAL_TO_LEFT;               /* signal on left */
     else
         dirflag = SIGNAL_TO_RIGHT;
 
@@ -321,13 +321,13 @@ void pancalc(double position,double *leftgain,double *rightgain)
         relpos = -position;
     else
         relpos = position;
-    if(relpos <= 1.0){		/* between the speakers */
+    if(relpos <= 1.0){          /* between the speakers */
         temp = 1.0 + (relpos * relpos);
         reldist = ROOT2 / sqrt(temp);
         temp = (position + 1.0) / 2.0;
         *rightgain = temp * reldist;
         *leftgain = (1.0 - temp ) * reldist;
-    } else {				/* outside the speakers */
+    } else {                            /* outside the speakers */
         temp = (relpos * relpos) + 1.0;
         reldist  = sqrt(temp) / ROOT2;   /* relative distance to source */
         invsquare = 1.0 / (reldist * reldist);
@@ -404,9 +404,9 @@ int generate_sintable(dataptr dz)
     p = dz->parray[SIN_TABLE];
     phase = (dz->param[SIN_PHASE]/360.0) * TWOPI;
     //TW UPDATE
-    //	*p++ = 0.0;
-    //	*p++ = phase;
-    //	cnt = 2;
+    //  *p++ = 0.0;
+    //  *p++ = phase;
+    //  cnt = 2;
     time = 0.0;
     if(dz->brksize[SIN_FRQ]) {
         if((exit_status = read_value_from_brktable(time,SIN_FRQ,dz))<0)
@@ -530,7 +530,7 @@ int scaledpan_preprocess(dataptr dz)
     for(n=0;n<len;n+=2)
         thisbrk[n] *= scaling;
     /* create stereo outfile here! */
-    dz->infile->channels = STEREO;	/* ARRGH! */
+    dz->infile->channels = STEREO;      /* ARRGH! */
     return create_sized_outfile(dz->outfilename,dz);
 }
 
@@ -603,7 +603,7 @@ int do_shudder(dataptr dz)
     /* get, time , width and L & R level for all shudders */
     while(time < dz->duration) {
         lasttime = time;
-        time = time + (1/dz->param[SHUD_FRQ]);	/* use frq from previous time, to calculate where next time is */
+        time = time + (1/dz->param[SHUD_FRQ]);  /* use frq from previous time, to calculate where next time is */
         if((exit_status = read_values_from_all_existing_brktables(time,dz))<0)
             return(exit_status);
         nexttime = time + (1/dz->param[SHUD_FRQ]);
@@ -707,13 +707,13 @@ int do_shudder(dataptr dz)
                                      &(last_insertk[1]),&(last_inserttime[1]),&(last_insertlevel[1]),envtime,envlevel,dz);
 
         }
-        basetime[0] = dz->parray[SHUD_ENV0][cnt0-2];	/* last envelope time in array */
-        basetime[1] = dz->parray[SHUD_ENV1][cnt1-2];	/* last envelope time in array */
+        basetime[0] = dz->parray[SHUD_ENV0][cnt0-2];    /* last envelope time in array */
+        basetime[1] = dz->parray[SHUD_ENV1][cnt1-2];    /* last envelope time in array */
 
         timecnt++;
         levelcnt+=2;
     }
-    if(dz->parray[SHUD_ENV0][0] <= FLTERR) {			/* Force points at ZERO and at DURATION+ */
+    if(dz->parray[SHUD_ENV0][0] <= FLTERR) {                    /* Force points at ZERO and at DURATION+ */
         dz->parray[SHUD_ENV0][0] = 0.0;
         dz->parray[SHUD_ENV1][0] = 0.0;
     } else {
@@ -744,8 +744,8 @@ int do_shudder(dataptr dz)
         sprintf(errstr,"Out of Memory While calculating Shudder Envelopes\n");
         return(MEMORY_ERROR);
     }
-    dz->itemcnt = cnt0;			/* used to store counts */
-    dz->extrabrkno = cnt1;		/* used to store counts */
+    dz->itemcnt = cnt0;                 /* used to store counts */
+    dz->extrabrkno = cnt1;              /* used to store counts */
     if((exit_status = apply_brkpnt_envelope(dz))<0)
         return(exit_status);
     return(FINISHED);
@@ -773,15 +773,15 @@ int insert_point_in_envelope(int *last_postk,double basetime,int thisenv,int *cn
         frac      = (envtime - pretime)/timestep;
         levelhere = ((postlevel - prelevel) * frac) + prelevel;
         if(envlevel > levelhere) {
-            for(j = *cnt-1;j >= k; j--)				/* SHUFFLUP DATA ABOVE */
+            for(j = *cnt-1;j >= k; j--)                         /* SHUFFLUP DATA ABOVE */
                 dz->parray[thisenv][j+2] = dz->parray[thisenv][j];
-            dz->parray[thisenv][k]   = envtime;	/* INSERT NEW POINT */
+            dz->parray[thisenv][k]   = envtime; /* INSERT NEW POINT */
             dz->parray[thisenv][k+1] = envlevel;
             *cnt += 2;
-            if(*last_postk >= 0) {					/* IF POINTS HAVE ALREADY BEEN INSERTED */
+            if(*last_postk >= 0) {                                      /* IF POINTS HAVE ALREADY BEEN INSERTED */
                 timestep = dz->parray[thisenv][k] - dz->parray[thisenv][*last_insertk];
                 last_pk     = *last_postk;
-                last_ptime  = *last_posttime;		/* CHECK POINTS INTERVENING BETWEEN THIS AND LAST INSERT */
+                last_ptime  = *last_posttime;           /* CHECK POINTS INTERVENING BETWEEN THIS AND LAST INSERT */
                 last_plevel = *last_postlevel;
                 while(envtime > last_ptime) {
                     frac = (last_ptime - *last_inserttime)/timestep;
@@ -793,7 +793,7 @@ int insert_point_in_envelope(int *last_postk,double basetime,int thisenv,int *cn
                     last_plevel = dz->parray[thisenv][last_pk+1];
                 }
             }
-            *last_insertk = k;						/* REMEMBER TIMES AND LEVELS OF LAST INSERT, AND POST-INSERT */
+            *last_insertk = k;                                          /* REMEMBER TIMES AND LEVELS OF LAST INSERT, AND POST-INSERT */
             *last_inserttime  = dz->parray[thisenv][k];
             *last_insertlevel = dz->parray[thisenv][k+1];
             k +=2;
@@ -840,9 +840,9 @@ int apply_brkpnt_envelope(dataptr dz)
     chan = 0;
     maxobuf0 = 0.0f;
     if((exit_status = do_simple_read(&samps_left_to_process,dz->buflen,chan,dz))<0)
-        return(exit_status);								/* setup simple buffering option */
+        return(exit_status);                                                            /* setup simple buffering option */
     if((exit_status = init_brkpnts
-	(&sampno,&starttime,&gain,&endbrk,&nextbrk,&nextgain,&gain_step,&gain_incr,&nextbrk_sampno,SHUD_ENV0,dz->itemcnt,dz))<0)
+        (&sampno,&starttime,&gain,&endbrk,&nextbrk,&nextgain,&gain_step,&gain_incr,&nextbrk_sampno,SHUD_ENV0,dz->itemcnt,dz))<0)
         return(exit_status);
     if((exit_status = simple_envel_processing(&samps_left_to_process,starttime,endbrk,&nextbrk,&nextgain,
                                               &sampno,&gain,&gain_step,&gain_incr,&nextbrk_sampno,chan,&maxobuf0,dz))<0)
@@ -872,9 +872,9 @@ int apply_brkpnt_envelope(dataptr dz)
     chan = 1;
     maxobuf1 = 0.0f;
     if((exit_status = do_simple_read(&samps_left_to_process,dz->buflen,chan,dz))<0)
-        return(exit_status);								/* setup simple buffering option */
+        return(exit_status);                                                            /* setup simple buffering option */
     if((exit_status = init_brkpnts
-	(&sampno,&starttime,&gain,&endbrk,&nextbrk,&nextgain,&gain_step,&gain_incr,&nextbrk_sampno,SHUD_ENV1,dz->extrabrkno,dz))<0)
+        (&sampno,&starttime,&gain,&endbrk,&nextbrk,&nextgain,&gain_step,&gain_incr,&nextbrk_sampno,SHUD_ENV1,dz->extrabrkno,dz))<0)
         return(exit_status);
     if((exit_status = simple_envel_processing(&samps_left_to_process,starttime,endbrk,&nextbrk,&nextgain,
                                               &sampno,&gain,&gain_step,&gain_incr,&nextbrk_sampno,chan,&maxobuf1,dz))<0)
@@ -1019,7 +1019,7 @@ int simple_envel_processing
             return(exit_status);
     }
     if((exit_status = do_mono_envelope
-	(dz->ssampsread,starttime,endbrk,nextbrk,nextgain,sampno,gain,gain_step,gain_incr,nextbrk_sampno,maxobuf,dz))<0)
+        (dz->ssampsread,starttime,endbrk,nextbrk,nextgain,sampno,gain,gain_step,gain_incr,nextbrk_sampno,maxobuf,dz))<0)
         return(exit_status);
     if(dz->ssampsread > 0)
         return write_samps(dz->sampbuf[1],dz->ssampsread,dz);
@@ -1042,34 +1042,34 @@ int do_mono_envelope
     double this_gain      = *gain;
     double this_gain_incr = *gain_incr;
     double this_gain_step = *gain_step;
-    endsampno = *sampno + sampcnt;				/* 1 */
+    endsampno = *sampno + sampcnt;                              /* 1 */
     if(sampcnt > dz->buflen) {
         sprintf(errstr,"Buffering anomaly: do_mono_envelope()\n");
         return(PROGRAM_ERROR);
     }
     while(quit==FALSE) {
-        if(*nextbrk_sampno <= endsampno) {		/* 2 */
+        if(*nextbrk_sampno <= endsampno) {              /* 2 */
             change = TRUE;
-            this_endsamp = *nextbrk_sampno;		/* 3 */
+            this_endsamp = *nextbrk_sampno;             /* 3 */
             if(*nextbrk_sampno==endsampno)
-                quit = TRUE;					/* 4 */
+                quit = TRUE;                                    /* 4 */
         } else {
-            change = FALSE;						/* 5 */
+            change = FALSE;                                             /* 5 */
             this_endsamp = endsampno;
             quit = TRUE;
         }
-        this_sampcnt = this_endsamp - *sampno;	/* 6 */
+        this_sampcnt = this_endsamp - *sampno;  /* 6 */
         if(obuf + this_sampcnt > obufend) {
             sprintf(errstr,"array overrun: do_mono_envelope()\n");
             return(PROGRAM_ERROR);
         }
         if(flteq(this_gain,1.0) && flteq(this_gain_step,0.0)) {
             obuf += this_sampcnt;
-            ibuf += this_sampcnt;				/* no modification of sound */
+            ibuf += this_sampcnt;                               /* no modification of sound */
         }
         else {
 
-            for(n=0;n<this_sampcnt;n++) {		/* 7 */
+            for(n=0;n<this_sampcnt;n++) {               /* 7 */
                 this_gain += this_gain_incr;
                 *obuf = (float)(*ibuf * this_gain);
                 *maxobuf = max(*maxobuf,*obuf);
@@ -1077,8 +1077,8 @@ int do_mono_envelope
                 ibuf++;
             }
         }
-        *sampno += this_sampcnt;				/* 8 */
-        if(change) {							/* 9 */
+        *sampno += this_sampcnt;                                /* 8 */
+        if(change) {                                                    /* 9 */
             if((exit_status = advance_brkpnts
                 (starttime,gain,endbrk,nextbrk,nextgain,gain_step,gain_incr,nextbrk_sampno,dz))<0)
                 return(exit_status);
@@ -1087,7 +1087,7 @@ int do_mono_envelope
             this_gain_step = *gain_step;
         }
     }
-    *gain = this_gain;							/* 10 */
+    *gain = this_gain;                                                  /* 10 */
     return(FINISHED);
 }
 
@@ -1150,7 +1150,7 @@ void unlink_temp_files(int type,int ofd0, int ofd1,dataptr dz)
             fprintf(stdout, "WARNING: Can't close temporary output soundfile.\n");
         else
             ofd1 = -1;
-        dz->ofd = ofd0;		/* closed at finish() */
+        dz->ofd = ofd0;         /* closed at finish() */
         break;
     case(2):
         if(sndunlink(ofd0) < 0)
@@ -1178,7 +1178,7 @@ int findpan(dataptr dz)
     double panpos;
     float *inbuf = dz->sampbuf[0];
     float maxL = 0.0, maxR = 0.0;
-    if(dz->param[PAN_PAN] > 0.0) {		/* Assesses One Sector at given time */
+    if(dz->param[PAN_PAN] > 0.0) {              /* Assesses One Sector at given time */
         samppos =  round(dz->param[PAN_PAN] * dz->infile->srate) * dz->infile->channels;
         secpos = samppos;
         if (secpos >= dz->insams[0]) {
@@ -1196,7 +1196,7 @@ int findpan(dataptr dz)
             maxL = (float)max(fabs(inbuf[n]),maxL);
             maxR = (float)max(fabs(inbuf[m]),maxR);
         }
-    } else {							/* Assesses whole file */
+    } else {                                                    /* Assesses whole file */
         do {
             if((exit_status = read_samps(inbuf,dz))<0) {
                 sprintf(errstr,"Failed to read data from sndfile.\n");

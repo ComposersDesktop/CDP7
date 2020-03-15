@@ -656,8 +656,10 @@ void usage(void){
         unsigned int  nchars=0,nzeros = 0;
         unsigned int max_inchar = 0;
         unsigned int flags[FLAG_NFLAGS] = {0};
+#ifdef WIN32
         int do_speakermask = 0;
         int speakermask = 0;
+#endif
         int do_updatemessages = 1;
 #ifdef unix
         struct itimerval tout_val;
@@ -827,9 +829,11 @@ void usage(void){
             case 'u':
                 do_updatemessages = 0;
                 break;
+#ifdef WIN32
             case 'x':
                 do_speakermask = 1;
                 break;
+#endif
             case 'B':
                 if(flags[FLAG_BM]){
                     printf("error: multiple -B flags\n");
@@ -917,23 +921,24 @@ void usage(void){
             goto error;
         }
 
+#if WIN32
         if(props.format == PSF_WAVE_EX){
             if(do_speakermask){
-                int mask;
                 if(flags[FLAG_B] || flags[FLAG_M]){
                     printf("-x flag ignored if -B or -m used\n");
                 }
                 else {
-                    mask = psf_speakermask(ifd);
+                    int mask = psf_speakermask(ifd);
                     if(mask < 0){
                         printf("could not read speaker mask. Using 0\n");
+                        speakermask = 0;
                     }
                     else
                         speakermask = mask;
                 }
             }
         }
-
+#endif
         from_frame = (long)(fromdur * props.srate);
         if(from_frame >= filesize){
             printf("Error: start is beyond end of file\n");

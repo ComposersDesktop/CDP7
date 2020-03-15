@@ -5,22 +5,22 @@
  *
  This file is part of the CDP System.
 
-    The CDP System is free software; you can redistribute it
-    and/or modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+ The CDP System is free software; you can redistribute it
+ and/or modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
 
-    The CDP System is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
+ The CDP System is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with the CDP System; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-    02111-1307 USA
+ You should have received a copy of the GNU Lesser General Public
+ License along with the CDP System; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+ 02111-1307 USA
  *
-*/
+ */
 
 
 
@@ -49,7 +49,7 @@ static int  set_output_header_properties(dataptr dz);
 static int  pt_datareduce(double **q,double sharp,double flat,double *thisarray,int *bsize);
 static int  incremental_pt_datareduction(int array_no,int *bsize,double sharpness,dataptr dz);
 
-    /* OTHER */
+/* OTHER */
 static int  print_screen_message(void);
 
 /* AUGUST 2000 */
@@ -66,18 +66,18 @@ int complete_output(dataptr dz)
             dz->outfiletype = PITCH_OUT;
     }
     switch(dz->process_type) {
-    case(UNEQUAL_SNDFILE):  
-    case(BIG_ANALFILE):     
-    case(UNEQUAL_ENVFILE):  
-    case(CREATE_ENVFILE):   
-    case(EXTRACT_ENVFILE):  
-    case(PITCH_TO_ANAL):    
+    case(UNEQUAL_SNDFILE):
+    case(BIG_ANALFILE):
+    case(UNEQUAL_ENVFILE):
+    case(CREATE_ENVFILE):
+    case(EXTRACT_ENVFILE):
+    case(PITCH_TO_ANAL):
     case(ANAL_TO_FORMANTS):
     case(PITCH_TO_BIGPITCH):
     case(PSEUDOSNDFILE):
-//TW No longer used:
-//      if((exit_status = truncate_outfile(dz))<0)
-//          return(exit_status);
+        //TW No longer used:
+        //      if((exit_status = truncate_outfile(dz))<0)
+        //          return(exit_status);
         /* fall thro */
     case(EQUAL_ANALFILE):
     case(MAX_ANALFILE):
@@ -94,13 +94,13 @@ int complete_output(dataptr dz)
     case(ANAL_TO_PITCH):
         sprintf(errstr,"ANAL_TO_PITCH process_type (%d) in complete_output()\n",dz->process_type);
         return(PROGRAM_ERROR);
-    case(TO_TEXTFILE):      
+    case(TO_TEXTFILE):
         if(fclose(dz->fp)<0) {
             fprintf(stdout,"WARNING: Failed to close output textfile.\n");
             fflush(stdout);
         }
         break;
-    case(OTHER_PROCESS):        
+    case(OTHER_PROCESS):
         break;
     default:
         sprintf(errstr,"Unknown process_type (%d) in complete_output()\n",dz->process_type);
@@ -123,11 +123,11 @@ int truncate_outfile(dataptr dz)
 /***************************** HEADWRITE *******************************/
 
 int headwrite(int ofd,dataptr dz)
-{	
-	int   exit_status;
-	int   isenv = 1;
-	int  property_marker = 1;
-	float window_size = 0.0f;
+{
+    int   exit_status;
+    int   isenv = 1;
+    int  property_marker = 1;
+    float window_size = 0.0f;
 
     if(!(dz->process == PVOC_ANAL || dz->process == PVOC_EXTRACT || dz->process == PVOC_SYNTH)) {
         if((exit_status = set_output_header_properties(dz))<0)
@@ -170,27 +170,27 @@ int headwrite(int ofd,dataptr dz)
         }
         /* drop through */
     case(SNDFILE_OUT):
-//TW these properties can either be created at the outset (sndcreat_formatted()
-//	in which case they are not alterable here.
-//	or they can be left open (sndcreat e.g. for PITCH, or CUT for dz->otherfile)
-		sndputprop(ofd,"sample rate", (char *)&(dz->outfile->srate), sizeof(int));
-		sndputprop(ofd,"channels", (char *)&(dz->outfile->channels), sizeof(int));
-		break;
-	case(ENVFILE_OUT):  
+        //TW these properties can either be created at the outset (sndcreat_formatted()
+        //      in which case they are not alterable here.
+        //      or they can be left open (sndcreat e.g. for PITCH, or CUT for dz->otherfile)
+        sndputprop(ofd,"sample rate", (char *)&(dz->outfile->srate), sizeof(int));
+        sndputprop(ofd,"channels", (char *)&(dz->outfile->channels), sizeof(int));
+        break;
+    case(ENVFILE_OUT):
         //samptype = SAMP_FLOAT;
-		//srate = round(SECS_TO_MS/dz->outfile->window_size);
-		//channels = 1;
-		window_size = dz->outfile->window_size;
-/* JUNE 2004
-        if(sndputprop(ofd,"sample rate", (char *)&srate, sizeof(int)) < 0){
-            sprintf(errstr,"Failure to write sample rate. headwrite()\n");
-            return(PROGRAM_ERROR);
-        }
-        if(sndputprop(ofd,"channels", (char *)&channels, sizeof(int)) < 0){
-            sprintf(errstr,"Failure to write channel data. headwrite()\n");
-            return(PROGRAM_ERROR);
-        }
-*/
+        //srate = round(SECS_TO_MS/dz->outfile->window_size);
+        //channels = 1;
+        window_size = dz->outfile->window_size;
+        /* JUNE 2004
+           if(sndputprop(ofd,"sample rate", (char *)&srate, sizeof(int)) < 0){
+           sprintf(errstr,"Failure to write sample rate. headwrite()\n");
+           return(PROGRAM_ERROR);
+           }
+           if(sndputprop(ofd,"channels", (char *)&channels, sizeof(int)) < 0){
+           sprintf(errstr,"Failure to write channel data. headwrite()\n");
+           return(PROGRAM_ERROR);
+           }
+        */
         if(sndputprop(ofd,"is an envelope",(char *)&isenv, sizeof(int)) < 0){
             sprintf(errstr,"Failure to write envelope property. headwrite()\n");
             return(PROGRAM_ERROR);
@@ -228,10 +228,10 @@ int headwrite(int ofd,dataptr dz)
     return(FINISHED);
 }
 
-/***************************** SET_OUTPUT_HEADER_PROPERTIES ******************************/         
- 
+/***************************** SET_OUTPUT_HEADER_PROPERTIES ******************************/
+
 int set_output_header_properties(dataptr dz)
-{   
+{
     switch(dz->process_type) {
     case(EQUAL_SNDFILE):
     case(UNEQUAL_SNDFILE):
@@ -245,7 +245,7 @@ int set_output_header_properties(dataptr dz)
     case(CREATE_ENVFILE):
         break;
     case(PSEUDOSNDFILE):     /* Assumption of conversion from anal,formant,pitch or transpos filetype */
-    case(PITCH_TO_PSEUDOSND):     
+    case(PITCH_TO_PSEUDOSND):
         dz->outfile->channels = 1;
         dz->outfile->srate    = dz->infile->origrate;
         dz->outfile->stype    = SAMP_SHORT;
@@ -319,8 +319,8 @@ int write_exact_bytes(char *buffer,int bytes_to_write,dataptr dz)
     }
     if(bytes_written != bytes_to_write) {
         sprintf(errstr, "Incorrect number of bytes written\nbytes_written = %ld\n"
-                        "bytes_to_write = %ld\n (is hard-disk full?).\n",
-                        bytes_written,bytes_to_write);
+                "bytes_to_write = %ld\n (is hard-disk full?).\n",
+                bytes_written,bytes_to_write);
         return(SYSTEM_ERROR);
     }
     dz->total_bytes_written += bytes_to_write;
@@ -355,8 +355,8 @@ int write_exact_samps(float *buffer,int samps_to_write,dataptr dz)
     }
     if(samps_written != samps_to_write) {
         sprintf(errstr, "Incorrect number of samples written\nsamps_written = %d\n"
-                        "samps_to_write = %d\n (is hard-disk full?).\n",
-                        samps_written,samps_to_write);
+                "samps_to_write = %d\n (is hard-disk full?).\n",
+                samps_written,samps_to_write);
         return(SYSTEM_ERROR);
     }
     dz->total_samps_written += samps_to_write;
@@ -392,7 +392,7 @@ int write_bytes(char *bbuf,int bytes_to_write,dataptr dz)
 #else
 int write_samps(float *bbuf,int samps_to_write,dataptr dz)
 {
-    
+
     int samps_written;
     int i,j;
     float val;
@@ -416,7 +416,7 @@ int write_samps(float *bbuf,int samps_to_write,dataptr dz)
         sprintf(errstr,"Can't write to output soundfile: %s\n",sferrstr());
         return(SYSTEM_ERROR);
     }
-    dz->total_samps_written += samps_written;   
+    dz->total_samps_written += samps_written;
     display_virtual_time(dz->total_samps_written,dz);
     return(FINISHED);
 }
@@ -445,7 +445,7 @@ int write_bytes_no_report(char *bbuf,int bytes_to_write,dataptr dz)
 #else
 int write_samps_no_report(float *bbuf,int samps_to_write,int *samps_written,dataptr dz)
 {
-    
+
     int i;
     int j;
     float val;
@@ -469,7 +469,7 @@ int write_samps_no_report(float *bbuf,int samps_to_write,int *samps_written,data
         return(SYSTEM_ERROR);
     }
     dz->total_samps_written += samps_to_write;
-    
+
     return(FINISHED);
 }
 
@@ -503,7 +503,7 @@ void display_virtual_time(int samps_sent,dataptr dz)
             case(ANALFILE_OUT):
                 secs = (double)(samps_sent/dz->wanted) * dz->frametime;
                 break;
-            case(PITCH_OUT):                       
+            case(PITCH_OUT):
             case(TRANSPOS_OUT):
                 secs = (double)(samps_sent) * dz->frametime;
                 break;
@@ -518,9 +518,9 @@ void display_virtual_time(int samps_sent,dataptr dz)
                 case(INFO_PRNTSND):
                     secs = (double)samps_sent/(double)(dz->infile->srate * dz->infile->channels);
                     break;
-                }   
+                }
                 break;
-    
+
             }
         }
         mins = (int)(secs/60.0);    /* TRUNCATE */
@@ -535,9 +535,9 @@ void display_virtual_time(int samps_sent,dataptr dz)
             break;
         case(MAX_ANALFILE):
             switch(dz->process) {
-                case(MAX):  /* file 0 is forced to be largest by program */
-                    float_time = (double)samps_sent/(double)dz->insams[0];
-                    break;
+            case(MAX):  /* file 0 is forced to be largest by program */
+                float_time = (double)samps_sent/(double)dz->insams[0];
+                break;
             default:
                 maxlen = dz->insams[0];
                 for(n=1;n<dz->infilecnt;n++)
@@ -571,19 +571,19 @@ void display_virtual_time(int samps_sent,dataptr dz)
                 total_samps_to_write = windows_to_write * dz->wanted;
                 float_time = (double)samps_sent/(double)total_samps_to_write;
                 break;
-            case(TSTRETCH): case(SHUFFLE): case(WEAVE): case(WARP): case(FORM):     
+            case(TSTRETCH): case(SHUFFLE): case(WEAVE): case(WARP): case(FORM):
                 float_time = (double)dz->total_samps_read/(double)dz->insams[0];
                 break;
-            case(DRUNK):        
+            case(DRUNK):
                 total_samps_to_write = round((dz->param[DRNK_DUR]/dz->frametime) * dz->wanted);
                 float_time = min((double)samps_sent/(double)total_samps_to_write,1.0);
                 break;
-            case(GLIDE):        
-//TW            total_samps_to_write = dz->wlength * dz->sampswanted;
+            case(GLIDE):
+                //TW            total_samps_to_write = dz->wlength * dz->sampswanted;
                 total_samps_to_write = dz->wlength * dz->wanted;
                 float_time = (double)samps_sent/(double)total_samps_to_write;
                 break;
-            case(BRIDGE):       
+            case(BRIDGE):
                 offset = round(dz->param[BRG_OFFSET]/dz->frametime) * dz->wanted;
                 switch(dz->iparam[BRG_TAILIS]) {
                 case(0):
@@ -593,7 +593,7 @@ void display_virtual_time(int samps_sent,dataptr dz)
                 }
                 float_time = min(1.0,(double)samps_sent/(double)total_samps_to_write);
                 break;
-            case(MORPH):        
+            case(MORPH):
                 total_samps_to_write = (dz->iparam[MPH_STAGW] * dz->wanted) + dz->insams[1];
                 float_time = min(1.0,(double)samps_sent/(double)total_samps_to_write);
                 break;
@@ -625,14 +625,14 @@ void display_virtual_time(int samps_sent,dataptr dz)
         case(PITCH_TO_ANAL):
             switch(dz->process) {
             case(MAKE):
-//TW NEW CASE
+                //TW NEW CASE
             case(MAKE2):
                 /* windows_to_write = dz->wlength, in this case based on specenvcnt-len formant-windows */
                 total_samps_to_write = dz->wlength * (dz->infile->origchans);
                 float_time = min(1.0,(double)samps_sent/(double)total_samps_to_write);
                 break;
-//TW NEW CASES ADDED, therefore
-//          case(P_HEAR):
+                //TW NEW CASES ADDED, therefore
+                //          case(P_HEAR):
             default:
                 /* windows_to_write = dz->insams[0] as each pitch is converted to a window */
                 total_samps_to_write = dz->insams[0] * dz->wanted;
@@ -648,15 +648,15 @@ void display_virtual_time(int samps_sent,dataptr dz)
             switch(dz->process) {
             case(DISTORT_AVG):  case(DISTORT_MLT):  case(DISTORT_DIV):  case(DISTORT_HRM):  case(DISTORT_FRC):
             case(DISTORT_REV):  case(DISTORT_SHUF): case(DISTORT_RPT):  case(DISTORT_INTP): case(DISTORT_DEL):
-            case(DISTORT_RPL):  case(DISTORT_TEL):  case(DISTORT_FLT):  case(DISTORT_PCH):  
-//TW NEW CASE
+            case(DISTORT_RPL):  case(DISTORT_TEL):  case(DISTORT_FLT):  case(DISTORT_PCH):
+                //TW NEW CASE
             case(DISTORT_OVERLOAD): case(DISTORT_RPT2):
             case(GRAIN_OMIT):       case(GRAIN_DUPLICATE):  case(GRAIN_REORDER):    case(GRAIN_REPITCH):
             case(GRAIN_RERHYTHM):   case(GRAIN_REMOTIF):    case(GRAIN_TIMEWARP):
             case(GRAIN_POSITION):   case(GRAIN_ALIGN):
                 float_time = min(1.0,(double)dz->total_samps_read/(double)dz->insams[0]);
                 break;
-//TW NEW CASE
+                //TW NEW CASE
             case(DISTORT_PULSED):
                 float_time = min(1.0,(double)samps_sent/(double)dz->tempsize);
                 break;
@@ -666,7 +666,7 @@ void display_virtual_time(int samps_sent,dataptr dz)
             case(TOPNTAIL_CLICKS):
                 float_time = min(1.0,(double)dz->total_samps_read/(double)dz->tempsize);
                 break;
-            case(DISTORT_INT):  
+            case(DISTORT_INT):
                 total_samps_to_write = (dz->insams[0] + dz->insams[1]) >> 1;/* averaged,as is bytes_read !! */
                 float_time = min(1.0,(double)dz->total_samps_read/(double)total_samps_to_write);
                 break;
@@ -682,8 +682,8 @@ void display_virtual_time(int samps_sent,dataptr dz)
                 total_samps_to_write = dz->iparam[DRNK_TOTALDUR];
                 float_time = min(1.0,(double)samps_sent/(double)total_samps_to_write);
                 break;
-            case(SIMPLE_TEX):   case(TIMED):    case(GROUPS):    case(TGROUPS):     case(DECORATED):  case(PREDECOR):   
-            case(POSTDECOR):    case(ORNATE):   case(PREORNATE): case(POSTORNATE):  case(MOTIFS):     case(TMOTIFS):    
+            case(SIMPLE_TEX):   case(TIMED):    case(GROUPS):    case(TGROUPS):     case(DECORATED):  case(PREDECOR):
+            case(POSTDECOR):    case(ORNATE):   case(PREORNATE): case(POSTORNATE):  case(MOTIFS):     case(TMOTIFS):
             case(MOTIFSIN):     case(TMOTIFSIN):
                 total_samps_to_write = round(dz->param[TEXTURE_DUR] * dz->infile->srate) * STEREO;
                 float_time = min(1.0,(double)samps_sent/(double)total_samps_to_write);
@@ -693,29 +693,29 @@ void display_virtual_time(int samps_sent,dataptr dz)
                 float_time = min(1.0,(double)samps_sent/(double)total_samps_to_write);
                 break;
             case(ENV_CURTAILING):
-                total_samps_to_write = 
-                round(dz->param[ENV_ENDTIME] * dz->infile->srate) * dz->infile->channels;
+                total_samps_to_write =
+                    round(dz->param[ENV_ENDTIME] * dz->infile->srate) * dz->infile->channels;
                 float_time = min(1.0,(double)samps_sent/(double)total_samps_to_write);
                 break;
             case(ENV_IMPOSE):   /* In these cases the 'bytes_sent' may be bytes_written or bytes_read */
-            case(ENV_REPLACE):  
-//TW NEW CASE
-            case(ENV_PROPOR):   
+            case(ENV_REPLACE):
+                //TW NEW CASE
+            case(ENV_PROPOR):
                 float_time = (double)samps_sent/(double)dz->insams[0];
                 break;
-            case(ENV_PLUCK):    
+            case(ENV_PLUCK):
                 float_time = min(1.0,(double)dz->total_samps_read/(double)dz->insams[0]);
                 break;
             case(EQ):           case(LPHP):     case(FSTATVAR):     case(FLTBANKN):
-//TW UPDATE
+                //TW UPDATE
             case(FLTBANKU):     case(FLTSWEEP):     case(ALLPASS):
-                total_samps_to_write = dz->insams[0] + 
-                (round(FLT_TAIL * (double)dz->infile->srate) * dz->infile->channels);
+                total_samps_to_write = dz->insams[0] +
+                    (round(FLT_TAIL * (double)dz->infile->srate) * dz->infile->channels);
                 float_time = (double)samps_sent/(double)total_samps_to_write;
                 break;
             case(FLTBANKV):
-                total_samps_to_write = dz->insams[0] + 
-                (round(dz->param[FILT_TAILV] * (double)dz->infile->srate) * dz->infile->channels);
+                total_samps_to_write = dz->insams[0] +
+                    (round(dz->param[FILT_TAILV] * (double)dz->infile->srate) * dz->infile->channels);
                 float_time = (double)samps_sent/(double)total_samps_to_write;
                 break;
             case(FLTITER):
@@ -736,7 +736,7 @@ void display_virtual_time(int samps_sent,dataptr dz)
             case(MIXMULTI):
                 float_time = min(1.0,(double)samps_sent/(double)dz->tempsize);
                 break;
-//TW NEW CASES
+                //TW NEW CASES
             case(HOUSE_BAKUP):
             case(SEQUENCER):
             case(SEQUENCER2):
@@ -752,7 +752,7 @@ void display_virtual_time(int samps_sent,dataptr dz)
             case(MOD_REVECHO):
                 if(dz->mode==MOD_STADIUM)
                     float_time = min(1.0,(double)samps_sent/(double)(dz->insams[0] * 2));
-                else 
+                else
                     float_time = min(1.0,(double)samps_sent/(double)dz->insams[0]);
                 break;
             case(MOD_SPACE):
@@ -761,7 +761,7 @@ void display_virtual_time(int samps_sent,dataptr dz)
                 else
                     float_time = min(1.0,(double)samps_sent/(double)dz->insams[0]);
                 break;
-//TW NEW CASE
+                //TW NEW CASE
             case(SCALED_PAN):
                 float_time = min(1.0,(double)dz->total_samps_read/(double)dz->insams[0]);
                 break;
@@ -779,8 +779,8 @@ void display_virtual_time(int samps_sent,dataptr dz)
                 }
                 break;
             case(PVOC_SYNTH):
-            case(EDIT_CUT):         case(EDIT_CUTEND):      case(EDIT_ZCUT):        case(EDIT_EXCISE):  
-            case(EDIT_EXCISEMANY):  case(EDIT_INSERT):      case(EDIT_INSERTSIL):   case(EDIT_JOIN):    
+            case(EDIT_CUT):         case(EDIT_CUTEND):      case(EDIT_ZCUT):        case(EDIT_EXCISE):
+            case(EDIT_EXCISEMANY):  case(EDIT_INSERT):      case(EDIT_INSERTSIL):   case(EDIT_JOIN):
             case(HOUSE_CHANS):      case(HOUSE_ZCHANNEL):   case(STOM):             case(MTOS):
             case(ZIGZAG):           case(LOOP):             case(ITERATE): /*  case(HOUSE_BAKUP): */
             case(DEL_PERM):         case(DEL_PERM2):        case(MIXTWO):           case(MIXBALANCE):
@@ -824,11 +824,11 @@ void display_virtual_time(int samps_sent,dataptr dz)
         case(EQUAL_SNDFILE):
             switch(dz->process) {
             case(HOUSE_CHANS):
-//TW NEW CASE
+                //TW NEW CASE
             case(TIME_GRID):
                 float_time = min(1.0,(double)samps_sent/(double)dz->tempsize);
                 break;
-//TW NEW CASE
+                //TW NEW CASE
             case(SHUDDER):
                 float_time = min(1.0,(double)dz->total_samps_written/(double)dz->tempsize);
                 break;
@@ -868,7 +868,7 @@ void display_virtual_time(int samps_sent,dataptr dz)
                     break;
                 }
                 break;
-    /* NEW */
+                /* NEW */
             case(INFO_DIFF):
                 float_time = min(1.0,(double)dz->total_samps_read/(double)dz->insams[0]);
                 break;
@@ -886,7 +886,7 @@ void display_virtual_time(int samps_sent,dataptr dz)
             case(GRAIN_GET):
                 float_time = min(1.0,(double)dz->total_samps_read/(double)dz->insams[0]);
                 break;
-            }   
+            }
             break;
         case(SCREEN_MESSAGE):
             switch(dz->process) {
@@ -894,7 +894,7 @@ void display_virtual_time(int samps_sent,dataptr dz)
             case(FIND_PANPOS):
                 float_time = min(1.0,(double)samps_sent/(double)dz->tempsize);
                 break;
-            }   
+            }
             break;
         case(CREATE_ENVFILE):
             switch(dz->process) {
@@ -962,7 +962,7 @@ int write_samps_to_elsewhere(int ofd, float *buffer,int samps_to_write,dataptr d
                 dz->otherpeakpos[j]++;
         }
     }
-    
+
     if((samps_written = fputfbufEx(buffer, samps_to_write,ofd))<=0) {
         sprintf(errstr, "Can't write to output soundfile:  %s\n",sferrstr());
         return(SYSTEM_ERROR);
@@ -1030,7 +1030,7 @@ int convert_pch_or_transpos_data_to_brkpnttable(int *brksize,float *floatbuf,flo
     *brksize = n/2;
     return(FINISHED);
 }
-    
+
 /***************************** PT_DATAREDUCE **********************
  *
  * Reduce data on passing from pitch or transposition to brkpnt representation.
@@ -1075,9 +1075,9 @@ int incremental_pt_datareduction(int array_no,int *bsize,double sharp,dataptr dz
     int exit_status;
     double flat;
     double *q;
-    double sharp_semitones = LOG2(dz->is_sharp) * SEMITONES_PER_OCTAVE; 
+    double sharp_semitones = LOG2(dz->is_sharp) * SEMITONES_PER_OCTAVE;
     double *thisarray = dz->parray[array_no];
-    while(*bsize >= 6 && sharp < sharp_semitones) { 
+    while(*bsize >= 6 && sharp < sharp_semitones) {
         flat = -sharp;
         q = thisarray + 4;
         while(q < thisarray + (*bsize) - 1) {
@@ -1087,7 +1087,7 @@ int incremental_pt_datareduction(int array_no,int *bsize,double sharp,dataptr dz
         }
         sharp *= 2.0;               /* interval-size doubles */
     }
-    if(*bsize >= 6) { 
+    if(*bsize >= 6) {
         sharp = sharp_semitones;
         flat = -sharp;
         q = thisarray + 4;
@@ -1115,7 +1115,7 @@ void splice_multiline_string(char *str,char *prefix)
         fprintf(stdout,"%s %s\n",prefix,q);
         *p = c;
         if(*p == '\n')
-             p++;
+            p++;
         while(*p == '\n') {
             fprintf(stdout,"%s \n",prefix);
             p++;

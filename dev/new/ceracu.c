@@ -46,7 +46,7 @@
 
 #define SIGNAL_TO_LEFT  (0)
 #define SIGNAL_TO_RIGHT (1)
-#define ROOT2		(1.4142136)
+#define ROOT2           (1.4142136)
 #define dupl descriptor_samps
 
 #ifdef unix
@@ -1762,5 +1762,3 @@ int open_the_outfile(dataptr dz)
     dz->infile->channels = 1;
     return(FINISHED);
 }
-
-

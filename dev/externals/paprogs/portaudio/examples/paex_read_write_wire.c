@@ -1,7 +1,7 @@
 /** @file paex_read_write_wire.c
-	@ingroup examples_src
-	@brief Tests full duplex blocking I/O by passing input straight to output.
-	@author Bjorn Roche. XO Audio LLC for Z-Systems Engineering.
+    @ingroup examples_src
+    @brief Tests full duplex blocking I/O by passing input straight to output.
+    @author Bjorn Roche. XO Audio LLC for Z-Systems Engineering.
     @author based on code by: Phil Burk  http://www.softsynth.com
     @author based on code by: Ross Bencina rossb@audiomulch.com
 */
@@ -33,13 +33,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -90,11 +90,11 @@
 #define PA_SAMPLE_TYPE  paUInt8
 #define SAMPLE_SIZE (1)
 #define SAMPLE_SILENCE  (128)
-#define CLEAR( a ) { \
-    int i; \
-    for( i=0; i<FRAMES_PER_BUFFER*NUM_CHANNELS; i++ ) \
-        ((unsigned char *)a)[i] = (SAMPLE_SILENCE); \
-}
+#define CLEAR( a ) {                                            \
+        int i;                                                  \
+        for( i=0; i<FRAMES_PER_BUFFER*NUM_CHANNELS; i++ )       \
+            ((unsigned char *)a)[i] = (SAMPLE_SILENCE);         \
+    }
 #define PRINTF_S_FORMAT "%d"
 #endif
 
@@ -109,17 +109,17 @@ int main(void)
     char *sampleBlock;
     int i;
     int numBytes;
-    
-    
+
+
     printf("patest_read_write_wire.c\n"); fflush(stdout);
 
     numBytes = FRAMES_PER_BUFFER * NUM_CHANNELS * SAMPLE_SIZE ;
     sampleBlock = (char *) malloc( numBytes );
     if( sampleBlock == NULL )
-    {
-        printf("Could not allocate record array.\n");
-        exit(1);
-    }
+        {
+            printf("Could not allocate record array.\n");
+            exit(1);
+        }
     CLEAR( sampleBlock );
 
     err = Pa_Initialize();
@@ -145,15 +145,15 @@ int main(void)
 
     /* -- setup -- */
 
-   err = Pa_OpenStream(
-              &stream,
-              &inputParameters,
-              &outputParameters,
-              SAMPLE_RATE,
-              FRAMES_PER_BUFFER,
-              paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-              NULL, /* no callback, use blocking API */
-              NULL ); /* no callback, so no callback userData */
+    err = Pa_OpenStream(
+                        &stream,
+                        &inputParameters,
+                        &outputParameters,
+                        SAMPLE_RATE,
+                        FRAMES_PER_BUFFER,
+                        paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+                        NULL, /* no callback, use blocking API */
+                        NULL ); /* no callback, so no callback userData */
     if( err != paNoError ) goto error;
 
     err = Pa_StartStream( stream );
@@ -161,55 +161,55 @@ int main(void)
     printf("Wire on. Will run %d seconds.\n", NUM_SECONDS); fflush(stdout);
 
     for( i=0; i<(NUM_SECONDS*SAMPLE_RATE)/FRAMES_PER_BUFFER; ++i )
-    {
-       err = Pa_WriteStream( stream, sampleBlock, FRAMES_PER_BUFFER );
-       if( err && CHECK_UNDERFLOW ) goto xrun;
-       err = Pa_ReadStream( stream, sampleBlock, FRAMES_PER_BUFFER );
-       if( err && CHECK_OVERFLOW ) goto xrun;
-    }
+        {
+            err = Pa_WriteStream( stream, sampleBlock, FRAMES_PER_BUFFER );
+            if( err && CHECK_UNDERFLOW ) goto xrun;
+            err = Pa_ReadStream( stream, sampleBlock, FRAMES_PER_BUFFER );
+            if( err && CHECK_OVERFLOW ) goto xrun;
+        }
     err = Pa_StopStream( stream );
     if( err != paNoError ) goto error;
 
     CLEAR( sampleBlock );
-/*
-    err = Pa_StartStream( stream );
-    if( err != paNoError ) goto error;
-    printf("Wire on. Interrupt to stop.\n"); fflush(stdout);
+    /*
+      err = Pa_StartStream( stream );
+      if( err != paNoError ) goto error;
+      printf("Wire on. Interrupt to stop.\n"); fflush(stdout);
 
-    while( 1 )
-    {
-       err = Pa_WriteStream( stream, sampleBlock, FRAMES_PER_BUFFER );
-       if( err ) goto xrun;
-       err = Pa_ReadStream( stream, sampleBlock, FRAMES_PER_BUFFER );
-       if( err ) goto xrun;
-    }
-    err = Pa_StopStream( stream );
-    if( err != paNoError ) goto error;
+      while( 1 )
+      {
+      err = Pa_WriteStream( stream, sampleBlock, FRAMES_PER_BUFFER );
+      if( err ) goto xrun;
+      err = Pa_ReadStream( stream, sampleBlock, FRAMES_PER_BUFFER );
+      if( err ) goto xrun;
+      }
+      err = Pa_StopStream( stream );
+      if( err != paNoError ) goto error;
 
-    Pa_CloseStream( stream );
-*/
+      Pa_CloseStream( stream );
+    */
     free( sampleBlock );
 
     Pa_Terminate();
     return 0;
 
-xrun:
+ xrun:
     if( stream ) {
-       Pa_AbortStream( stream );
-       Pa_CloseStream( stream );
+        Pa_AbortStream( stream );
+        Pa_CloseStream( stream );
     }
     free( sampleBlock );
     Pa_Terminate();
     if( err & paInputOverflow )
-       fprintf( stderr, "Input Overflow.\n" );
+        fprintf( stderr, "Input Overflow.\n" );
     if( err & paOutputUnderflow )
-       fprintf( stderr, "Output Underflow.\n" );
+        fprintf( stderr, "Output Underflow.\n" );
     return -2;
 
-error:
+ error:
     if( stream ) {
-       Pa_AbortStream( stream );
-       Pa_CloseStream( stream );
+        Pa_AbortStream( stream );
+        Pa_CloseStream( stream );
     }
     free( sampleBlock );
     Pa_Terminate();
@@ -218,4 +218,3 @@ error:
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
     return -1;
 }
-

@@ -26,13 +26,13 @@
 
 /**************************************************************************
 
-				MAXSAMP2.C
+                                MAXSAMP2.C
 
-	usage	maxsamp2 infile
+        usage   maxsamp2 infile
 
-	Finds the maximum sample of a file and writes it to the header.
+        Finds the maximum sample of a file and writes it to the header.
 
-	Based on maxsamp in CDPARSE
+        Based on maxsamp in CDPARSE
 
 **************************************************************************/
 
@@ -46,33 +46,33 @@
 #include <sfsys.h>
 #include <cdplib.h>
 
-/*static void	usage(void);*/
-static void	report(void);
-static int	tidy_up(int);
-static void	min_sec(int,int,int*,double*);
-static void	find_fmax(float*,int,int);
-static int	try_header(int);
-static int	open_in(char*,int);
-static int	get_big_buf(void);
-static int	get_max_samp(int,int);
-static int	smpflteq(double f1,double f2);
+/*static void   usage(void);*/
+static void     report(void);
+static int      tidy_up(int);
+static void     min_sec(int,int,int*,double*);
+static void     find_fmax(float*,int,int);
+static int      try_header(int);
+static int      open_in(char*,int);
+static int      get_big_buf(void);
+static int      get_max_samp(int,int);
+static int      smpflteq(double f1,double f2);
 static void force_new_header(void);
 
-float *bigfbuf;	/* buffer used to read samples from soundfile 	*/
+float *bigfbuf; /* buffer used to read samples from soundfile   */
 
-size_t buflen;	/* buffer length in samps (eventually) */
-int ifd;	/* input soundfile descriptor			*/
-int srate = 44100;	/* sampling rate of input		*/
-int channels = 2;	/* number of channels of input		*/
+size_t buflen;  /* buffer length in samps (eventually) */
+int ifd;        /* input soundfile descriptor                   */
+int srate = 44100;      /* sampling rate of input               */
+int channels = 2;       /* number of channels of input          */
 
-double maxpdamp = DBL_MIN;	/* value of maximum negative sample	*/
-double maxndamp = DBL_MAX;	/* value of maximum positive sample	*/
-float maxpfamp;		/* float value of maximum positive sample	*/
-float maxnfamp;		/* float value of maximum negative sample	*/
-double maxdamp  = 0.0;	/* value of maximum sample			*/
+double maxpdamp = DBL_MIN;      /* value of maximum negative sample     */
+double maxndamp = DBL_MAX;      /* value of maximum positive sample     */
+float maxpfamp;         /* float value of maximum positive sample       */
+float maxnfamp;         /* float value of maximum negative sample       */
+double maxdamp  = 0.0;  /* value of maximum sample                      */
 
-int maxloc = 0;	/* location of maximum sample		*/
-int repeats = 1;	/* counts how many times the maximum repeats */
+int maxloc = 0; /* location of maximum sample           */
+int repeats = 1;        /* counts how many times the maximum repeats */
 int pos_repeats = 0;
 int neg_repeats = 0;
 int in_header = 0;
@@ -83,7 +83,7 @@ double *maxcpdamp, *maxcndamp;
 int *posreps, *negreps;
 const char* cdp_version = "7.1.0";
 
-int open_in(char *name,int force_read)		/* opens input soundfile and gets header */
+int open_in(char *name,int force_read)          /* opens input soundfile and gets header */
 {
     int is_sound = 0;
     SFPROPS props = {0};
@@ -92,7 +92,7 @@ int open_in(char *name,int force_read)		/* opens input soundfile and gets header
         open_type = CDP_OPEN_RDWR;
     else
         open_type = CDP_OPEN_RDONLY;
-    if( (ifd = sndopenEx(name,0,open_type)) < 0 )	{
+    if( (ifd = sndopenEx(name,0,open_type)) < 0 )       {
         fprintf(stdout,"INFO: Cannot open file: %s\n\t",name);
         fflush(stdout);
         return(-1);
@@ -113,7 +113,7 @@ int open_in(char *name,int force_read)		/* opens input soundfile and gets header
     return(is_sound);
 }
 
-int get_big_buf(void)	/* allocates memory for the biggest possible buffer */
+int get_big_buf(void)   /* allocates memory for the biggest possible buffer */
 {
     size_t i;
 
@@ -125,11 +125,11 @@ int get_big_buf(void)	/* allocates memory for the biggest possible buffer */
         fflush(stdout);
         return 0;
     }
-    i = ((size_t)bigfbuf+sizeof(float)-1)/sizeof(float)*sizeof(float);	/* align bigbuf to word boundary */
+    i = ((size_t)bigfbuf+sizeof(float)-1)/sizeof(float)*sizeof(float);  /* align bigbuf to word boundary */
     bigfbuf = (float*)i;
 
     buflen /= sizeof(float);
-    buflen = (buflen/channels) * channels;		/* align buflen to channel boundaries */
+    buflen = (buflen/channels) * channels;              /* align buflen to channel boundaries */
     if(buflen <= 0) {
         fprintf(stdout,"ERROR: Failed to allocate float buffer.\n");
         fflush(stdout);
@@ -149,12 +149,12 @@ int get_max_samp(int ifd,int force_read)
 
     switch(force_read) {
     case(0):
-        if(try_header(ifd) >= 0)	//	No forcing: "try_header" succeeds. Maxsamp can be >0 or 0
+        if(try_header(ifd) >= 0)        //      No forcing: "try_header" succeeds. Maxsamp can be >0 or 0
             return(0);
         break;
     case(2):
-        if(try_header(ifd) > 0)		//	"try_header" succeeds. Maxsamp can be >0 but NOT 0
-            return(0);				//	if maxsamp is 0, searching for maxsamp is forced
+        if(try_header(ifd) > 0)         //      "try_header" succeeds. Maxsamp can be >0 but NOT 0
+            return(0);                          //      if maxsamp is 0, searching for maxsamp is forced
         force_read = 1;
         break;
         /* else if info is not in header */
@@ -185,7 +185,7 @@ int get_max_samp(int ifd,int force_read)
             pos_repeats = posreps[j];
         } else if (maxcpdamp[j] < maxpdamp)
             ;
-        else if(maxcploc[j] < maxploc)	// equal +ve vals
+        else if(maxcploc[j] < maxploc)  // equal +ve vals
             maxploc = maxcploc[j];
         if(maxcndamp[j] < maxndamp) {
             maxndamp = maxcndamp[j];
@@ -193,7 +193,7 @@ int get_max_samp(int ifd,int force_read)
             neg_repeats = negreps[j];
         } else if (maxcndamp[j] > maxndamp)
             ;
-        else if(maxcnloc[j] < maxnloc)	// equal -ve vals
+        else if(maxcnloc[j] < maxnloc)  // equal -ve vals
             maxnloc = maxcnloc[j];
     }
     maxpfamp = (float)maxpdamp;
@@ -253,16 +253,16 @@ report(void)
 int tidy_up(int where)
 {
     switch(where)
-	{
-	case 0:
+        {
+        case 0:
             Mfree(bigfbuf);
-	case 1:
+        case 1:
             sndcloseEx(ifd);
-	case 2:
+        case 2:
             sffinish();
-	default:
+        default:
             break;
-	}
+        }
     return(1);
 }
 
@@ -271,7 +271,7 @@ int main(int argc,char *argv[])
     int force_read = 0, j;
     /*TICK *///unsigned int time;
     int is_sound;
-    /* get current time	*/
+    /* get current time */
     //time = hz200();
 
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
@@ -298,13 +298,13 @@ int main(int argc,char *argv[])
         return tidy_up(3);
     }
 
-    /* initialise SFSYS	*/
+    /* initialise SFSYS */
     if( sflinit("maxsamp2") < 0 )
-	{
+        {
             fprintf(stdout,"ERROR: Cannot initialise soundfile system.\n");
             fflush(stdout);
             return tidy_up(3);
-	}
+        }
 
     /* open input file */
     if((is_sound = open_in(argv[1],force_read)) < 0)
@@ -391,7 +391,7 @@ int try_header(int ifd)
         if(peakdata[j].value > maxdamp) {
             maxdamp = peakdata[j].value;
             maxloc  = peakdata[j].position;
-        } else if(!(peakdata[j].value < maxdamp)) {	/* i.e. equal values */
+        } else if(!(peakdata[j].value < maxdamp)) {     /* i.e. equal values */
             maxloc  = min(peakdata[j].position,(unsigned int)maxloc);
         }
     }
@@ -443,7 +443,7 @@ void force_new_header(void) {
         } else if(-maxcpdamp[j] > maxcndamp[j]) {
             maxv = maxcndamp[j];
             maxp = maxcnloc[j];
-        } else {	// equal
+        } else {        // equal
             if(maxcnloc[j] < maxcploc[j]) {
                 maxv = maxcndamp[j];
                 maxp = maxcnloc[j];

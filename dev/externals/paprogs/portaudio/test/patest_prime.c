@@ -1,7 +1,7 @@
 /** @file patest_prime.c
-	@ingroup test_src
-	@brief Test stream priming mode.
-	@author Ross Bencina http://www.audiomulch.com/~rossb
+    @ingroup test_src
+    @brief Test stream priming mode.
+    @author Ross Bencina http://www.audiomulch.com/~rossb
 */
 
 /*
@@ -32,16 +32,16 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
- 
+
 #include <stdio.h>
 #include <math.h>
 #include "portaudio.h"
@@ -66,7 +66,7 @@ typedef struct
     int          beepCountdown;
     int          idleCountdown;
 }
-paTestData;
+    paTestData;
 
 static void InitializeTestData( paTestData *testData )
 {
@@ -83,8 +83,8 @@ static void InitializeTestData( paTestData *testData )
 */
 static int patestCallback( const void *inputBuffer, void *outputBuffer,
                            unsigned long framesPerBuffer,
-			               const PaStreamCallbackTimeInfo *timeInfo,
-			               PaStreamCallbackFlags statusFlags, void *userData )
+                           const PaStreamCallbackTimeInfo *timeInfo,
+                           PaStreamCallbackFlags statusFlags, void *userData )
 {
     /* Cast data passed through stream to our structure. */
     paTestData *data = (paTestData*)userData;
@@ -98,42 +98,42 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
     (void) statusFlags;
 
     for( i=0; i<framesPerBuffer; i++ )
-    {
-        switch( data->state )
         {
-        case STATE_BKG_IDLE:
-            *out++ = 0.0;  /* left */
-            *out++ = 0.0;  /* right */
-            --data->idleCountdown;
-            
-            if( data->idleCountdown <= 0 ) result = paComplete;
-            break;
+            switch( data->state )
+                {
+                case STATE_BKG_IDLE:
+                    *out++ = 0.0;  /* left */
+                    *out++ = 0.0;  /* right */
+                    --data->idleCountdown;
 
-        case STATE_BKG_BEEPING:
-            if( data->beepCountdown <= 0 )
-            {
-                data->state = STATE_BKG_IDLE;
-                *out++ = 0.0;  /* left */
-                *out++ = 0.0;  /* right */
-            }
-            else
-            {
-                /* Play sawtooth wave. */
-                *out++ = data->leftPhase;  /* left */
-                *out++ = data->rightPhase;  /* right */
-                /* Generate simple sawtooth phaser that ranges between -1.0 and 1.0. */
-                data->leftPhase += 0.01f;
-                /* When signal reaches top, drop back down. */
-                if( data->leftPhase >= 1.0f ) data->leftPhase -= 2.0f;
-                /* higher pitch so we can distinguish left and right. */
-                data->rightPhase += 0.03f;
-                if( data->rightPhase >= 1.0f ) data->rightPhase -= 2.0f;
-            }
-            --data->beepCountdown;
-            break;
+                    if( data->idleCountdown <= 0 ) result = paComplete;
+                    break;
+
+                case STATE_BKG_BEEPING:
+                    if( data->beepCountdown <= 0 )
+                        {
+                            data->state = STATE_BKG_IDLE;
+                            *out++ = 0.0;  /* left */
+                            *out++ = 0.0;  /* right */
+                        }
+                    else
+                        {
+                            /* Play sawtooth wave. */
+                            *out++ = data->leftPhase;  /* left */
+                            *out++ = data->rightPhase;  /* right */
+                            /* Generate simple sawtooth phaser that ranges between -1.0 and 1.0. */
+                            data->leftPhase += 0.01f;
+                            /* When signal reaches top, drop back down. */
+                            if( data->leftPhase >= 1.0f ) data->leftPhase -= 2.0f;
+                            /* higher pitch so we can distinguish left and right. */
+                            data->rightPhase += 0.03f;
+                            if( data->rightPhase >= 1.0f ) data->rightPhase -= 2.0f;
+                        }
+                    --data->beepCountdown;
+                    break;
+                }
         }
-    }
-    
+
     return result;
 }
 
@@ -145,12 +145,12 @@ static PaError DoTest( int flags )
     paTestData data;
     PaStreamParameters outputParameters;
 
-    InitializeTestData( &data );       
+    InitializeTestData( &data );
 
     outputParameters.device = Pa_GetDefaultOutputDevice();
     if (outputParameters.device == paNoDevice) {
-      fprintf(stderr,"Error: No default output device.\n");
-      goto error;
+        fprintf(stderr,"Error: No default output device.\n");
+        goto error;
     }
     outputParameters.channelCount = 2;
     outputParameters.hostApiSpecificStreamInfo = NULL;
@@ -159,14 +159,14 @@ static PaError DoTest( int flags )
 
     /* Open an audio I/O stream. */
     err = Pa_OpenStream(
-        &stream,
-        NULL,                         /* no input */
-        &outputParameters,
-        SAMPLE_RATE,
-        FRAMES_PER_BUFFER,            /* frames per buffer */
-        paClipOff | flags,      /* we won't output out of range samples so don't bother clipping them */
-        patestCallback,
-        &data );
+                        &stream,
+                        NULL,                         /* no input */
+                        &outputParameters,
+                        SAMPLE_RATE,
+                        FRAMES_PER_BUFFER,            /* frames per buffer */
+                        paClipOff | flags,      /* we won't output out of range samples so don't bother clipping them */
+                        patestCallback,
+                        &data );
     if( err != paNoError ) goto error;
 
 
@@ -186,7 +186,7 @@ static PaError DoTest( int flags )
     if( err != paNoError ) goto error;
 
     return err;
-error:
+ error:
     return err;
 }
 
@@ -200,32 +200,32 @@ int main(void)
     /* Initialize library before making any other calls. */
     err = Pa_Initialize();
     if( err != paNoError ) goto error;
-    
+
     printf("PortAudio Test: Testing stream playback with no priming.\n");
     printf("PortAudio Test: you should see BEEP before you hear it.\n");
     printf("BEEP %d times.\n", NUM_BEEPS );
 
     for( i=0; i< NUM_BEEPS; ++i )
-    {
-        err = DoTest( 0 );
-        if( err != paNoError )
-            goto error;
-    }
+        {
+            err = DoTest( 0 );
+            if( err != paNoError )
+                goto error;
+        }
 
     printf("PortAudio Test: Testing stream playback with priming.\n");
     printf("PortAudio Test: you should see BEEP around the same time you hear it.\n");
     for( i=0; i< NUM_BEEPS; ++i )
-    {
-        err = DoTest( paPrimeOutputBuffersUsingStreamCallback );
-        if( err != paNoError )
-            goto error;
-    }
+        {
+            err = DoTest( paPrimeOutputBuffersUsingStreamCallback );
+            if( err != paNoError )
+                goto error;
+        }
 
     printf("Test finished.\n");
 
     Pa_Terminate();
     return err;
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

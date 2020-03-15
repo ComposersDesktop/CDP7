@@ -1,7 +1,7 @@
 /** @file pa_fuzz.c
-	@ingroup examples_src
+    @ingroup examples_src
     @brief Distort input like a fuzz box.
-	@author Phil Burk  http://www.softsynth.com
+    @author Phil Burk  http://www.softsynth.com
 */
 /*
  * $Id: pa_fuzz.c 1752 2011-09-08 03:21:55Z philburk $
@@ -31,13 +31,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -67,15 +67,15 @@ float CubicAmplifier( float input )
 {
     float output, temp;
     if( input < 0.0 )
-    {
-        temp = input + 1.0f;
-        output = (temp * temp * temp) - 1.0f;
-    }
+        {
+            temp = input + 1.0f;
+            output = (temp * temp * temp) - 1.0f;
+        }
     else
-    {
-        temp = input - 1.0f;
-        output = (temp * temp * temp) + 1.0f;
-    }
+        {
+            temp = input - 1.0f;
+            output = (temp * temp * temp) + 1.0f;
+        }
 
     return output;
 }
@@ -100,23 +100,23 @@ static int fuzzCallback( const void *inputBuffer, void *outputBuffer,
     (void) userData;
 
     if( inputBuffer == NULL )
-    {
-        for( i=0; i<framesPerBuffer; i++ )
         {
-            *out++ = 0;  /* left - silent */
-            *out++ = 0;  /* right - silent */
+            for( i=0; i<framesPerBuffer; i++ )
+                {
+                    *out++ = 0;  /* left - silent */
+                    *out++ = 0;  /* right - silent */
+                }
+            gNumNoInputs += 1;
         }
-        gNumNoInputs += 1;
-    }
     else
-    {
-        for( i=0; i<framesPerBuffer; i++ )
         {
-            *out++ = FUZZ(*in++);  /* left - distorted */
-            *out++ = *in++;          /* right - clean */
+            for( i=0; i<framesPerBuffer; i++ )
+                {
+                    *out++ = FUZZ(*in++);  /* left - distorted */
+                    *out++ = *in++;          /* right - clean */
+                }
         }
-    }
-    
+
     return paContinue;
 }
 
@@ -133,8 +133,8 @@ int main(void)
 
     inputParameters.device = Pa_GetDefaultInputDevice(); /* default input device */
     if (inputParameters.device == paNoDevice) {
-      fprintf(stderr,"Error: No default input device.\n");
-      goto error;
+        fprintf(stderr,"Error: No default input device.\n");
+        goto error;
     }
     inputParameters.channelCount = 2;       /* stereo input */
     inputParameters.sampleFormat = PA_SAMPLE_TYPE;
@@ -143,8 +143,8 @@ int main(void)
 
     outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
     if (outputParameters.device == paNoDevice) {
-      fprintf(stderr,"Error: No default output device.\n");
-      goto error;
+        fprintf(stderr,"Error: No default output device.\n");
+        goto error;
     }
     outputParameters.channelCount = 2;       /* stereo output */
     outputParameters.sampleFormat = PA_SAMPLE_TYPE;
@@ -152,14 +152,14 @@ int main(void)
     outputParameters.hostApiSpecificStreamInfo = NULL;
 
     err = Pa_OpenStream(
-              &stream,
-              &inputParameters,
-              &outputParameters,
-              SAMPLE_RATE,
-              FRAMES_PER_BUFFER,
-              0, /* paClipOff, */  /* we won't output out of range samples so don't bother clipping them */
-              fuzzCallback,
-              NULL );
+                        &stream,
+                        &inputParameters,
+                        &outputParameters,
+                        SAMPLE_RATE,
+                        FRAMES_PER_BUFFER,
+                        0, /* paClipOff, */  /* we won't output out of range samples so don't bother clipping them */
+                        fuzzCallback,
+                        NULL );
     if( err != paNoError ) goto error;
 
     err = Pa_StartStream( stream );
@@ -174,7 +174,7 @@ int main(void)
     Pa_Terminate();
     return 0;
 
-error:
+ error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );

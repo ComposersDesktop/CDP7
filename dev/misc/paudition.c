@@ -45,14 +45,14 @@ char errstr[2400];
 
 #define NOT_PITCH (-1.0)
 
-#define ENDOFSTR 				('\0')
-#define ANALFILE_OUT 			(1)
-#define SNDFILE_OUT 			(0)
-#define WINDOW_AMP 				(0.5)
-#define PARTIALS_IN_TEST_TONE 	(6)
-#define PARTIAL_DECIMATION 		(.25)
-#define	VERY_TINY_AMP 			(0.00000000000000000001)	/* 10^-20 */
-#define	FLTERR 					(0.000002)
+#define ENDOFSTR                                ('\0')
+#define ANALFILE_OUT                    (1)
+#define SNDFILE_OUT                     (0)
+#define WINDOW_AMP                              (0.5)
+#define PARTIALS_IN_TEST_TONE   (6)
+#define PARTIAL_DECIMATION              (.25)
+#define VERY_TINY_AMP                   (0.00000000000000000001)        /* 10^-20 */
+#define FLTERR                                  (0.000002)
 
 static int headwrite(int ofd,int origstype,int origrate,float arate,int Mlen,int Dfac);
 static int get_data_from_pitchfile(float **pitches,int infilesize,int ifd);
@@ -92,7 +92,7 @@ int main(int argc,char *argv[])
     float arate;
     int Mlen, Dfac;
     int srate, chans;
-    double	chwidth, halfchwidth, nyquist, nois_chanamp, gain = 1.0, pre_totalamp;
+    double      chwidth, halfchwidth, nyquist, nois_chanamp, gain = 1.0, pre_totalamp;
     int   wanted, clength;
 
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
@@ -105,7 +105,7 @@ int main(int argc,char *argv[])
         fflush(stdout);
         return 1;
     }
-    /* initialise SFSYS	*/
+    /* initialise SFSYS */
     if( sflinit("paudition") < 0 ) {
         fprintf(stdout,"ERROR: Cannot initialise soundfile system.\n");
         fflush(stdout);
@@ -113,7 +113,7 @@ int main(int argc,char *argv[])
     }
 
     /* open input file */
-    if((ifd = sndopenEx(argv[1],0,CDP_OPEN_RDONLY))<0)	{
+    if((ifd = sndopenEx(argv[1],0,CDP_OPEN_RDONLY))<0)  {
         fprintf(stdout,"INFO: Cannot open intermediate pitch data file: %s\n",argv[1]);
         fflush(stdout);
         do_finish(0,ifd,ofd,bigbuf);
@@ -178,8 +178,8 @@ int main(int argc,char *argv[])
         return 1;
     }
 
-    wanted 	= origchans ;		/* floatsams to read */
-    clength	= wanted / 2;		/* channels to process */
+    wanted      = origchans ;           /* floatsams to read */
+    clength     = wanted / 2;           /* channels to process */
     nyquist     = (double)origrate/2.0;
     chwidth     = nyquist/(double)(clength - 1);
     halfchwidth = chwidth/2.0;
@@ -220,7 +220,7 @@ int main(int argc,char *argv[])
     Mfree(bigbuf);
     sndcloseEx(ofd);
 
-    if((ifd = sndopenEx(argv[2],0,CDP_OPEN_RDONLY))<0)	{
+    if((ifd = sndopenEx(argv[2],0,CDP_OPEN_RDONLY))<0)  {
         fprintf(stdout,"INFO: Cannot open intermediate analysis data file: %s\n",argv[2]);
         fflush(stdout);
         do_finish(0,ifd,ofd,bigbuf);
@@ -368,7 +368,7 @@ int make_buffer(float **bigbuf,int *big_fsize, int wanted)
         fflush(stdout);
         return 0;
     }
-    if((*bigbuf	= (float*)Malloc(*big_fsize * sizeof(float)))==NULL) {
+    if((*bigbuf = (float*)Malloc(*big_fsize * sizeof(float)))==NULL) {
         fprintf(stdout,"ERROR: Insufficient memory F.\n");
         fflush(stdout);
         return 0;
@@ -390,11 +390,11 @@ int gen_testdata(int ofd,float *bigbuf,float *bigbufend,int big_fsize,
     int cc, vc;
     while(n < wlength) {
         thisfrq = (double)pitches[n];
-        if(thisfrq < NOT_PITCH)		/* NO SOUND FOUND : GENERATE SILENCE */
+        if(thisfrq < NOT_PITCH)         /* NO SOUND FOUND : GENERATE SILENCE */
             gen_silence_in_sampbuf(sampbuf,chwidth,halfchwidth,clength,chbot,nois_chanamp);
-        else if(thisfrq < 0.0)		/* NO PITCH FOUND : GENERATE NOISE */
+        else if(thisfrq < 0.0)          /* NO PITCH FOUND : GENERATE NOISE */
             gen_nois_in_sampbuf(sampbuf,chwidth,halfchwidth,clength,chbot,nois_chanamp);
-        else {				/* GENERATE TESTTONE AT FOUND PITCH */
+        else {                          /* GENERATE TESTTONE AT FOUND PITCH */
             preset_sampbuf(sampbuf,halfchwidth,clength,chbot);
             gen_tone_in_sampbuf(thisfrq,sampbuf,testpamp,totpamp,nyquist,pre_totalamp,chwidth,halfchwidth,wanted);
         }
@@ -511,7 +511,7 @@ void hamming(float *win,int winLen,int even)
     int i;
 
     /***********************************************************
-					Pi = (float)((double)4.*atan((double)1.));
+                                        Pi = (float)((double)4.*atan((double)1.));
     ***********************************************************/
     Pi = (float)PI;
     ftmp = Pi/winLen;
@@ -520,7 +520,7 @@ void hamming(float *win,int winLen,int even)
         for (i=0; i<winLen; i++)
             *(win+i) = (float)((double).54 + (double).46*cos((double)(ftmp*((float)i+.5))));
         *(win+winLen) = 0.0f;}
-    else{	*(win) = 1.0f;
+    else{       *(win) = 1.0f;
         for (i=1; i<=winLen; i++)
             *(win+i) =(float)((double).54 + (double).46*cos((double)(ftmp*(float)i)));
     }
@@ -530,7 +530,7 @@ void hamming(float *win,int winLen,int even)
 /****************************** FLOAT_ARRAY ******************************/
 
 int pvoc_float_array(int nnn,float **ptr)
-{	/* set up a floating point array length nnn. */
+{       /* set up a floating point array length nnn. */
     *ptr = (float *) calloc(nnn,sizeof(float));
     if(*ptr==NULL){
         fprintf(stdout,"ERROR: insufficient memory for PVOC\n");
@@ -545,65 +545,65 @@ int pvoc_float_array(int nnn,float **ptr)
 int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Mlen,int Dfac)
 {
     int num_overflows = 0;
-    float	*input,			/* pointer to start of input buffer */
-        *output,		/* pointer to start of output buffer */
-        *anal,			/* pointer to start of analysis buffer */
-        *syn,			/* pointer to start of synthesis buffer */
-        //*banal,			/* pointer to anal[1] (for FFT calls) */
-        *bsyn,			/* pointer to syn[1]  (for FFT calls) */
-        //*nextIn,		/* pointer to next empty word in input */
-        *nextOut,		/* pointer to next empty word in output */
-        *analWindow,	/* pointer to center of analysis window */
-        *synWindow,		/* pointer to center of synthesis window */
-        *maxAmp,		/* pointer to start of max amp buffer */
-        *avgAmp,		/* pointer to start of avg amp buffer */
-        *avgFrq,		/* pointer to start of avg frq buffer */
-        *env,			/* pointer to start of spectral envelope */
-        *i0,			/* pointer to amplitude channels */
-        *i1,			/* pointer to frequency channels */
-        *oldInPhase,	/* pointer to start of input phase buffer */
-        *oldOutPhase,	/* pointer to start of output phase buffer */
+    float       *input,                 /* pointer to start of input buffer */
+        *output,                /* pointer to start of output buffer */
+        *anal,                  /* pointer to start of analysis buffer */
+        *syn,                   /* pointer to start of synthesis buffer */
+        //*banal,                       /* pointer to anal[1] (for FFT calls) */
+        *bsyn,                  /* pointer to syn[1]  (for FFT calls) */
+        //*nextIn,              /* pointer to next empty word in input */
+        *nextOut,               /* pointer to next empty word in output */
+        *analWindow,    /* pointer to center of analysis window */
+        *synWindow,             /* pointer to center of synthesis window */
+        *maxAmp,                /* pointer to start of max amp buffer */
+        *avgAmp,                /* pointer to start of avg amp buffer */
+        *avgFrq,                /* pointer to start of avg frq buffer */
+        *env,                   /* pointer to start of spectral envelope */
+        *i0,                    /* pointer to amplitude channels */
+        *i1,                    /* pointer to frequency channels */
+        *oldInPhase,    /* pointer to start of input phase buffer */
+        *oldOutPhase,   /* pointer to start of output phase buffer */
         maxsample = 0.0, minsample = 0.0;
 
-    int		M = 0,			/* length of analWindow impulse response */
-        D = 0,			/* decimatin factor */
-        I = 0,			/* interpolation factor (default will be I=D)*/
+    int         M = 0,                  /* length of analWindow impulse response */
+        D = 0,                  /* decimatin factor */
+        I = 0,                  /* interpolation factor (default will be I=D)*/
         pvoc_chans = chans - 2,
-        analWinLen,		/* half-length of analysis window */
-        synWinLen;		/* half-length of synthesis window */
+        analWinLen,             /* half-length of analysis window */
+        synWinLen;              /* half-length of synthesis window */
 
-    int	outCount,		/* number of samples written to output */
-        ibuflen,		/* length of input buffer */
-        obuflen,		/* length of output buffer */
-        nI = 0,			/* current input (analysis) sample */
-        nO,				/* current output (synthesis) sample */
-        nMaxOut;		/* last output (synthesis) sample */
-    int	//isr,			/* sampling rate */
+    int outCount,               /* number of samples written to output */
+        ibuflen,                /* length of input buffer */
+        obuflen,                /* length of output buffer */
+        nI = 0,                 /* current input (analysis) sample */
+        nO,                             /* current output (synthesis) sample */
+        nMaxOut;                /* last output (synthesis) sample */
+    int //isr,                  /* sampling rate */
         endsamp = VERY_BIG_INT;
 
-    float	mag,			/* magnitude of analysis data */
-        phase,			/* phase of analysis data */
-        //RoverTwoPi,		/* R/D divided by 2*Pi */
-        TwoPioverR,		/* 2*Pi divided by R/I */
-        F = (float)0,	/* fundamental frequency (determines pvoc_chans) */
-        sum,			/* scale factor for renormalizing windows */
-        //rIn,			/* decimated sampling rate */
-        rOut,			/* pre-interpolated sampling rate */
-        R;				/* input sampling rate */
+    float       mag,                    /* magnitude of analysis data */
+        phase,                  /* phase of analysis data */
+        //RoverTwoPi,           /* R/D divided by 2*Pi */
+        TwoPioverR,             /* 2*Pi divided by R/I */
+        F = (float)0,   /* fundamental frequency (determines pvoc_chans) */
+        sum,                    /* scale factor for renormalizing windows */
+        //rIn,                  /* decimated sampling rate */
+        rOut,                   /* pre-interpolated sampling rate */
+        R;                              /* input sampling rate */
 
-    int		i,j,k,		/* index variables */
-        Dd,			/* number of new inputs to read (Dd <= D) */
-        Ii,			/* number of new outputs to write (Ii <= I) */
-        N2,			/* pvoc_chans/2 */
-        NO,			/* synthesis NO = pvoc_chans / P */
-        NO2,		/* NO/2 */
-        IO,			/* synthesis IO = I / P */
-        IOi,		/* synthesis IOi = Ii / P */
-        Mf = 0,		/* flag for even M */
+    int         i,j,k,          /* index variables */
+        Dd,                     /* number of new inputs to read (Dd <= D) */
+        Ii,                     /* number of new outputs to write (Ii <= I) */
+        N2,                     /* pvoc_chans/2 */
+        NO,                     /* synthesis NO = pvoc_chans / P */
+        NO2,            /* NO/2 */
+        IO,                     /* synthesis IO = I / P */
+        IOi,            /* synthesis IOi = Ii / P */
+        Mf = 0,         /* flag for even M */
 #ifdef SINGLE_SAMP
-        rv,			/* return value from fgetfloat */
+        rv,                     /* return value from fgetfloat */
 #endif
-        flag = 0;	/* end-of-input flag */
+        flag = 0;       /* end-of-input flag */
 
 #if defined(__SC__) && defined(SOFT_FP)
     extern int _8087;
@@ -621,9 +621,9 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
     }
 
     //isr      = origrate;
-    M		 = Mlen;
+    M            = Mlen;
     D        = Dfac;
-    R    	 = ((float) D * arate);
+    R            = ((float) D * arate);
 
     if(flteq(R,0.0)) {
         fprintf(stdout, "ERROR: Problem: zero sampling rate in PVOC\n");
@@ -644,7 +644,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
     obuflen = 4 * M;
 
     I   = D;
-    NO  = pvoc_chans;	/* synthesis transform will be NO points */
+    NO  = pvoc_chans;   /* synthesis transform will be NO points */
     NO2 = NO/2;
     IO  = I;
 
@@ -674,7 +674,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
     if (M > pvoc_chans) {
         if (Mf)
             *analWindow *=(float)
-		((double)pvoc_chans*sin((double)PI*.5/pvoc_chans)/(double)(PI*.5));
+                ((double)pvoc_chans*sin((double)PI*.5/pvoc_chans)/(double)(PI*.5));
         for (i = 1; i <= analWinLen; i++)
             *(analWindow + i) *=(float)
                 ((double)pvoc_chans * sin((double) (PI*(i+.5*Mf)/pvoc_chans) / (PI*(i+.5*Mf))));
@@ -686,7 +686,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
     for (i = -analWinLen; i <= analWinLen; i++)
         sum += *(analWindow + i);
 
-    sum = (float)(2.0/sum);		/*factor of 2 comes in later in trig identity*/
+    sum = (float)(2.0/sum);             /*factor of 2 comes in later in trig identity*/
 
     for (i = -analWinLen; i <= analWinLen; i++)
         *(analWindow + i) *= sum;
@@ -798,10 +798,10 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
     rOut = (float)(R/(float)I);
     //RoverTwoPi = (float)(rIn/TWOPI);
     TwoPioverR = (float)(TWOPI/rOut);
-    nI = -(analWinLen / D) * D;	/* input time (in samples) */
-    nO = nI;					/* output time (in samples) */
-    Dd = analWinLen + nI + 1;	/* number of new inputs to read */
-    Ii = 0;				/* number of new outputs to write */
+    nI = -(analWinLen / D) * D; /* input time (in samples) */
+    nO = nI;                                    /* output time (in samples) */
+    Dd = analWinLen + nI + 1;   /* number of new inputs to read */
+    Ii = 0;                             /* number of new outputs to write */
     IOi = 0;
     flag = 1;
 
@@ -810,7 +810,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
 
     while(nI < (endsamp + analWinLen)){
 #ifdef SINGLE_SAMP
-        for (i = 0; i < pvoc_chans+2; i++){		/* synthesis only */
+        for (i = 0; i < pvoc_chans+2; i++){             /* synthesis only */
             if ((rv = fgetfloat((anal+i),ifd)) <= 0){
                 return 1;
             }
@@ -824,7 +824,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
             return 1;
 #endif
 
-	/* reconversion: The magnitude and angle-difference-per-second in syn
+        /* reconversion: The magnitude and angle-difference-per-second in syn
            (assuming an intermediate sampling rate of rOut) are
            converted to real and imaginary values and are returned in syn.
            This automatically incorporates the proper phase scaling for
@@ -848,7 +848,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
             *i1 = (float)((double)mag * sin((double)phase));
         }
 
-	/* synthesis: The synthesis subroutine uses the Weighted Overlap-Add
+        /* synthesis: The synthesis subroutine uses the Weighted Overlap-Add
            technique to reconstruct the time-domain signal.  The (pvoc_chans/2 + 1)
            phase vocoder channel outputs at time n are inverse Fourier
            transformed, windowed, and added into the output array.  The
@@ -878,7 +878,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
             k += NO;
         k = k % NO;
 
-        for (i = -synWinLen; i <= synWinLen; i++) {	/*overlap-add*/
+        for (i = -synWinLen; i <= synWinLen; i++) {     /*overlap-add*/
             if (++j >= obuflen)
                 j -= obuflen;
             if (++k >= NO)
@@ -887,7 +887,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
         }
 
 #ifdef SINGLE_SAMP
-        for (i = 0; i < IOi; i++) {	/* shift out next IOi values */
+        for (i = 0; i < IOi; i++) {     /* shift out next IOi values */
             fputfloat(nextOut,ofd);
             *(nextOut++) = 0.;
             if (nextOut >= (output + obuflen))
@@ -895,7 +895,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
             outCount++;
         }
 #else
-        for (i = 0; i < IOi;) {	/* shift out next IOi values */
+        for (i = 0; i < IOi;) { /* shift out next IOi values */
             int j;
             int todo = min(IOi-i, output+obuflen-nextOut);
             if(!outfloats(nextOut,&maxsample,&minsample,&num_overflows,todo, ofd))
@@ -909,13 +909,13 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
         }
 #endif
 
-        if(flag 							/* flag means do this operation only once */
-           && (nI > 0) && (Dd < D)) {			/* EOF detected */
+        if(flag                                                         /* flag means do this operation only once */
+           && (nI > 0) && (Dd < D)) {                   /* EOF detected */
             flag = 0;
             endsamp = nI + analWinLen - (D - Dd);
         }
 
-        nI += D;				/* increment time */
+        nI += D;                                /* increment time */
         nO += IO;
         /* Dd = D except when the end of the sample stream intervenes */
         Dd = min(D, max(0, D+endsamp-nI-analWinLen));
@@ -934,7 +934,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
         IOi = Ii;
 
 
-    }	/* End of main while loop */
+    }   /* End of main while loop */
 
     nMaxOut = endsamp;
     while (outCount <= nMaxOut){
@@ -961,9 +961,9 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
 /************************************ OUTFLOATS ************************************
  *TW 2002 no longer need to do conversion to floats: this func is now just checking for clipping
  *
- *	ORIGINALLY (MCA) Converted floats -> shorts explicitly, since we are compiled with
- *	hardware FP(probably), and the sound filing system is not!
- *	(even without this, it should be more efficient!)
+ *      ORIGINALLY (MCA) Converted floats -> shorts explicitly, since we are compiled with
+ *      hardware FP(probably), and the sound filing system is not!
+ *      (even without this, it should be more efficient!)
  */
 int outfloats(float *nextOut,float *maxsample,float *minsample,int *num_overflows,int todo, int ofd)
 {
@@ -1037,6 +1037,6 @@ int flteq(double f1,double f2)
     upperbnd = f2 + FLTERR;
     lowerbnd = f2 - FLTERR;
     if((f1>upperbnd) || (f1<lowerbnd))
-	return(0);
+        return(0);
     return(1);
 }

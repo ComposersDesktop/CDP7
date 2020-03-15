@@ -41,25 +41,25 @@
 
 #include <extend.h>
 
-int 	reverse_it(int incnt,dataptr dz);
-void 	do_down_splice(dataptr dz);
-int 	add_to_splicebuf(float *iptr,dataptr dz);
-int 	find_zzchunk(int **thisstart,int **lastend, int *ziglistend, int *minsamp, dataptr dz);
-int 	adjust_buffer(int minsamp, int *oldminsec, int init, dataptr dz);
-int 	zig_or_zag(int direction,int *here,int *next,int is_startsplice,int is_endsplice,
+int     reverse_it(int incnt,dataptr dz);
+void    do_down_splice(dataptr dz);
+int     add_to_splicebuf(float *iptr,dataptr dz);
+int     find_zzchunk(int **thisstart,int **lastend, int *ziglistend, int *minsamp, dataptr dz);
+int     adjust_buffer(int minsamp, int *oldminsec, int init, dataptr dz);
+int     zig_or_zag(int direction,int *here,int *next,int is_startsplice,int is_endsplice,
                    int *outbuf_space,int obufno,int splbufno, dataptr dz);
-int 	do_zigzags(int *thisstart,int *lastend,int *outbuf_space,int obufno,int splbufno,dataptr dz);
-int 	memcpy_with_check(char *bufptr,char *bufend,char *fromptr,int bytecnt);
-int 	setup_splices(int *base,int *last,int *here,int *next,int *after,int *end,
+int     do_zigzags(int *thisstart,int *lastend,int *outbuf_space,int obufno,int splbufno,dataptr dz);
+int     memcpy_with_check(char *bufptr,char *bufend,char *fromptr,int bytecnt);
+int     setup_splices(int *base,int *last,int *here,int *next,int *after,int *end,
                       int *is_startsplice,int *is_endsplice,dataptr dz);
 static void do_end_splice(int samps_left,int obufno,dataptr dz);
 
-#define	ZIG		(1)
-#define UNKNOWN	(0)
-#define ZAG		(-1)
+#define ZIG             (1)
+#define UNKNOWN (0)
+#define ZAG             (-1)
 
-#define NORMAL	(0)
-#define REVERSE	(1)
+#define NORMAL  (0)
+#define REVERSE (1)
 
 #define SECMARGIN  (256)
 
@@ -76,20 +76,20 @@ int zigzag(dataptr dz)
     int outbuf_space = dz->buflen, samps_left;
     int obufno, splbufno;
     switch(dz->process) {
-    case(ZIGZAG): 	obufno = 2;	splbufno = 3; break;
+    case(ZIGZAG):       obufno = 2;     splbufno = 3; break;
     case(LOOP):
-    case(SCRAMBLE): obufno = 1;	splbufno = 2; break;
+    case(SCRAMBLE): obufno = 1; splbufno = 2; break;
     default:
-        sprintf(errstr,"Unknown case in	zigzag()\n");
+        sprintf(errstr,"Unknown case in zigzag()\n");
         return(PROGRAM_ERROR);
     }
     if((exit_status = find_zzchunk(&thisstart,&lastend,ziglistend,&minsamp,dz))!=CONTINUE) {
         if(exit_status == FINISHED)
             exit_status = GOAL_FAILED;
         switch(dz->process) {
-        case(ZIGZAG): 	sprintf(errstr,"WARNING: No valid zigzag found\n"); 	break;
-        case(LOOP):   	sprintf(errstr,"WARNING: No valid loop found\n"); 	 	break;
-        case(SCRAMBLE): sprintf(errstr,"WARNING: No valid scramble found\n"); 	break;
+        case(ZIGZAG):   sprintf(errstr,"WARNING: No valid zigzag found\n");     break;
+        case(LOOP):     sprintf(errstr,"WARNING: No valid loop found\n");               break;
+        case(SCRAMBLE): sprintf(errstr,"WARNING: No valid scramble found\n");   break;
         }
         return(exit_status);
     }
@@ -133,7 +133,7 @@ int do_zigzags(int *thisstart,int *lastend,int *outbuf_space,int obufno,int splb
         direction = setup_splices(base,last,here,next,after,end,&is_startsplice,&is_endsplice,dz);
         switch(dz->process) {
         case(ZIGZAG):
-            break;				 /* both ZIGS (forward) and ZAGS (backwards) are played */
+            break;                               /* both ZIGS (forward) and ZAGS (backwards) are played */
         case(LOOP):
         case(SCRAMBLE):
             if(dz->iparray[ZIGZAG_PLAY][here - base]==TRUE)
@@ -197,7 +197,7 @@ int zig_or_zag
         if((exit_status = add_to_splicebuf(dz->sbufptr[bufno],dz))<0)
             return(exit_status);
     }
-    if(*outbuf_space >= incnt) { 	/* ENOUGH SPACE IN OUTBUFFER To DO EVERYTHING */
+    if(*outbuf_space >= incnt) {        /* ENOUGH SPACE IN OUTBUFFER To DO EVERYTHING */
         if(is_startsplice) {
             if((exit_status = memcpy_with_check
                 ((char *)dz->sbufptr[obufno],(char *)dz->sampbuf[splbufno],
@@ -259,7 +259,7 @@ int zig_or_zag
             return(exit_status);
         dz->sbufptr[obufno]     += advance;
         dz->sbufptr[bufno] += advance;
-        *outbuf_space 	   -= advance;
+        *outbuf_space      -= advance;
         if(is_endsplice) {
             memmove((char *)dz->extrabuf[ZIGZAG_SPLBUF],
                     (char *)dz->sbufptr[bufno],(size_t)dz->iparam[ZIG_SPLSAMPS]* sizeof(float));
@@ -304,7 +304,7 @@ int zig_or_zag
             do_down_splice(dz);
             dz->sbufptr[bufno] += dz->iparam[ZIG_SPLSAMPS];
         }
-    } else {		/* OUTBUFFER SPACE REACHES INTO MIDDLE OF ENDSPLICE */
+    } else {            /* OUTBUFFER SPACE REACHES INTO MIDDLE OF ENDSPLICE */
         if(is_startsplice) {
             if((exit_status = memcpy_with_check
                 ((char *)dz->sbufptr[obufno],(char *)dz->sampbuf[splbufno],
@@ -368,36 +368,36 @@ int zig_or_zag
 int adjust_buffer(int minsamp, int *oldminsec, int init, dataptr dz)
 {
     int minsec, secchange, sampchange = 0, samp_at_sector_start = 0;
-    minsec    = minsamp/SECMARGIN;		/* minimum sector in file that we need, for next read */
-    secchange = minsec - *oldminsec;	/* number of sectors we need to move buffer along */
+    minsec    = minsamp/SECMARGIN;              /* minimum sector in file that we need, for next read */
+    secchange = minsec - *oldminsec;    /* number of sectors we need to move buffer along */
     *oldminsec = minsec;
 
-    if(init) {				/* On first read */
-        if(secchange<0) {	/* secchange must be >= 0 from start of file */
+    if(init) {                          /* On first read */
+        if(secchange<0) {       /* secchange must be >= 0 from start of file */
             sprintf(errstr,"Anomaly in first pass of adjust_buffer()\n");
             return(PROGRAM_ERROR);
         }
-        if(secchange) {		/* seek to 1st buffer needed */
+        if(secchange) {         /* seek to 1st buffer needed */
             sampchange = secchange * SECMARGIN;
             if(sndseekEx(dz->ifd[0],sampchange,0)<0) {
                 sprintf(errstr,"sndseek: Failed in adjust_buffer()\n");
                 return(SYSTEM_ERROR);
-            }				/* find sample-number (in file) of first sample in buffer */
+            }                           /* find sample-number (in file) of first sample in buffer */
             samp_at_sector_start = sampchange;
-        }					/* read 1st buffer */
+        }                                       /* read 1st buffer */
         if(fgetfbufEx(dz->sampbuf[0],dz->buflen,dz->ifd[0],0)<0) {
             sprintf(errstr,"read() 0 Failed in adjust_buffer()\n");
             return(SYSTEM_ERROR);
         }
         dz->sbufptr[0] = dz->sampbuf[0] + (dz->lparray[ZIGZAG_TIMES][0] - samp_at_sector_start);
         return(FINISHED);
-    }						/* IF NOT in first read */
+    }                                           /* IF NOT in first read */
 
     //TW UPDATE (Removed below)
-    //	if(!secchange) {		/* Data should have been checked to avoid zero zigs or zags */
-    //		sprintf(errstr,"Search anomaly in adjust_buffer()\n");
-    //		return(PROGRAM_ERROR);
-    //	}
+    //  if(!secchange) {                /* Data should have been checked to avoid zero zigs or zags */
+    //          sprintf(errstr,"Search anomaly in adjust_buffer()\n");
+    //          return(PROGRAM_ERROR);
+    //  }
 
     /* sampchange = Change in samp position in file from current buffer start to next buffer start.
      * NB, it should be impossible for this to exceed buffer_size
@@ -443,32 +443,32 @@ int find_zzchunk(int **thisstart,int **lastend, int *ziglistend, int *minsamp, d
     int check;
     int max_smpsize = dz->buflen - SECMARGIN;
     /*  Max zig-segment permitted, taking into a/c */
-    /*	need to round up to a whole sector AT THE ENDS!! */
-    *thisstart  = *lastend;						/* Set start of current segment to end of last segment */
+    /*  need to round up to a whole sector AT THE ENDS!! */
+    *thisstart  = *lastend;                                             /* Set start of current segment to end of last segment */
     p = *thisstart;
     /* WE'RE SEARCHING FOR THE earliest and latest times among successive zigtimes */
-    min_samp = *p;								/* so preset both of these to the current first zigtime */
+    min_samp = *p;                                                              /* so preset both of these to the current first zigtime */
     max_samp = *p;
     p++;
-    while(p < ziglistend) {							/* search forward through the zigtimes list */
+    while(p < ziglistend) {                                                     /* search forward through the zigtimes list */
         check = 0;
-        if(*p < min_samp) {						/* if this zigtime earlier than any encountered so far */
-            lastmin_samp = min_samp;			/* store last earliest elsewhere, and keep new one */
+        if(*p < min_samp) {                                             /* if this zigtime earlier than any encountered so far */
+            lastmin_samp = min_samp;                    /* store last earliest elsewhere, and keep new one */
             min_samp = *p;
-            check = 1;	  						/* flag that a new earliest-time has been registered */
-        } else if(*p > max_samp) {				/* if this zigtime later than any encountered so far */
-            lastmax_samp = max_samp;			/* store last latest elsewhere, and keep new one */
+            check = 1;                                                  /* flag that a new earliest-time has been registered */
+        } else if(*p > max_samp) {                              /* if this zigtime later than any encountered so far */
+            lastmax_samp = max_samp;                    /* store last latest elsewhere, and keep new one */
             max_samp = *p;
-            check = 2;							/* flag that a new latest-time has been registered */
+            check = 2;                                                  /* flag that a new latest-time has been registered */
         }
-        if(check) {									/* If a new earliest or latest time has been found */
-            if(max_samp - min_samp > max_smpsize) {	/* If the span between earliest and latest is TOO LARGE */
-                if(check==2)						/* restore the previous earliest(or latest) time */
+        if(check) {                                                                     /* If a new earliest or latest time has been found */
+            if(max_samp - min_samp > max_smpsize) {     /* If the span between earliest and latest is TOO LARGE */
+                if(check==2)                                            /* restore the previous earliest(or latest) time */
                     max_samp = lastmax_samp;
                 else
                     min_samp = lastmin_samp;
-                break;								/* and break from the loop */
-            }										/* (Otherwise next zigtime would be beyond a bufferlength) */
+                break;                                                          /* and break from the loop */
+            }                                                                           /* (Otherwise next zigtime would be beyond a bufferlength) */
         }
         p++;
     }
@@ -478,10 +478,10 @@ int find_zzchunk(int **thisstart,int **lastend, int *ziglistend, int *minsamp, d
     }
     if(max_samp - min_samp == 0)
         return(FINISHED);
-    *minsamp = min_samp;							/* flag position of earliest time, as a samp-count in file */
-    /*	NB...
-     *	if we reached end of ziglist (p = ziglistend), lastend = end of list = ziglistend - 1
-     *	if we dropped out of loop, because last found time was unacceptable,
+    *minsamp = min_samp;                                                        /* flag position of earliest time, as a samp-count in file */
+    /*  NB...
+     *  if we reached end of ziglist (p = ziglistend), lastend = end of list = ziglistend - 1
+     *  if we dropped out of loop, because last found time was unacceptable,
      * we must baktrak in the the ziglist by 1. Hence...
      */
     *lastend = p - 1;
@@ -494,7 +494,7 @@ int find_zzchunk(int **thisstart,int **lastend, int *ziglistend, int *minsamp, d
 int add_to_splicebuf(float *iptr,dataptr dz)
 {
     //TW CHANGED
-    //	/*int*/float val;
+    //  /*int*/float val;
     double val;
     float *sptr = dz->extrabuf[ZIGZAG_SPLBUF];
     int n, m;
@@ -616,7 +616,7 @@ int setup_splices
 void do_end_splice(int samps_left,int obufno,dataptr dz)
 {
     //TW CHANGED
-    //	float *sptr, val;
+    //  float *sptr, val;
     float *sptr;
     double val;
     int  n/*, val*/;
