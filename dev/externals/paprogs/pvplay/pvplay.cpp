@@ -386,8 +386,8 @@ void usage(void){
         int anal_buflen,overlap,winlen;
         // for sfiles only, for now
         //int framesize_factor = 0;
-        phasevocoder *pv = NULL, *pv_r = NULL;
-        //PLAYTYPE playtype = PLAY_SFILE;
+        //phasevocoder *pv = NULL, *pv_r = NULL;
+        PLAYTYPE playtype = PLAY_SFILE;
 
 
 #ifdef WIN32

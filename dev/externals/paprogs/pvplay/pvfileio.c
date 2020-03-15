@@ -698,8 +698,8 @@ static int pvoc_readfmt(int fd,int byterev,WAVEFORMATPVOCEX *pWfpx)
 static int pvoc_readheader(int ifd,WAVEFORMATPVOCEX *pWfpx)
 {
     DWORD tag, size,riffsize;
-    int fmtseen = 0, dataseen = 0, windowseen = 0;
-    DWORD windowlength = 0;
+    int fmtseen = 0, windowseen = 0;
+    //DWORD windowlength = 0;
 
 #ifdef _DEBUG
     assert(pWfpx);

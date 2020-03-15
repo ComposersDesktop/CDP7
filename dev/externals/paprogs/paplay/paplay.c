@@ -657,6 +657,7 @@ void usage(void){
         unsigned int max_inchar = 0;
         unsigned int flags[FLAG_NFLAGS] = {0};
         int do_speakermask = 0;
+        int speakermask = 0;
         int do_updatemessages = 1;
 #ifdef unix
         struct itimerval tout_val;

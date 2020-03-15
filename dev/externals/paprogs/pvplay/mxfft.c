@@ -22,7 +22,7 @@
  *  Conversion by Trevor Wishart and Keith Henderson, York Univ.
  */
 
-static char *rcsid = "$Id: mxfft.c%v 3.4 1994/10/31 17:37:28 martin Exp $";
+//static char *rcsid = "$Id: mxfft.c%v 3.4 1994/10/31 17:37:28 martin Exp $";
 /*
  *	$Log: mxfft.c%v $
  * Revision 3.4  1994/10/31  17:37:28  martin
@@ -59,7 +59,7 @@ int	nseg,
 	nspn,
 	isn;
       
-{	int nfac[16];		/*  These are one bigger than needed   */
+{	int nfac[32];		/*  These are one bigger than needed   */
 				/*  because wish to use Fortran array  */
 				/* index which runs 1 to n, not 0 to n */
 
@@ -186,10 +186,10 @@ int nfac[];
 		nn,nt;
 	double  aa, aj, ajm, ajp, ak, akm, akp,
 		bb, bj, bjm, bjp, bk, bkm, bkp,
-		c1, c2, c3, c72, cd,
+		c1, c2 = 0, c3 = 0, c72, cd,
 		dr,
 		rad, 
-		sd, s1, s2, s3, s72, s120;
+		sd, s1, s2 = 0, s3 = 0, s72, s120;
 
 	double	xx;	/****** ADDED APRIL 1991 *********/
 	inc=abs(isn);
@@ -257,7 +257,7 @@ lbl40:
  */
       	kspan /= 2;
       	k1 = kspan + 2;
-lbl50:	do{	do{	k2 = kk + kspan;
+        do{	do{	k2 = kk + kspan;
 		      	ak = a[k2];
 		      	bk = b[k2];
 		      	a[k2] = (a[kk]) - ak;
@@ -486,7 +486,7 @@ lbl250:	k1 = kk;
       	bk = bb;
       	j = 1;
       	k1 += kspan;
-lbl260:	do{	k2 -= kspan;
+	do{	k2 -= kspan;
 	      	j++;
 	      	at[j] = a[k1] + a[k2];
 	      	ak = at[j] + ak;	
@@ -510,7 +510,7 @@ lbl270:	k1 += kspan;
       	aj = 0.0;
       	bj = 0.0;
       	k = 1;
-lbl280:	do{	k++;
+	do{	k++;
 	      	ak = (at[k] * ck[jj]) + ak;
 	      	bk = (bt[k] * ck[jj]) + bk;	
 	      	k++;
@@ -580,7 +580,7 @@ lbl350:	np[1] = ks;
       	if(m < k) 
 		k--;
 	np[k+1] = jc;
-lbl360:	for(j=1; j < k; j++,k--){
+	for(j=1; j < k; j++,k--){
 		np[j+1] = np[j] / nfac[j];
 	      	np[k] = np[k+1] * nfac[j];
 	}
@@ -619,7 +619,7 @@ lbl390:	if(kk < k2){
  * permutation for multivariate transform
  */
 lbl400:	do{	do{	k = kk + jc;
-lbl410:			do{	ak = a[kk];
+			do{	ak = a[kk];
 			      	a[kk] = a[k2];
 			      	a[k2] = ak;
 			      	bk = b[kk];
@@ -772,7 +772,7 @@ int	n,
 		fprintf(stderr,"\nerror - zero in reals parameters : %d : %d ",n,isn);
 	       	return;
 	}
-lbl10: 	nk = (nf*inc) + 2;
+ 	nk = (nf*inc) + 2;
       	nh = nk/2;
 /*****************************
     	rad  = atan((double)1.0);
@@ -800,7 +800,7 @@ lbl10: 	nk = (nf*inc) + 2;
 		cn = -1.0;
 		sd = -sd;
 	}
-lbl20: 	for(j=1;j<=nh;j+=inc)	{
+ 	for(j=1;j<=nh;j+=inc)	{
         	k = nk - j;
         	aa = a[j] + a[k];
         	ab = a[j] - a[k];

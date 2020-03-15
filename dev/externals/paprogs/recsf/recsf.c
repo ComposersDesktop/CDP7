@@ -436,7 +436,7 @@ int main(int argc,char **argv)
     //    PaWinMmeStreamInfo winmmeStreamInfo;
 
 #endif
-    //PaDeviceInfo *devinfo = NULL;
+    PaDeviceInfo *devinfo = NULL;
     PaStream *stream = NULL;
     //PaStreamCallback *callback = recordCallback;
     PaError err = paNoError;
@@ -740,13 +740,13 @@ int main(int argc,char **argv)
     inputParameters.hostApiSpecificStreamInfo = NULL;
 
     devinfo = (PaDeviceInfo *) Pa_GetDeviceInfo(device);
-#ifdef MAC
+#if defined(MAC) || defined(linux)
     if(devinfo){
         printf("Using device %d: %s\n",device,devinfo->name);
     }
 #endif
 
-#ifdef WIN32
+#if defined(WIN32)
     if(devinfo) {
         int apitype = devinfo->hostApi;
         const PaHostApiInfo *apiinfo = Pa_GetHostApiInfo(apitype);
