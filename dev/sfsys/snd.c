@@ -33,7 +33,7 @@
  *      All Rights Reserved.
  */
 /* RWD: old sfsys functions DEPRECATED and emptied */
-/* RWD Dec 2019  fixed SndTellEx for int64 comps */
+/* RWD Dec 2019  fixed SndCloseEx for int64 comps */
 #ifdef _DEBUG
 #include <stdio.h>
 #endif
