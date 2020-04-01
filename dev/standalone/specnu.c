@@ -4,17 +4,17 @@
  * http://www.composersdesktop.com
  *
  This file is part of the CDP System.
- 
+
  The CDP System is free software; you can redistribute it
  and/or modify it under the terms of the GNU Lesser General Public
  License as published by the Free Software Foundation; either
  version 2.1 of the License, or (at your option) any later version.
- 
+
  The CDP System is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU Lesser General Public License for more details.
- 
+
  You should have received a copy of the GNU Lesser General Public
  License along with the CDP System; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
@@ -143,7 +143,7 @@ int main(int argc,char *argv[])
     dataptr dz = NULL;
     char **cmdline;
     int  cmdlinecnt;
-    aplptr ap;
+    //aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -164,13 +164,13 @@ int main(int argc,char *argv[])
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-                      
+
     if(!sloom) {
         if(argc == 1) {
-            usage1();   
+            usage1();
             return(FAILED);
         } else if(argc == 2) {
-            usage2(argv[1]);    
+            usage2(argv[1]);
             return(FAILED);
         }
         if((exit_status = make_initial_cmdline_check(&argc,&argv))<0) {     // CDP LIB
@@ -216,11 +216,11 @@ int main(int argc,char *argv[])
         //parse_TK_data() =
         if((exit_status = parse_sloom_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {
             exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-            return(exit_status);         
+            return(exit_status);
         }
     }
-    ap = dz->application;
-    // parse_infile_and_hone_type() = 
+    //ap = dz->application;
+    // parse_infile_and_hone_type() =
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -231,8 +231,8 @@ int main(int argc,char *argv[])
         return(FAILED);
     }
     // open_first_infile        CDP LIB
-    if((exit_status = open_first_infile(cmdline[0],dz))<0) {    
-        print_messages_and_close_sndfiles(exit_status,is_launched,dz);  
+    if((exit_status = open_first_infile(cmdline[0],dz))<0) {
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
     cmdlinecnt--;
@@ -245,7 +245,7 @@ int main(int argc,char *argv[])
             return(FAILED);
         }
     }
-    // handle_outfile() = 
+    // handle_outfile() =
     if((exit_status = handle_the_outfile(&cmdlinecnt,&cmdline,is_launched,dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -259,7 +259,7 @@ int main(int argc,char *argv[])
             print_messages_and_close_sndfiles(exit_status,is_launched,dz);
             return(FAILED);
         }
-    } 
+    }
     if((exit_status = read_parameters_and_flags(&cmdline,&cmdlinecnt,dz))<0) {      // CDP LIB
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -301,7 +301,7 @@ int main(int argc,char *argv[])
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-    
+
     //param_preprocess()                        redundant
     //spec_process_file =
     switch(dz->process) {
@@ -345,12 +345,12 @@ int handle_the_extra_infile(char ***cmdline,int *cmdlinecnt,dataptr dz)
     int maxrep;
     int getmax = 0, getmaxinfo = 0;
     infileptr ifp;
-    fileptr fp1 = dz->infile; 
+    fileptr fp1 = dz->infile;
     filename = (*cmdline)[0];
     if((dz->ifd[fileno] = sndopenEx(filename,0,CDP_OPEN_RDONLY)) < 0) {
         sprintf(errstr,"cannot open input file %s to read data.\n",filename);
         return(DATA_ERROR);
-    }   
+    }
     if((ifp = (infileptr)malloc(sizeof(struct filedata)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY to store data on later infile. (1)\n");
         return(MEMORY_ERROR);
@@ -408,15 +408,15 @@ int handle_the_extra_infile(char ***cmdline,int *cmdlinecnt,dataptr dz)
 
 int set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char *paramlist)
 {
-    ap->special_data   = (char)special_data;       
+    ap->special_data   = (char)special_data;
     ap->param_cnt      = (char)paramcnt;
     ap->max_param_cnt  = (char)maxparamcnt;
     if(ap->max_param_cnt>0) {
-        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {    
+        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for param_list\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->param_list,paramlist); 
+        strcpy(ap->param_list,paramlist);
     }
     return(FINISHED);
 }
@@ -437,16 +437,16 @@ int set_vflgs
             sprintf(errstr,"INSUFFICIENT MEMORY: for option_flags\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->option_flags,optflags); 
+        strcpy(ap->option_flags,optflags);
     }
-    ap->vflag_cnt = (char) vflagcnt;           
+    ap->vflag_cnt = (char) vflagcnt;
     ap->variant_param_cnt = (char) vparamcnt;
     if(vflagcnt) {
         if((ap->variant_list  = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for variant_list\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->variant_list,varlist);       
+        strcpy(ap->variant_list,varlist);
         if((ap->variant_flags = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for variant_flags\n");
             return(MEMORY_ERROR);
@@ -466,36 +466,36 @@ int application_init(dataptr dz)
     int tipc, brkcnt;
     aplptr ap = dz->application;
     if(ap->vflag_cnt>0)
-        initialise_vflags(dz);    
+        initialise_vflags(dz);
     tipc  = ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt;
     ap->total_input_param_cnt = (char)tipc;
     if(tipc>0) {
-        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)             
+        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)        
+        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)    
+        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)
             return(exit_status);
     }
     brkcnt = tipc;
     if(brkcnt>0) {
-        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)              
+        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)
             return(exit_status);
     }
-    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {         
-        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)   
+    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {
+        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)
             return(exit_status);
-        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)      
+        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)
             return(exit_status);
-    }                                                      
-    if((exit_status = mark_parameter_types(dz,ap))<0)     
+    }
+    if((exit_status = mark_parameter_types(dz,ap))<0)
             return(exit_status);
-    
+
     // establish_infile_constants() replaced by
     dz->infilecnt = ONE_NONSND_FILE;
     //establish_bufptrs_and_extra_buffers():
     if(dz->process == SPECSLICE && dz->mode == 3) {
-        if((exit_status = setup_specslice_parameter_storage(dz))<0)   
+        if((exit_status = setup_specslice_parameter_storage(dz))<0)
             return(exit_status);
     } else if(dz->process == SPECRAND) {
         dz->iarray_cnt=2;
@@ -518,7 +518,7 @@ int application_init(dataptr dz)
 /******************************** SETUP_AND_INIT_INPUT_BRKTABLE_CONSTANTS ********************************/
 
 int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
-{   
+{
     int n;
     if((dz->brk      = (double **)malloc(brkcnt * sizeof(double *)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 1\n");
@@ -534,7 +534,7 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
     }
     if((dz->firstval = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 3\n");
-        return(MEMORY_ERROR);                                                 
+        return(MEMORY_ERROR);
     }
     if((dz->lastind  = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 4\n");
@@ -669,7 +669,7 @@ int handle_the_outfile(int *cmdlinecnt,char ***cmdline,int is_launched,dataptr d
     } else {
         filename = (*cmdline)[0];
     }
-    strcpy(dz->outfilename,filename);      
+    strcpy(dz->outfilename,filename);
     if((exit_status = create_sized_outfile(filename,dz))<0)
         return(exit_status);
     (*cmdline)++;
@@ -691,7 +691,7 @@ int create_next_outfile(dataptr dz)
     }
     strcpy(filename,dz->wordstor[0]);
     insert_newnumber_at_filename_end(filename,dz->itemcnt,1);
-    strcpy(dz->outfilename,filename);      
+    strcpy(dz->outfilename,filename);
     if((exit_status = create_sized_outfile(filename,dz))<0)
         return(exit_status);
     return(FINISHED);
@@ -804,7 +804,7 @@ int setup_the_application(dataptr dz)
         dz->has_otherfile = FALSE;
         // assign_process_logic -->
         dz->input_data_type = ANALFILE_ONLY;
-        dz->process_type    = EQUAL_ANALFILE;   
+        dz->process_type    = EQUAL_ANALFILE;
         dz->outfiletype     = ANALFILE_OUT;
         break;
     case(SPECTRACT):
@@ -817,7 +817,7 @@ int setup_the_application(dataptr dz)
         dz->has_otherfile = FALSE;
         // assign_process_logic -->
         dz->input_data_type = TWO_ANALFILES;
-        dz->process_type    = EQUAL_ANALFILE;   
+        dz->process_type    = EQUAL_ANALFILE;
         dz->outfiletype     = ANALFILE_OUT;
         break;
     case(SPECSLICE):
@@ -846,7 +846,7 @@ int setup_the_application(dataptr dz)
         dz->has_otherfile = FALSE;
         // assign_process_logic -->
         dz->input_data_type = ANALFILE_ONLY;
-        dz->process_type    = EQUAL_ANALFILE;   
+        dz->process_type    = EQUAL_ANALFILE;
         dz->outfiletype     = ANALFILE_OUT;
         break;
     case(SPECRAND):
@@ -858,7 +858,7 @@ int setup_the_application(dataptr dz)
         dz->has_otherfile = FALSE;
         // assign_process_logic -->
         dz->input_data_type = ANALFILE_ONLY;
-        dz->process_type    = EQUAL_ANALFILE;   
+        dz->process_type    = EQUAL_ANALFILE;
         dz->outfiletype     = ANALFILE_OUT;
         break;
     case(SPECSQZ):
@@ -870,7 +870,7 @@ int setup_the_application(dataptr dz)
         dz->has_otherfile = FALSE;
         // assign_process_logic -->
         dz->input_data_type = ANALFILE_ONLY;
-        dz->process_type    = EQUAL_ANALFILE;   
+        dz->process_type    = EQUAL_ANALFILE;
         dz->outfiletype     = ANALFILE_OUT;
         break;
     }
@@ -1023,7 +1023,7 @@ int setup_the_param_ranges_and_defaults(dataptr dz)
 //      ap->lo[SVF2_WNDR]           = 0;                // semitone range that peak can wander and remain SAME peak-trail
 //      ap->hi[SVF2_WNDR]           = 12.0;
 //      ap->default_val[SVF2_WNDR]  = 1.0;
-//      ap->lo[SVF2_PSST]           = dz->frametime * SECS_TO_MS;   // Duration (mS) for which peak-trail must persist, to be 'true' peak-trail.    
+//      ap->lo[SVF2_PSST]           = dz->frametime * SECS_TO_MS;   // Duration (mS) for which peak-trail must persist, to be 'true' peak-trail.
 //      ap->hi[SVF2_PSST]           = 1.0 * SECS_TO_MS;
 //      ap->default_val[SVF2_PSST]  = 4 * SECS_TO_MS;
 //      ap->lo[SVF2_TSTP]           = dz->frametime * SECS_TO_MS;
@@ -1055,7 +1055,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+    //aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -1063,14 +1063,14 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             return(DATA_ERROR);
         }
         switch(cnt) {
-        case(1):    
+        case(1):
             if(sscanf(argv[cnt],"%d",&dz->process)!=1) {
                 sprintf(errstr,"Cannot read process no. sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
 
-        case(2):    
+        case(2):
             if(sscanf(argv[cnt],"%d",&dz->mode)!=1) {
                 sprintf(errstr,"Cannot read mode no. sent from TK\n");
                 return(DATA_ERROR);
@@ -1080,10 +1080,10 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_the_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+            //ap = dz->application;
             break;
 
-        case(3):    
+        case(3):
             if(sscanf(argv[cnt],"%d",&infilecnt)!=1) {
                 sprintf(errstr,"Cannot read infilecnt sent from TK\n");
                 return(DATA_ERROR);
@@ -1095,137 +1095,137 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             if((exit_status = assign_file_data_storage(infilecnt,dz))<0)
                 return(exit_status);
             break;
-        case(INPUT_FILETYPE+4): 
+        case(INPUT_FILETYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->filetype)!=1) {
                 sprintf(errstr,"Cannot read filetype sent from TK (%s)\n",argv[cnt]);
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FILESIZE+4): 
+        case(INPUT_FILESIZE+4):
             if(sscanf(argv[cnt],"%d",&filesize)!=1) {
                 sprintf(errstr,"Cannot read infilesize sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = filesize;   
+            dz->insams[0] = filesize;
             break;
-        case(INPUT_INSAMS+4):   
+        case(INPUT_INSAMS+4):
             if(sscanf(argv[cnt],"%d",&insams)!=1) {
                 sprintf(errstr,"Cannot read insams sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = insams; 
+            dz->insams[0] = insams;
             break;
-        case(INPUT_SRATE+4):    
+        case(INPUT_SRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->srate)!=1) {
                 sprintf(errstr,"Cannot read srate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_CHANNELS+4): 
+        case(INPUT_CHANNELS+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->channels)!=1) {
                 sprintf(errstr,"Cannot read channels sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_STYPE+4):    
+        case(INPUT_STYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->stype)!=1) {
                 sprintf(errstr,"Cannot read stype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGSTYPE+4):    
+        case(INPUT_ORIGSTYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origstype)!=1) {
                 sprintf(errstr,"Cannot read origstype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGRATE+4): 
+        case(INPUT_ORIGRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origrate)!=1) {
                 sprintf(errstr,"Cannot read origrate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MLEN+4): 
+        case(INPUT_MLEN+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Mlen)!=1) {
                 sprintf(errstr,"Cannot read Mlen sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DFAC+4): 
+        case(INPUT_DFAC+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Dfac)!=1) {
                 sprintf(errstr,"Cannot read Dfac sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGCHANS+4):    
+        case(INPUT_ORIGCHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origchans)!=1) {
                 sprintf(errstr,"Cannot read origchans sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_SPECENVCNT+4):   
+        case(INPUT_SPECENVCNT+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->specenvcnt)!=1) {
                 sprintf(errstr,"Cannot read specenvcnt sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->specenvcnt = dz->infile->specenvcnt;
             break;
-        case(INPUT_WANTED+4):   
+        case(INPUT_WANTED+4):
             if(sscanf(argv[cnt],"%d",&dz->wanted)!=1) {
                 sprintf(errstr,"Cannot read wanted sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_WLENGTH+4):  
+        case(INPUT_WLENGTH+4):
             if(sscanf(argv[cnt],"%d",&dz->wlength)!=1) {
                 sprintf(errstr,"Cannot read wlength sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_OUT_CHANS+4):    
+        case(INPUT_OUT_CHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->out_chans)!=1) {
                 sprintf(errstr,"Cannot read out_chans sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
             /* RWD these chanegs to samps - tk will have to deal with that! */
-        case(INPUT_DESCRIPTOR_BYTES+4): 
+        case(INPUT_DESCRIPTOR_BYTES+4):
             if(sscanf(argv[cnt],"%d",&dz->descriptor_samps)!=1) {
                 sprintf(errstr,"Cannot read descriptor_samps sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_IS_TRANSPOS+4):  
+        case(INPUT_IS_TRANSPOS+4):
             if(sscanf(argv[cnt],"%d",&dz->is_transpos)!=1) {
                 sprintf(errstr,"Cannot read is_transpos sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_COULD_BE_TRANSPOS+4):    
+        case(INPUT_COULD_BE_TRANSPOS+4):
             if(sscanf(argv[cnt],"%d",&dz->could_be_transpos)!=1) {
                 sprintf(errstr,"Cannot read could_be_transpos sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_COULD_BE_PITCH+4):   
+        case(INPUT_COULD_BE_PITCH+4):
             if(sscanf(argv[cnt],"%d",&dz->could_be_pitch)!=1) {
                 sprintf(errstr,"Cannot read could_be_pitch sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DIFFERENT_SRATES+4): 
+        case(INPUT_DIFFERENT_SRATES+4):
             if(sscanf(argv[cnt],"%d",&dz->different_srates)!=1) {
                 sprintf(errstr,"Cannot read different_srates sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DUPLICATE_SNDS+4):   
+        case(INPUT_DUPLICATE_SNDS+4):
             if(sscanf(argv[cnt],"%d",&dz->duplicate_snds)!=1) {
                 sprintf(errstr,"Cannot read duplicate_snds sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_BRKSIZE+4):  
+        case(INPUT_BRKSIZE+4):
             if(sscanf(argv[cnt],"%d",&inbrksize)!=1) {
                 sprintf(errstr,"Cannot read brksize sent from TK\n");
                 return(DATA_ERROR);
@@ -1262,74 +1262,74 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                 break;
             }
             break;
-        case(INPUT_NUMSIZE+4):  
+        case(INPUT_NUMSIZE+4):
             if(sscanf(argv[cnt],"%d",&dz->numsize)!=1) {
                 sprintf(errstr,"Cannot read numsize sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_LINECNT+4):  
+        case(INPUT_LINECNT+4):
             if(sscanf(argv[cnt],"%d",&dz->linecnt)!=1) {
                 sprintf(errstr,"Cannot read linecnt sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ALL_WORDS+4):    
+        case(INPUT_ALL_WORDS+4):
             if(sscanf(argv[cnt],"%d",&dz->all_words)!=1) {
                 sprintf(errstr,"Cannot read all_words sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ARATE+4):    
+        case(INPUT_ARATE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->arate)!=1) {
                 sprintf(errstr,"Cannot read arate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FRAMETIME+4):    
+        case(INPUT_FRAMETIME+4):
             if(sscanf(argv[cnt],"%lf",&dummy)!=1) {
                 sprintf(errstr,"Cannot read frametime sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->frametime = (float)dummy;
             break;
-        case(INPUT_WINDOW_SIZE+4):  
+        case(INPUT_WINDOW_SIZE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->window_size)!=1) {
                 sprintf(errstr,"Cannot read window_size sent from TK\n");
                     return(DATA_ERROR);
             }
             break;
-        case(INPUT_NYQUIST+4):  
+        case(INPUT_NYQUIST+4):
             if(sscanf(argv[cnt],"%lf",&dz->nyquist)!=1) {
                 sprintf(errstr,"Cannot read nyquist sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DURATION+4): 
+        case(INPUT_DURATION+4):
             if(sscanf(argv[cnt],"%lf",&dz->duration)!=1) {
                 sprintf(errstr,"Cannot read duration sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MINBRK+4):   
+        case(INPUT_MINBRK+4):
             if(sscanf(argv[cnt],"%lf",&dz->minbrk)!=1) {
                 sprintf(errstr,"Cannot read minbrk sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MAXBRK+4):   
+        case(INPUT_MAXBRK+4):
             if(sscanf(argv[cnt],"%lf",&dz->maxbrk)!=1) {
                 sprintf(errstr,"Cannot read maxbrk sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MINNUM+4):   
+        case(INPUT_MINNUM+4):
             if(sscanf(argv[cnt],"%lf",&dz->minnum)!=1) {
                 sprintf(errstr,"Cannot read minnum sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MAXNUM+4):   
+        case(INPUT_MAXNUM+4):
             if(sscanf(argv[cnt],"%lf",&dz->maxnum)!=1) {
                 sprintf(errstr,"Cannot read maxnum sent from TK\n");
                 return(DATA_ERROR);
@@ -1348,7 +1348,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 
     if(true_cnt)
         cnt = true_cnt;
-    *cmdlinecnt = 0;        
+    *cmdlinecnt = 0;
 
     while(cnt < argc) {
         if((exit_status = get_tk_cmdline_word(cmdlinecnt,cmdline,argv[cnt]))<0)
@@ -1549,7 +1549,7 @@ int get_process_no(char *prog_identifier_from_cmdline,dataptr dz)
     return(FINISHED);
 }
 
-int read_special_data(char *str,dataptr dz) 
+int read_special_data(char *str,dataptr dz)
 {
     return(FINISHED);
 }
@@ -1578,7 +1578,7 @@ int allocate_speclean_buffer(dataptr dz)
     unsigned int buffersize;
     buffersize = dz->wanted * (dz->bptrcnt + 2);
     dz->buflen = dz->wanted;
-    if((dz->bigfbuf = (float*) malloc(buffersize * sizeof(float)))==NULL) {  
+    if((dz->bigfbuf = (float*) malloc(buffersize * sizeof(float)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY for sound buffers.\n");
         return(MEMORY_ERROR);
     }
@@ -1835,7 +1835,7 @@ int do_speclean(int subtract,dataptr dz)
         if(samps_read < 0) {
             sprintf(errstr,"Failed to read data from noise file.\n");
             return(SYSTEM_ERROR);
-        }       
+        }
         for(cc = 0, vc = 0; cc < dz->clength; cc++, vc +=2) {
             if(fbuf[AMPP] > nbuf[AMPP])
                 nbuf[AMPP] = fbuf[AMPP];
@@ -1845,7 +1845,7 @@ int do_speclean(int subtract,dataptr dz)
     if(total_samps <= 0) {
         sprintf(errstr,"No data found in noise file.\n");
         return(SYSTEM_ERROR);
-    }       
+    }
             /* MUTIPLY BY 'NOISEGAIN' FACTOR */
     for(cc = 0, vc = 0; cc < dz->clength; cc++, vc +=2)
         nbuf[AMPP] = (float)(nbuf[AMPP] * dz->param[1]);
@@ -1924,8 +1924,8 @@ int do_speclean(int subtract,dataptr dz)
             /* IF CHANNEL IS ALREADY ON, KEEP IT, BUT DECREMENT ITS PERSISTENCE VALUE, and FADE OUTPUT LEVEL */
                 if(on[cc]) {
                             /* If it's persisted longer than min, reset persistence to min */
-                    if(persist[cc] > dz->iparam[0]) 
-                        persist[cc] = dz->iparam[0];    
+                    if(persist[cc] > dz->iparam[0])
+                        persist[cc] = dz->iparam[0];
                             /* as persistence falls from min to zero, fade the output level */
                     if(--persist[cc] <= 0) {
                         on[cc] = 0;
@@ -1950,7 +1950,7 @@ int do_speclean(int subtract,dataptr dz)
                         obuf[AMPP] = (float)(obuf[AMPP] * ((double)k/(double)dz->iparam[0]));
             /* ELSE RETAIN FULL LEVEL AND MARK CHANNEL AS (FULLY) ON */
                     else
-                        on[cc] = 1; 
+                        on[cc] = 1;
                 }
             }
         }
@@ -2095,7 +2095,7 @@ int handle_pitchdata(int *cmdlinecnt,char ***cmdline,dataptr dz)
         fprintf(stdout,"WARNING: Failed to close input textfile %s.\n",filename);
         fflush(stdout);
     }
-    (*cmdline)++;       
+    (*cmdline)++;
     (*cmdlinecnt)--;
     return(FINISHED);
 }
@@ -2260,7 +2260,7 @@ int setup_specslice_parameter_storage(dataptr dz) {
     }
     if((dz->firstval = (double  *)realloc(dz->firstval,2 * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_specslice_parameter_storage(): 3\n");
-        return(MEMORY_ERROR);                                                 
+        return(MEMORY_ERROR);
     }
     if((dz->lastind  = (double  *)realloc(dz->lastind,2 * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_specslice_parameter_storage(): 4\n");
@@ -2309,7 +2309,7 @@ int setup_specslice_parameter_storage(dataptr dz) {
 
 int specpivot(dataptr dz)
 {
-    int exit_status, nullspec = 0, pivot, vc1, vc2;
+    int exit_status, nullspec = 0, pivot = 0, vc1 = 0, vc2 = 0;
     float temp;
     int samps_read;
     double thistime = 0.0;
@@ -2327,7 +2327,7 @@ int specpivot(dataptr dz)
         if(dz->brksize[0]) {
             if((exit_status = read_value_from_brktable(thistime,0,dz))<0)
                 return(exit_status);
-            pivot = (int)round(dz->param[0]/dz->chwidth); 
+            pivot = (int)round(dz->param[0]/dz->chwidth);
             if(vc1 < 0 || vc2 >= dz->wanted)
                 nullspec = 1;
         }
@@ -2393,7 +2393,7 @@ int specrand(dataptr dz)
                 dz->iparam[0] = 2;                              //  Get size of timeframe (in windows) to randomise
         }
         windowrangesize = dz->iparam[0];
-        windowgroupsize = dz->iparam[1]; 
+        windowgroupsize = dz->iparam[1];
         scramblesetsize = windowrangesize/windowgroupsize;      //  Number of window-groups to permute
         rndintperm(perm,scramblesetsize);                       //  Randomise order
         for(n = 0; n < scramblesetsize; n++) {
@@ -2419,7 +2419,7 @@ int specrand(dataptr dz)
     for(n = 0; n < dz->wlength;n++) {
         thiswindow = rwindow[n];
         thissample = thiswindow * dz->wanted;
-        if((sndseekEx(dz->ifd[0],thissample,0)<0)){        
+        if((sndseekEx(dz->ifd[0],thissample,0)<0)){
             sprintf(errstr,"sndseek() failed at window %d at time %lf : thissample = %d len = %d windows = %d\n",thiswindow,thiswindow * dz->frametime,thissample,dz->insams[0],dz->wlength);
             return SYSTEM_ERROR;
         }
@@ -2507,8 +2507,7 @@ int allocate_specsqz_buffer(dataptr dz)
         return(MEMORY_ERROR);
     }
     dz->big_fsize = dz->buflen;
-    dz->flbufptr[2]  = dz->bigfbuf + dz->big_fsize;   
+    dz->flbufptr[2]  = dz->bigfbuf + dz->big_fsize;
     dz->flbufptr[3]  = dz->flbufptr[2] + dz->big_fsize;
     return(FINISHED);
 }
-
