@@ -23,29 +23,29 @@
  */
 
 /*
- *	Sound Filing System - resident library interface header
+ *      Sound Filing System - resident library interface header
  *
- *	Copyright M. C. Atkins, 1987, 1988, 1989, 1990, RWD revisions 1997,1998,199,2000,2001
- *	All Rights Reserved.
+ *      Copyright M. C. Atkins, 1987, 1988, 1989, 1990, RWD revisions 1997,1998,199,2000,2001
+ *      All Rights Reserved.
  *
- *	Portable version for WindowsNT, DOS and Unix
+ *      Portable version for WindowsNT, DOS and Unix
  */
 #ifndef __CDP_SFSYS_INCLUDED__
 #define __CDP_SFSYS_INCLUDED__
-#define SFSYS_H_RCSID	"$Id: sfsys.h%v 4.1 1994/10/31 15:19:34 martin Exp $"
+#define SFSYS_H_RCSID   "$Id: sfsys.h%v 4.1 1994/10/31 15:19:34 martin Exp $"
 
 /*
- *	$Log: sfsys.h%v $
+ *      $Log: sfsys.h%v $
  * Revision 4.1  1994/10/31  15:19:34  martin
  * Starting with RCS
  *
  */
 
 /*
- *	This version of sfsys.h was introduced with version 2.33 of sfsys.prg
+ *      This version of sfsys.h was introduced with version 2.33 of sfsys.prg
  *
- *	ver 3.04	31/ 1/93 MCA - changes introducing license control
- *	ver 3.05	25/ 5/93 MCA - add sfdata
+ *      ver 3.04        31/ 1/93 MCA - changes introducing license control
+ *      ver 3.05        25/ 5/93 MCA - add sfdata
  */
 
 /*  RWD: SFSYSEX version (c) CDP 2000,2001 */
@@ -60,7 +60,7 @@
 /* NB: sfsys64: sf_direct.length now unsigned, so will report a 4GB file size */
 
 /* Feb 2010: discover if we are  64 bit */
-#ifdef __GNUC__ 
+#ifdef __GNUC__
 # ifdef __LP64__
 #   define CDPLONG64
 # endif
@@ -68,14 +68,14 @@
 
 
 extern int _sfverno;
-#define sfverno()	(_sfverno)		/* sfsys version number */
+#define sfverno()       (_sfverno)              /* sfsys version number */
 
 
 /* SFSYSEX: new structures; may be extended even further... */
 typedef enum {wt_wave,wt_analysis,wt_formant,wt_transposition,wt_pitch,wt_binenv} wavetype;
-typedef enum {SHORT8,SHORT16,FLOAT32,INT_32,INT2424,INT2432,INT2024,INT_MASKED}		sampletype;
+typedef enum {SHORT8,SHORT16,FLOAT32,INT_32,INT2424,INT2432,INT2024,INT_MASKED}         sampletype;
 /* very likely we will support .au and .snd too, and maybe even raw */
-typedef enum wt_format {FMT_UNKNOWN = -1,WAVE,WAVE_EX,AIFF,AIFC}		fileformat;
+typedef enum wt_format {FMT_UNKNOWN = -1,WAVE,WAVE_EX,AIFF,AIFC}                fileformat;
 typedef enum  {CDP_CREATE_NORMAL,CDP_CREATE_TEMPORARY,CDP_CREATE_RDONLY} cdp_create_mode;
 /* MC_WAVE_EX is a temporary one to cover abstruse infile formats! */
 typedef enum { STDWAVE,MC_STD,MC_MONO,MC_STEREO,MC_QUAD,MC_LCRS,MC_BFMT,MC_DOLBY_5_1,MC_SURR_5_0,MC_SURR_6_1,MC_SURR_7_1,MC_CUBE,MC_WAVE_EX } channelformat;
@@ -85,23 +85,23 @@ typedef enum { STDWAVE,MC_STD,MC_MONO,MC_STEREO,MC_QUAD,MC_LCRS,MC_BFMT,MC_DOLBY
 /* NB any new fields should be added at the bottom ONLY!. Best of all is to define a new
  * structure, with SFPROPS as the first element
  */
-typedef struct sfprops 
+typedef struct sfprops
 {
-	int		srate;
-	int		chans;
-	wavetype	type;
-	sampletype	samptype;		
-	fileformat	format;			
-	channelformat chformat;		
-	int		origsize;		/*RWD 3:2000 needs UPDATING in pvoc to register all new sample types */
-	int		origrate;
-	int		origchans;		/* pitch, formant,transpos only */
-	int		specenvcnt;		/* formants only */
-	float	arate;
-	int		winlen;					/*aka Mlen*/
-	int		decfac;					/* aka Dfac*/
-	/*RWD.6.99 for envelope files*/
-	float	window_size;
+        int             srate;
+        int             chans;
+        wavetype        type;
+        sampletype      samptype;
+        fileformat      format;
+        channelformat chformat;
+        int             origsize;               /*RWD 3:2000 needs UPDATING in pvoc to register all new sample types */
+        int             origrate;
+        int             origchans;              /* pitch, formant,transpos only */
+        int             specenvcnt;             /* formants only */
+        float           arate;
+        int             winlen;                 /*aka Mlen*/
+        int             decfac;                 /* aka Dfac*/
+        /*RWD.6.99 for envelope files*/
+        float   window_size;
 } SFPROPS;
 
 
@@ -109,33 +109,33 @@ typedef struct sfprops
 
 /* SFSYSEX PEAK chunk support: use CHPEAK to avoid likely name clashes (e.g. Release 4!)  */
 typedef struct chpeak {
-	float value;			/* absolute value: 0dBFS = 1.0	*/
-	unsigned int position;	/* in (muti-channel)sample frames */
+        float value;            /* absolute value: 0dBFS = 1.0  */
+        unsigned int position;  /* in (muti-channel)sample frames */
 } CHPEAK;
 
 
 /*
- *	This is the Sound Filing System initialisation routine, which must be
- *	called before doing ANYTHING else with the SFSystem.
- *	It returns 0 on success, or 1 on failure.
+ *      This is the Sound Filing System initialisation routine, which must be
+ *      called before doing ANYTHING else with the SFSystem.
+ *      It returns 0 on success, or 1 on failure.
  */
 /* the name is not used! */
 extern int sflinit(const char *progname);
 
 /*
- *	Print a description of the most-recent error on stderr.
- *	calling this only makes sense after an error-return from
- *	a SFSystem routine.
+ *      Print a description of the most-recent error on stderr.
+ *      calling this only makes sense after an error-return from
+ *      a SFSystem routine.
  */
 extern void  sfperror(const char *msg);
 
 /*
- *	return the string that would be printed by sfperror.
+ *      return the string that would be printed by sfperror.
  */
 extern char *  sferrstr(void);
 
 /*
- *	return the numeric error indication.
+ *      return the numeric error indication.
  */
 extern int  sferrno();
 
@@ -144,7 +144,7 @@ extern int sfinit();     /* deprecated */
 #define sfexit exit      /* deprecated */
 
 /*
- *	the access routine, etc
+ *      the access routine, etc
  */
 extern void  sffinish(void);
 
@@ -152,24 +152,24 @@ extern void  sffinish(void);
  * ability to write full, minimum or PEAK-only header
  */
 /* header-size flags*/
-#define SFILE_CDP		(2)
-#define SFILE_PEAKONLY	(1)
-#define SFILE_MINIMUM	(0)
+#define SFILE_CDP               (2)
+#define SFILE_PEAKONLY  (1)
+#define SFILE_MINIMUM   (0)
 
 /* support opening read-only files - e.g from CD, also multiple opens */
 /* All new progs should use RDONLY wherever possible, when opening existing files */
-#define CDP_OPEN_RDONLY		(0)
-#define CDP_OPEN_RDWR		(1)
+#define CDP_OPEN_RDONLY         (0)
+#define CDP_OPEN_RDWR           (1)
 
 /* return 0 for true */
 int sndreadpeaks(int sfd,int channels,CHPEAK peakdata[],int *peaktime);
 int sndputpeaks(int sfd,int channels,const CHPEAK peakdata[]);
 
 /*
- *	Next routines for buffered access to files
- */ 
+ *      Next routines for buffered access to files
+ */
 int snd_getchanformat(int sfd, channelformat *chformat);
-const char * snd_getfilename(int ifd);                                                               
+const char * snd_getfilename(int ifd);
 int sndgetchanmask(int sfd);
 extern int sndopen(const char *name);
 /* sfsysEx extended version - supports all formats.
@@ -179,7 +179,7 @@ extern int sndopenEx(const char *name, int auto_scale,int access);
 extern int sndcreat(const char *name, int size, int stype);
 /* sfsysEx extended version*/
 extern int sndcreat_formatted(const char *fn, int size, int stype,
-							  int channels,int srate,cdp_create_mode mode);  /*SFSYS98*/
+                                                          int channels,int srate,cdp_create_mode mode);  /*SFSYS98*/
 
 /*need this for WAVE_EX,etc*/
 int
@@ -198,7 +198,7 @@ extern int snd_makepath(char path[],const char* sfname);
 extern int sndgetwordsize(int sfd);
 
 /* set sndfile for deletion */
-extern int sndunlink(int sndfd);					
+extern int sndunlink(int sndfd);
 /*recognise shortcuts in WIN32 - ~should~ be portable to unix/mac alias
  */
 int snd_is_shortcut(int sfd);
@@ -208,15 +208,15 @@ int snd_is_shortcut(int sfd);
 int snd_fileformat(int sfd, fileformat *pfmt);
 
 /*
- *	float-oriented operations : DEPRECATED;  see below for extended versions 
+ *      float-oriented operations : DEPRECATED;  see below for extended versions
  */
 extern int fgetfloat(float *fp, int sfd);
 extern int fputfloat(float *fp, int sfd);
 extern int fgetfbuf(float *fp, int count, int sfd);
 extern int fputfbuf(float *fp, int count, int sfd);
-                                                                             
+
 /*
- *	short-oriented operations  : DEPRECATED;
+ *      short-oriented operations  : DEPRECATED;
  */
 extern int fgetshort(short *sp, int sfd);
 extern int fputshort(short *sp, int sfd);
@@ -231,7 +231,7 @@ extern int snddirprop(int sfd, int (*func)(char *propname, int propsize));
 
 /* sfsysEx extended versions, supporting all formats */
 /* set expect_floats if reading from a type-1 32bit file known to be floats */
-/* it is best not to mix: e.g don;t use fgetfloatEx with sndtell() */ 
+/* it is best not to mix: e.g don;t use fgetfloatEx with sndtell() */
 extern int fgetfloatEx(float *fp, int sfd,int expect_floats);
 extern int fgetfbufEx(float *fp, int count, int sfd,int expect_floats);
 extern int fputfloatEx(float *fp, int sfd);
@@ -243,62 +243,62 @@ extern int fgetsbufEx(short *sp, int count, int sfd,int expect_floats);
 extern int fputshortEx(short *sp, int sfd);
 extern int fputsbufEx(short *sp, int count, int sfd);
 
-extern int sndseekEx(int sfd, int dist, int whence);	/*uses buffered sf_routines*/
+extern int sndseekEx(int sfd, int dist, int whence);    /*uses buffered sf_routines*/
 extern int sndsizeEx(int sfd);
 extern int sndtellEx(int sfd);
 
 /*
- *	definitions for use with sfdir
+ *      definitions for use with sfdir
  */
 /*
- *	values for the flags field
+ *      values for the flags field
  */
-#define SFFLG_EMPTY	(1)	/* the SFile is empty */
-#define SFFLG_LAST	(2)	/* the SFile is the last on the disk */
-#define SFFLG_SAMPLE	(4)	/* sample type was set (only sfdir) */
-#define SFFLG_ISOPEN	(8)	/* file is open (internal use only) */
-#define SFFLG_TODELETE	(16)	/* file to be deleted (ditto) */
-#define SFFLG_IOERROR	(32)	/* sfdir only - error reading file information */
+#define SFFLG_EMPTY     (1)     /* the SFile is empty */
+#define SFFLG_LAST      (2)     /* the SFile is the last on the disk */
+#define SFFLG_SAMPLE    (4)     /* sample type was set (only sfdir) */
+#define SFFLG_ISOPEN    (8)     /* file is open (internal use only) */
+#define SFFLG_TODELETE  (16)    /* file to be deleted (ditto) */
+#define SFFLG_IOERROR   (32)    /* sfdir only - error reading file information */
 
 /*
- *	selectors for sfdir
+ *      selectors for sfdir
  */
-#define SFDIR_EMPTY	(1)	/* call func with empty SFiles */
-#define SFDIR_USED	(2)	/* call func with non-empty SFiles */
-#define SFDIR_SAMPLE	(4)	/* call func with (non-empty) sample SFiles */
+#define SFDIR_EMPTY     (1)     /* call func with empty SFiles */
+#define SFDIR_USED      (2)     /* call func with non-empty SFiles */
+#define SFDIR_SAMPLE    (4)     /* call func with (non-empty) sample SFiles */
 
-#define SFDIR_ALL	(3)	/* call func with all SFiles */
+#define SFDIR_ALL       (3)     /* call func with all SFiles */
 
-#define SFDIR_IGPREFIX	(16)	/* show files irrespective of prefix */
+#define SFDIR_IGPREFIX  (16)    /* show files irrespective of prefix */
 
-#define SFDIR_FOUND	(0)	/* function accepted file */
-#define SFDIR_NOTFOUND	(1)	/* no file was accepted */
-#define SFDIR_ERROR	(-1)	/* and error occured during sfdir */
+#define SFDIR_FOUND     (0)     /* function accepted file */
+#define SFDIR_NOTFOUND  (1)     /* no file was accepted */
+#define SFDIR_ERROR     (-1)    /* and error occured during sfdir */
 
 /*
- *	Other useful constants
+ *      Other useful constants
  */
 /* NB in time, these will be REMOVED! */
-#define SECSIZE		(512)		/* bytes/sector on the disk */
-#define LOGSECSIZE	(9)		/* log2(ditto)	*/
+#define SECSIZE         (512)           /* bytes/sector on the disk */
+#define LOGSECSIZE      (9)             /* log2(ditto)  */
 
 #ifdef SFFUNCS
-#define SF_MAGIC	(0x15927624)	/* value of _sfmagic() */
-#define SF_CMAGIC	(0x27182835)	/* magic number for configuration */
-#define SF_UNLKMAGIC	(0x46689275)	/* magic value for rdiskunlck() */
+#define SF_MAGIC        (0x15927624)    /* value of _sfmagic() */
+#define SF_CMAGIC       (0x27182835)    /* magic number for configuration */
+#define SF_UNLKMAGIC    (0x46689275)    /* magic value for rdiskunlck() */
 #endif
 
-#define SF_MAXFILES	(1000)		/* max no. of SFfiles open at once */
-#define MAXSNDFILES	(1000)		/* max no. of sndfiles open at once */
+#define SF_MAXFILES     (1000)          /* max no. of SFfiles open at once */
+#define MAXSNDFILES     (1000)          /* max no. of sndfiles open at once */
 
 /* RWD  reduced property size, to assist bad unix progs to read soundifles! */
 /* also, we are reducing dependency on CDP props, through new file formats */
-#define PROPSIZE	(800)		/* size of the property area in hdrs */
-#ifndef _WINNT_					
+#define PROPSIZE        (800)           /* size of the property area in hdrs */
+#ifndef _WINNT_
 # ifdef MAXSHORT
 #  undef MAXSHORT
 # endif
-# define MAXSHORT	(32767.0)	/* maxint for shorts (as a float);  used EVERYWHERE! */
+# define MAXSHORT       (32767.0)       /* maxint for shorts (as a float);  used EVERYWHERE! */
 # ifdef MAXLONG
 #  undef MAXLONG
 # endif
@@ -313,71 +313,71 @@ extern int sndtellEx(int sfd);
 #define MAX24BIT  (8388607.0)
 
 /*
- *	sample types
+ *      sample types
  */
-#define SAMP_SHORT	(0)		/* 16-bit short integers */
-#define SAMP_FLOAT	(1)		/* 32-bit (IEEE) floating point */
+#define SAMP_SHORT      (0)             /* 16-bit short integers */
+#define SAMP_FLOAT      (1)             /* 32-bit (IEEE) floating point */
 /* sfsysEx Extended type support */
-#define SAMP_BYTE	(2)		/*recognize 8bit soundfiles*/
-#define SAMP_LONG	(3)		/* four most likely formats*/
-#define SAMP_2424	(4)		
-#define	SAMP_2432	(5)		/* illegal for AIFF, and probably for WAVE too , but what the...*/
-#define SAMP_2024	(6)		/* curioisity value: used by Alesis ADAT */
-#define SAMP_MASKED (7)		/*some weird WAVE_EX format!*/
+#define SAMP_BYTE       (2)             /*recognize 8bit soundfiles*/
+#define SAMP_LONG       (3)             /* four most likely formats*/
+#define SAMP_2424       (4)
+#define SAMP_2432       (5)             /* illegal for AIFF, and probably for WAVE too , but what the...*/
+#define SAMP_2024       (6)             /* curioisity value: used by Alesis ADAT */
+#define SAMP_MASKED (7)         /*some weird WAVE_EX format!*/
 
 
 /*
- *	Generate the program registration number
+ *      Generate the program registration number
  */
-#define PROGRAM_NUMBER(pn)	unsigned long _SF_prognum = (pn)
+#define PROGRAM_NUMBER(pn)      unsigned long _SF_prognum = (pn)
 
 /*
- *	Values for sferrno
+ *      Values for sferrno
  */
-#define EBASEERR	(100)
+#define EBASEERR        (100)
 
-#define ESFNOSPACE	(EBASEERR+ 0)
-#define ESFNOTOPEN	(EBASEERR+ 1)
-#define ESFRDERR	(EBASEERR+ 2)
-#define ESFWRERR	(EBASEERR+ 3)
-#define ESFNOSFD	(EBASEERR+ 4)
-#define ESFNOTFOUND	(EBASEERR+ 5)
-#define ESFNOMEM	(EBASEERR+ 6)
-#define ESFDUPFNAME	(EBASEERR+ 7)
-#define ESFBADMAG	(EBASEERR+ 8)
-#define ESFNOCONFIG	(EBASEERR+ 9)
-#define ESFNOTINIT	(EBASEERR+11)
-#define ESFCONSIST	(EBASEERR+12)
-#define ESFNOSTYPE	(EBASEERR+13)
-#define ESFBADRATE	(EBASEERR+14)
-#define ESFBADNCHANS	(EBASEERR+15)
-#define ESFBADPARAM	(EBASEERR+16)
-#define ESFNOSEEK	(EBASEERR+17)
-#define ESFBADSRCDST	(EBASEERR+18)
-#define ESFLOSEDATA	(EBASEERR+19)
-#define ESFBADADDR	(EBASEERR+20)
-#define ESFPTHTOLONG	(EBASEERR+21)
-#define ESFILLSFNAME	(EBASEERR+22)
-#define ESFPREFTOLONG	(EBASEERR+23)
-#define ESFLOCKED	(EBASEERR+24)
-#define ESFILLREGNAM	(EBASEERR+25)
-#define ESFNOSTRMR	(EBASEERR+26)
-#define ESFHARDCONFIG	(EBASEERR+27)
-#define ESFUNDERRUN	(EBASEERR+28)
-#define ESFBUFFOPER	(EBASEERR+29)
-#define ESFSETBUFFER	(EBASEERR+30)
-#define ESFOVERRUN	(EBASEERR+31)
-#define ESFNOTPLAYING	(EBASEERR+32)
-#define ESFPLAYING	(EBASEERR+33)
-#define ESFUSESDMA	(EBASEERR+34)
-#define ESFRECING	(EBASEERR+35)
-#define ESFNOTRECING	(EBASEERR+36)
-#define ESFREADONLY	(EBASEERR+37)
+#define ESFNOSPACE      (EBASEERR+ 0)
+#define ESFNOTOPEN      (EBASEERR+ 1)
+#define ESFRDERR        (EBASEERR+ 2)
+#define ESFWRERR        (EBASEERR+ 3)
+#define ESFNOSFD        (EBASEERR+ 4)
+#define ESFNOTFOUND     (EBASEERR+ 5)
+#define ESFNOMEM        (EBASEERR+ 6)
+#define ESFDUPFNAME     (EBASEERR+ 7)
+#define ESFBADMAG       (EBASEERR+ 8)
+#define ESFNOCONFIG     (EBASEERR+ 9)
+#define ESFNOTINIT      (EBASEERR+11)
+#define ESFCONSIST      (EBASEERR+12)
+#define ESFNOSTYPE      (EBASEERR+13)
+#define ESFBADRATE      (EBASEERR+14)
+#define ESFBADNCHANS    (EBASEERR+15)
+#define ESFBADPARAM     (EBASEERR+16)
+#define ESFNOSEEK       (EBASEERR+17)
+#define ESFBADSRCDST    (EBASEERR+18)
+#define ESFLOSEDATA     (EBASEERR+19)
+#define ESFBADADDR      (EBASEERR+20)
+#define ESFPTHTOLONG    (EBASEERR+21)
+#define ESFILLSFNAME    (EBASEERR+22)
+#define ESFPREFTOLONG   (EBASEERR+23)
+#define ESFLOCKED       (EBASEERR+24)
+#define ESFILLREGNAM    (EBASEERR+25)
+#define ESFNOSTRMR      (EBASEERR+26)
+#define ESFHARDCONFIG   (EBASEERR+27)
+#define ESFUNDERRUN     (EBASEERR+28)
+#define ESFBUFFOPER     (EBASEERR+29)
+#define ESFSETBUFFER    (EBASEERR+30)
+#define ESFOVERRUN      (EBASEERR+31)
+#define ESFNOTPLAYING   (EBASEERR+32)
+#define ESFPLAYING      (EBASEERR+33)
+#define ESFUSESDMA      (EBASEERR+34)
+#define ESFRECING       (EBASEERR+35)
+#define ESFNOTRECING    (EBASEERR+36)
+#define ESFREADONLY     (EBASEERR+37)
 
-#define ELASTERR	(ESFREADONLY)
+#define ELASTERR        (ESFREADONLY)
 
 /*
- *	Atari things we we will also have to emulate
+ *      Atari things we we will also have to emulate
  */
 void *Malloc(long size);
 void Mfree(void *);
@@ -396,16 +396,16 @@ extern long cdp_round(double val);
 #ifndef __cplusplus
 /* unix math.h does not include these macros */
 # ifndef min
-# define min(x,y)	( ((x)>(y)) ? (y) : (x) )
+# define min(x,y)       ( ((x)>(y)) ? (y) : (x) )
 # endif
 
 # ifndef max
-# define max(x,y)	( ((x)>(y)) ? (x) : (y) )
+# define max(x,y)       ( ((x)>(y)) ? (x) : (y) )
 # endif
 #endif
 
 /*
- *	Globals internal to the porting library
+ *      Globals internal to the porting library
  */
 extern int rsferrno;
 extern char *rsferrstr;
@@ -419,4 +419,4 @@ if (IS_DENORMAL(x)) x = 0.0f;
 
 int sndrewind(int sfd);
 
-#endif		
+#endif

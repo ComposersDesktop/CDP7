@@ -25,15 +25,15 @@
 
 
 /*
- *	Portable scandir for systems that don't have it!
+ *      Portable scandir for systems that don't have it!
  *
- *	These definitions should be safe if the routines
- *	are already declared
+ *      These definitions should be safe if the routines
+ *      are already declared
  */
 
 #define SCANDIR_H_RCSID "$Id: scandir.h%v 1.1 1994/10/31 15:30:08 martin Exp $"
 /*
- *	$Log: scandir.h%v $
+ *      $Log: scandir.h%v $
  * Revision 1.1  1994/10/31  15:30:08  martin
  * Initial revision
  *
@@ -46,7 +46,7 @@
 #elif defined(_WIN32) || defined(__SC__)
 
 struct dirent {
-	char d_name[_MAX_PATH];
+        char d_name[_MAX_PATH];
 };
 
 #else
@@ -54,11 +54,11 @@ struct dirent {
 #endif
 #ifndef __MAC__
 int scandir(const char *dir,
-		struct dirent ***namelist,
-		int (*selfn)(const struct dirent *d),
-		int (*srtfn)(const struct dirent * const *d1,
-				const struct dirent * const *d2));
+            struct dirent ***namelist,
+            int (*selfn)(const struct dirent *d),
+            int (*srtfn)(const struct dirent * const *d1,
+                         const struct dirent * const *d2));
 
 int alphasort(const struct dirent * const *d1,
-		const struct dirent * const *d2);
+              const struct dirent * const *d2);
 #endif
