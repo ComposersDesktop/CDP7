@@ -24,10 +24,10 @@
 
 
 
-#define IS_SPEC_COMPILE		(1)
+#define IS_SPEC_COMPILE         (1)
 
 int  specshift(dataptr dz);
 int  specglis(dataptr dz);
 int  specinvert(dataptr dz);
-int	 specwaver(dataptr dz);
-int	 specwarp(dataptr dz);
+int      specwaver(dataptr dz);
+int      specwarp(dataptr dz);

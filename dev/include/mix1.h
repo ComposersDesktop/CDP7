@@ -31,7 +31,7 @@ int  mmix(dataptr dz);
 int  mix_syntax_check(dataptr dz);
 int  mix_level_check(double *normalisation,dataptr dz);
 int  create_mixdummy(dataptr dz);
-int	 mix_twisted(dataptr dz);
+int      mix_twisted(dataptr dz);
 
 int  mix_gain(dataptr dz);
 int  mix_timewarp(dataptr dz);
@@ -58,7 +58,7 @@ int  open_file_retrieve_props_open(int filecnt,char *filename,int *srate,dataptr
 int  synchronise_mix_attack(dataptr dz);
 int  get_level(char *thisword,double *level);
 int  sync_and_output_mixfile_line
-	 (int n,char *filename,int max_namelen,int max_timeword,double timestor,double gain,dataptr dz);
+         (int n,char *filename,int max_namelen,int max_timeword,double timestor,double gain,dataptr dz);
 int  retime_the_lines(double *timestor,int maxpostdec,dataptr dz);
 int  timesort_mixfile(double *timestor,dataptr dz);
 

@@ -24,13 +24,13 @@
 
 
 
-#define IS_GROUCHO_COMPILE	(1)
+#define IS_GROUCHO_COMPILE      (1)
 
-#define	MAX_TIMESUM_SPLEN		(2000.0)	/* ms */
-#define	TIMESUM_DEFAULT_SPLEN	(15.0)		/* ms */
-#define	MAX_SFDIFF_CNT			(1000)
-#define MU_MAXGAIN				(128.0)
-#define MAX_OCTSHIFT			(8.0)
+#define MAX_TIMESUM_SPLEN               (2000.0)        /* ms */
+#define TIMESUM_DEFAULT_SPLEN   (15.0)          /* ms */
+#define MAX_SFDIFF_CNT                  (1000)
+#define MU_MAXGAIN                              (128.0)
+#define MAX_OCTSHIFT                    (8.0)
 
-int 	do_sndinfo(dataptr dz);
-int 	do_musunits(dataptr dz);
+int     do_sndinfo(dataptr dz);
+int     do_musunits(dataptr dz);

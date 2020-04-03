@@ -24,20 +24,19 @@
 
 
 
-#define IS_GROUCHO_COMPILE	(1)
+#define IS_GROUCHO_COMPILE      (1)
 
 /* Functions in TTPVOC.C */
 
-#define DEFAULT_PVOC_CHANS	(1024)
-#define DEFAULT_WIN_OVERLAP	(3)
-#define VERY_BIG_INT		(100000000)
-#define MAX_PVOC_CHANS		(16380)
-#define	PVOC_CONSTANT_A		(8.0)
-#define	SAMP_TIME_STEP		(2000)
+#define DEFAULT_PVOC_CHANS      (1024)
+#define DEFAULT_WIN_OVERLAP     (3)
+#define VERY_BIG_INT            (100000000)
+#define MAX_PVOC_CHANS          (16380)
+#define PVOC_CONSTANT_A         (8.0)
+#define SAMP_TIME_STEP          (2000)
 
 /* Functions in MXFFT.C */
 
 int fft_(float *, float *,int,int,int,int);
 int fftmx(float *,float *,int,int,int,int,int,int *,float *,float *,float *,float *,int *,int[]);
 int reals_(float *,float *,int,int);
-

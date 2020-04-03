@@ -24,12 +24,12 @@
 
 
 
-#define IS_GROUCHO_COMPILE		(1)
+#define IS_GROUCHO_COMPILE              (1)
 
-#include	<pnames.h>
-#include	<flags.h>
-#include	<envlcon.h>
-#include	<envel1.h>
+#include        <pnames.h>
+#include        <flags.h>
+#include        <envlcon.h>
+#include        <envel1.h>
 
 /*RWD try to replace/lose all SECSIZE stuff in time! */
 #define ENV_FSECSIZE (256)

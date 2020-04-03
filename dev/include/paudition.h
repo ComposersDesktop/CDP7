@@ -25,4 +25,3 @@
 
 
 extern char errstr[];
-

@@ -24,10 +24,9 @@
 
 
 
-#define IS_SPEC_COMPILE		(1)
+#define IS_SPEC_COMPILE         (1)
 
 int  specpinfo(dataptr dz);
 int  specpsee(dataptr dz);
 int  specphear(dataptr dz);
 int  specpwrite(dataptr dz);
-

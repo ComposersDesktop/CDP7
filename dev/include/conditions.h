@@ -27,145 +27,143 @@
 #include <pnames.h>
 
 /*
- * 1)	When compiling validate library for CDPARSE, ALL condit defines must be ON!!
+ * 1)   When compiling validate library for CDPARSE, ALL condit defines must be ON!!
  */
 
-#ifdef ENVEL_COMPILE	
-#define IS_GROUCHO_COMPILE		(1)
-#include <envel.h>		
+#ifdef ENVEL_COMPILE
+#define IS_GROUCHO_COMPILE              (1)
+#include <envel.h>
 #endif
 
-#ifdef DISTORT_COMPILE	
-#define IS_GROUCHO_COMPILE		(1)
-#include <distort.h>		
+#ifdef DISTORT_COMPILE
+#define IS_GROUCHO_COMPILE              (1)
+#include <distort.h>
 #endif
 
-#ifdef EXTEND_COMPILE	
-#define IS_GROUCHO_COMPILE		(1)
-#include <extend.h>		
+#ifdef EXTEND_COMPILE
+#define IS_GROUCHO_COMPILE              (1)
+#include <extend.h>
 #endif
 
-#ifdef TEXTURE_COMPILE	
-#define IS_GROUCHO_COMPILE		(1)
-#include <texture.h>	
+#ifdef TEXTURE_COMPILE
+#define IS_GROUCHO_COMPILE              (1)
+#include <texture.h>
 #endif
 
-#ifdef GRAIN_COMPILE	
-#define IS_GROUCHO_COMPILE		(1)
-#include <grain.h>		
+#ifdef GRAIN_COMPILE
+#define IS_GROUCHO_COMPILE              (1)
+#include <grain.h>
 #endif
 
-#ifdef MIX_COMPILE		
-#define IS_GROUCHO_COMPILE		(1)
-#include <mix.h>		
+#ifdef MIX_COMPILE
+#define IS_GROUCHO_COMPILE              (1)
+#include <mix.h>
 int  set_up_mix(dataptr dz);
 #endif
 
-#ifdef FILTER_COMPILE	
-#define IS_GROUCHO_COMPILE		(1)
-#include <filters.h>	
+#ifdef FILTER_COMPILE
+#define IS_GROUCHO_COMPILE              (1)
+#include <filters.h>
 #endif
 
-#ifdef MODIFY_COMPILE	
-#define IS_GROUCHO_COMPILE		(1)
-#include <modify.h>		
+#ifdef MODIFY_COMPILE
+#define IS_GROUCHO_COMPILE              (1)
+#include <modify.h>
 #endif
 
 
-#ifdef SPEC_SIMPLE_COMPILE		
-#define IS_SPEC_COMPILE		(1)
+#ifdef SPEC_SIMPLE_COMPILE
+#define IS_SPEC_COMPILE         (1)
 #include <simple.h>
 #endif
 
-#ifdef SPEC_STRETCH_COMPILE	
-#define IS_SPEC_COMPILE		(1)
+#ifdef SPEC_STRETCH_COMPILE
+#define IS_SPEC_COMPILE         (1)
 #include <stretch.h>
 #endif
 
-#ifdef SPEC_PITCH_COMPILE		
-#define IS_SPEC_COMPILE		(1)
+#ifdef SPEC_PITCH_COMPILE
+#define IS_SPEC_COMPILE         (1)
 #include <pitch.h>
 #endif
 
-#ifdef SPEC_HIGHLIGHT_COMPILE		
-#define IS_SPEC_COMPILE		(1)
+#ifdef SPEC_HIGHLIGHT_COMPILE
+#define IS_SPEC_COMPILE         (1)
 #include <highlight.h>
 #endif
 
-#ifdef SPEC_FOCUS_COMPILE		
-#define IS_SPEC_COMPILE		(1)
+#ifdef SPEC_FOCUS_COMPILE
+#define IS_SPEC_COMPILE         (1)
 #include <focus.h>
 #endif
 
-#ifdef SPEC_BLUR_COMPILE		
-#define IS_SPEC_COMPILE		(1)
+#ifdef SPEC_BLUR_COMPILE
+#define IS_SPEC_COMPILE         (1)
 #include <blur.h>
 #endif
 
-#ifdef SPEC_STRANGE_COMPILE	
-#define IS_SPEC_COMPILE		(1)
+#ifdef SPEC_STRANGE_COMPILE
+#define IS_SPEC_COMPILE         (1)
 #include <strange.h>
 #endif
 
-#ifdef SPEC_MORPH_COMPILE		
-#define IS_SPEC_COMPILE		(1)
+#ifdef SPEC_MORPH_COMPILE
+#define IS_SPEC_COMPILE         (1)
 #include <morph.h>
 #endif
 
-#ifdef SPEC_REPITCH_COMPILE	
-#define IS_SPEC_COMPILE		(1)
+#ifdef SPEC_REPITCH_COMPILE
+#define IS_SPEC_COMPILE         (1)
 #include <repitch.h>
 #endif
 
-#ifdef SPEC_FORMANTS_COMPILE	
-#define IS_SPEC_COMPILE		(1)
+#ifdef SPEC_FORMANTS_COMPILE
+#define IS_SPEC_COMPILE         (1)
 #include <fmnts.h>
 #endif
 
-#ifdef SPEC_COMBINE_COMPILE	
-#define IS_SPEC_COMPILE		(1)
+#ifdef SPEC_COMBINE_COMPILE
+#define IS_SPEC_COMPILE         (1)
 #include <combine.h>
 #endif
 
-#ifdef SPEC_INFO_COMPILE		
-#define IS_SPEC_COMPILE		(1)
+#ifdef SPEC_INFO_COMPILE
+#define IS_SPEC_COMPILE         (1)
 #include <specinfo.h>
 #endif
 
-#ifdef SPEC_PINFO_COMPILE		
-#define IS_SPEC_COMPILE		(1)
+#ifdef SPEC_PINFO_COMPILE
+#define IS_SPEC_COMPILE         (1)
 #include <specpinfo.h>
 #endif
 
-#ifdef PVOC_COMPILE		
-#define IS_GROUCHO_COMPILE	(1)
+#ifdef PVOC_COMPILE
+#define IS_GROUCHO_COMPILE      (1)
 #include <pvoc.h>
 #endif
 
-#ifdef EDIT_COMPILE		
-#define IS_GROUCHO_COMPILE	(1)
+#ifdef EDIT_COMPILE
+#define IS_GROUCHO_COMPILE      (1)
 #include <edit.h>
 #endif
 
-#ifdef HOUSEKEEP_COMPILE		
-#define IS_GROUCHO_COMPILE	(1)
+#ifdef HOUSEKEEP_COMPILE
+#define IS_GROUCHO_COMPILE      (1)
 #include <house.h>
 #endif
 
-#ifdef SNDINFO_COMPILE		
-#define IS_GROUCHO_COMPILE	(1)
+#ifdef SNDINFO_COMPILE
+#define IS_GROUCHO_COMPILE      (1)
 #include <sndinfo.h>
 #endif
 
-#ifdef SYNTHESIS_COMPILE		
-#define IS_GROUCHO_COMPILE	(1)
+#ifdef SYNTHESIS_COMPILE
+#define IS_GROUCHO_COMPILE      (1)
 #include <synth.h>
 #endif
 
 
-#ifdef UTILS_COMPILE		
-#define IS_GROUCHO_COMPILE	(1)
+#ifdef UTILS_COMPILE
+#define IS_GROUCHO_COMPILE      (1)
 #include <utils.h>
 #endif
-
-

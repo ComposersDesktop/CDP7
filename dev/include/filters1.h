@@ -26,13 +26,13 @@
 
 /* GLOBAL */
 
-int 	filter_process(dataptr dz);
-void 	io_filtering(float *buf1,float *buf2,int chans,int n,
-			double *a,double *b,double *y,double *z,double *d,double *z1,double *ampl,dataptr dz);
-int 	filter_pconsistency(dataptr dz);
-int 	filter_preprocess(dataptr dz);
-int 	filter_process(dataptr dz);
-int 	iterating_filter(dataptr dz);
-int 	allocate_filter_frq_amp_arrays(int fltcnt,dataptr dz);
-int		make_vfilt_data(dataptr dz);						   /* TW March 2004	 */
-int		newfval2(double *fbrk,double *hbrk,dataptr dz);
+int     filter_process(dataptr dz);
+void    io_filtering(float *buf1,float *buf2,int chans,int n,
+                        double *a,double *b,double *y,double *z,double *d,double *z1,double *ampl,dataptr dz);
+int     filter_pconsistency(dataptr dz);
+int     filter_preprocess(dataptr dz);
+int     filter_process(dataptr dz);
+int     iterating_filter(dataptr dz);
+int     allocate_filter_frq_amp_arrays(int fltcnt,dataptr dz);
+int             make_vfilt_data(dataptr dz);                                               /* TW March 2004      */
+int             newfval2(double *fbrk,double *hbrk,dataptr dz);

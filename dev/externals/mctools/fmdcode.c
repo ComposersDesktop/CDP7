@@ -53,15 +53,15 @@ extern int stricmp(const char *a, const char *b);
 
   Horizontal   Height  Soundfield   Number of    Channels
   order        order       type      channels
-  1               0             horizontal         3         WXY
-  1               1            full-sphere         4         WXYZ
-  2               0             horizontal         5         WXY....UV
-  2               1             mixed-order    6             WXYZ...UV
-  2               2            full-sphere     9             WXYZRSTUV
-  3           0         horizontal         7         WXY....UV.....PQ
+  1               0         horizontal     3         WXY
+  1               1         full-sphere    4         WXYZ
+  2               0         horizontal     5         WXY....UV
+  2               1         mixed-order    6         WXYZ...UV
+  2               2         full-sphere    9         WXYZRSTUV
+  3               0         horizontal     7         WXY....UV.....PQ
   3               1         mixed-order    8         WXYZ...UV.....PQ
-  3               2             mixed-order       11         WXYZRSTUV.....PQ
-  3               3            full-sphere        16         WXYZRSTUVKLMNOPQ
+  3               2         mixed-order   11         WXYZRSTUV.....PQ
+  3               3         full-sphere   16         WXYZRSTUVKLMNOPQ
 
 */
 

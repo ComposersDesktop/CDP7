@@ -28,43 +28,43 @@
 /* floatsam version*/
 /* CONSTANTS FOR DISTORT */
 
-/*#define CLIPMAX	    ((short)24000)*/
-#define FCLIPMAX		(0.7325f)
+/*#define CLIPMAX           ((short)24000)*/
+#define FCLIPMAX                (0.7325f)
 #define SINETABLEN  (1024)
 #define TABLEN      (1024.0)
-#define PULSEWIDTH  (0.001)		/* secs */
-#define MAXWIDTH 	(6.0)
+#define PULSEWIDTH  (0.001)             /* secs */
+#define MAXWIDTH        (6.0)
 
 /* CONSTANTS FOR DISTORTA, DISTORTTH, DISTORTF */
 
-#define MAXWAVELEN   (.5)		/* seconds */
+#define MAXWAVELEN   (.5)               /* seconds */
 
 /* CONSTANTS FOR DISTORTH */
 
 /* CONSTANTS FOR DISTORTF */
 
-#define MIN_SCALE		(2.0)
+#define MIN_SCALE               (2.0)
 
 /* CONSTANTS FOR DISTORT_RPT */
 
-#define	MULTIPLY		(0)
-#define	INTERPOLATE		(1)
-#define	GRP_MULTIPLY	(2)
+#define MULTIPLY                (0)
+#define INTERPOLATE             (1)
+#define GRP_MULTIPLY    (2)
 
 /* CONSTANTS FOR DISTORT_DEL */
 
-#define	LOSE			(0)
-#define	KEEP			(1)
+#define LOSE                    (0)
+#define KEEP                    (1)
 
 /* CONSTANTS FOR DISTORT_PCH */
 
-#define	MAXOCTVAR		(8.0)
-#define	DEFAULT_RSTEP	(64)
+#define MAXOCTVAR               (8.0)
+#define DEFAULT_RSTEP   (64)
 
-#define MINWAVELEN		(8.0)		/* samples */
+#define MINWAVELEN              (8.0)           /* samples */
 
-#define	DISTORT_MAX_POWFAC		(40.0)
-#define	DISTORTE_MIN_EXPON		(0.02)	
-#define	DISTORTE_MAX_EXPON		(50.0)
-#define DISTORTH_MAX_PRESCALE	(200.0)
-#define CYCLIM_DFLTFRQ	(1000.0)
+#define DISTORT_MAX_POWFAC              (40.0)
+#define DISTORTE_MIN_EXPON              (0.02)
+#define DISTORTE_MAX_EXPON              (50.0)
+#define DISTORTH_MAX_PRESCALE   (200.0)
+#define CYCLIM_DFLTFRQ  (1000.0)

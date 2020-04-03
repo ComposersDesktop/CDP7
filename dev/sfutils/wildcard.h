@@ -22,12 +22,12 @@
  */
 
 /*
- *	Declarations for wildcard library
+ *      Declarations for wildcard library
  */
 
 #define WILDCARD_H_RCSID "$Id: wildcard.h%v 1.1 1994/10/31 16:49:24 martin Exp $"
 /*
- *	$Log: wildcard.h%v $
+ *      $Log: wildcard.h%v $
  * Revision 1.1  1994/10/31  16:49:24  martin
  * Initial revision
  *
@@ -37,10 +37,10 @@ int iswildcard(char *filename);
 void freeargv(char **);
 char **wildexpand(char *filename);
 
-#define MAXMATCH	(1000)
+#define MAXMATCH        (1000)
 
 /*
- *	The basic matcher routines
+ *      The basic matcher routines
  */
 struct wildcard *wildcomp(char *);
 void wildfree(struct wildcard *);

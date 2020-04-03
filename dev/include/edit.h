@@ -24,36 +24,35 @@
 
 
 
-#define IS_GROUCHO_COMPILE	(1)
+#define IS_GROUCHO_COMPILE      (1)
 
-#define	EDIT_SPLICELEN	(15.0)
-#define	EDIT_SPLICEMAX	(5000.0)
-#define	EDIT_MAXGAIN	(128.0)
-#define MINOUTDUR 		(0.05)
-#define MIN_SUPRESS		(1000)
+#define EDIT_SPLICELEN  (15.0)
+#define EDIT_SPLICEMAX  (5000.0)
+#define EDIT_MAXGAIN    (128.0)
+#define MINOUTDUR               (0.05)
+#define MIN_SUPRESS             (1000)
 
-int 	create_edit_buffers(dataptr dz);
-int 	create_twixt_buffers(dataptr dz);
-int 	edit_pconsistency(dataptr dz);
-int 	edit_preprocess(dataptr dz);
-int 	twixt_preprocess(dataptr dz);
-int 	sphinx_preprocess(dataptr dz);
-int 	do_cut(dataptr dz);
-int 	do_zcut(dataptr dz);
-int 	do_excise(dataptr dz);
-int 	do_insert(dataptr dz);
-int 	do_insertsil_many(dataptr dz);
-int 	do_joining(dataptr dz);
-int 	do_patterned_joining(dataptr dz);	/*TW March 2004 */
-int		do_randcuts(dataptr dz);					   
-int		do_randchunks(dataptr dz);
-int		do_twixt(dataptr dz);
-int 	get_switchtime_data(char *filename,dataptr dz);
-int 	get_multi_switchtime_data(char *filename,dataptr dz);
-int 	cut_many(dataptr dz);
-int 	do_noise_suppression(dataptr dz);
-int 	do_syllabs(dataptr dz);				/*TW March 2004 */
-int		do_many_zcuts(dataptr dz);
-#define SPLICELEN (dz->ringsize)	/* dz->ringsize being used to store SPLICELEN */
-									/* danger, don't use RING functions anywhere in sfedit functions !! */
-
+int     create_edit_buffers(dataptr dz);
+int     create_twixt_buffers(dataptr dz);
+int     edit_pconsistency(dataptr dz);
+int     edit_preprocess(dataptr dz);
+int     twixt_preprocess(dataptr dz);
+int     sphinx_preprocess(dataptr dz);
+int     do_cut(dataptr dz);
+int     do_zcut(dataptr dz);
+int     do_excise(dataptr dz);
+int     do_insert(dataptr dz);
+int     do_insertsil_many(dataptr dz);
+int     do_joining(dataptr dz);
+int     do_patterned_joining(dataptr dz);       /*TW March 2004 */
+int             do_randcuts(dataptr dz);
+int             do_randchunks(dataptr dz);
+int             do_twixt(dataptr dz);
+int     get_switchtime_data(char *filename,dataptr dz);
+int     get_multi_switchtime_data(char *filename,dataptr dz);
+int     cut_many(dataptr dz);
+int     do_noise_suppression(dataptr dz);
+int     do_syllabs(dataptr dz);                         /*TW March 2004 */
+int             do_many_zcuts(dataptr dz);
+#define SPLICELEN (dz->ringsize)        /* dz->ringsize being used to store SPLICELEN */
+                                                                        /* danger, don't use RING functions anywhere in sfedit functions !! */

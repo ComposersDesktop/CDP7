@@ -32,17 +32,17 @@
 
 int do_hfperm(dataptr dz);
 
-#define ROOT		(0)
-#define TOP			(1)
-#define PCLASS		(2)
-#define CHORDTYPE	(3)
-#define CHORD_1		(4)
+#define ROOT            (0)
+#define TOP                     (1)
+#define PCLASS          (2)
+#define CHORDTYPE       (3)
+#define CHORD_1         (4)
 
-#define MAXSPAN_LAST	(0)	/* means nothing for chords */
-#define MAXSPAN_FIRST	(1)	/* means nothing for chords */
+#define MAXSPAN_LAST    (0)     /* means nothing for chords */
+#define MAXSPAN_FIRST   (1)     /* means nothing for chords */
 
 /* both means nothing for chords OR density */
-#define DENSE_SORT	(0)	/* sort by DENSITY */
-#define OTHER_SORT	(1)	/* for ROOT & TOP, sort by INTSTAK : for PCLASS, sort by MAXINT then DENSITY */
+#define DENSE_SORT      (0)     /* sort by DENSITY */
+#define OTHER_SORT      (1)     /* for ROOT & TOP, sort by INTSTAK : for PCLASS, sort by MAXINT then DENSITY */
 
 int gen_dp_output(dataptr dz);

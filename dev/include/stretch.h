@@ -24,7 +24,7 @@
 
 
 
-#define IS_SPEC_COMPILE		(1)
+#define IS_SPEC_COMPILE         (1)
 
 int  specstretch(dataptr dz);
 int  spectstretch(dataptr dz);
