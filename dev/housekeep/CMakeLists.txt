@@ -12,9 +12,9 @@ link_directories(../cdp2k ../sfsys)
 
 include_directories(../../include)
 
-add_executable(houskeep main.c ap_house.c channels.c clean.c dump.c dupl.c respec.c sort.c)
+add_executable(housekeep main.c ap_house.c channels.c clean.c dump.c dupl.c respec.c sort.c)
 
-target_link_libraries(houskeep cdp2k sfsys ${EXTRA_LIBRARIES})
+target_link_libraries(housekeep cdp2k sfsys ${EXTRA_LIBRARIES})
 
-my_install(houskeep)
+my_install(housekeep)
 
