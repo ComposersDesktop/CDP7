@@ -24,7 +24,7 @@
 
 
 
-#define IS_SPEC_COMPILE		(1)
+#define IS_SPEC_COMPILE         (1)
 
 int  specwcnt(dataptr dz);
 int  specchan(dataptr dz);
@@ -32,4 +32,3 @@ int  specfrq(dataptr dz);
 int  speclevel(dataptr dz);
 int  specoctvu(dataptr dz);
 int  outer_textout_only_loop(dataptr dz);
-

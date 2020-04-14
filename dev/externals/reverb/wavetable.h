@@ -4,20 +4,20 @@
  * http://www.composersdesktop.com
  * This file is part of the CDP System.
  * The CDP System is free software; you can redistribute it
- * and/or modify it under the terms of the GNU Lesser General Public 
- * License as published by the Free Software Foundation; either 
- * version 2.1 of the License, or (at your option) any later version. 
+ * and/or modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * The CDP System is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * The CDP System is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  * You should have received a copy of the GNU Lesser General Public
  * License along with the CDP System; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
- 
+
 
 // wavetable.h: interface for the fast_lfo class.
 // Feb 2009 added gaussian option to random
@@ -42,43 +42,43 @@ enum {PVS_LFO_FREQ_LORANGE, PVS_LFO_FREQ_HIRANGE};
 
 typedef struct lfoparam
 {
-	double freq;
-	double modrange;
+        double freq;
+        double modrange;
 } LfoParam;
 
 
 
 class fastlfo {
-	typedef double (fastlfo:: *tickfunc)(void);
+        typedef double (fastlfo:: *tickfunc)(void);
 public:
 
-	fastlfo();
-	virtual ~fastlfo() {}
-	long init(double srate, double normphase = 0.0,long seedval = 0,unsigned long ksmps = 1);
-	double		tick(void)							{ return (this->*tf)(); }
-	tickfunc	tf;
-	void		set_freq(double freq)				{ param.freq = freq;	}
-	double		get_freq(void)				const	{ return param.freq;	}
-	void		set_mod(double mod)					{ param.modrange = mod;	}
-	double		get_mod(void)				const	{ return param.modrange;}
-	void		reset(double phase);
-	bool		set_WaveType(LfoWaveType type);
-	void		set_tpdf()              		    { tpdf = true; gauss = biexp = false;}
+        fastlfo();
+        virtual ~fastlfo() {}
+        long init(double srate, double normphase = 0.0,long seedval = 0,unsigned long ksmps = 1);
+        double          tick(void)                                                      { return (this->*tf)(); }
+        tickfunc        tf;
+        void            set_freq(double freq)                           { param.freq = freq;    }
+        double          get_freq(void)                          const   { return param.freq;    }
+        void            set_mod(double mod)                                     { param.modrange = mod; }
+        double          get_mod(void)                           const   { return param.modrange;}
+        void            reset(double phase);
+        bool            set_WaveType(LfoWaveType type);
+        void            set_tpdf()                                  { tpdf = true; gauss = biexp = false;}
     void        set_white()                         {  tpdf = gauss = biexp = false;}
     void        set_biexp()                         {  tpdf = gauss = false; biexp = true;}
     void        set_flat()                          { tpdf = gauss = biexp = false;}
     void        set_gaussian()                      { tpdf = biexp = false; gauss = true;}
-	void		sync_phase(double phase, double offset, double phaseincr);
-	void		set_sync(bool onoff)				{ b_sync = onoff;}
-    double      csrand();                   
+        void            sync_phase(double phase, double offset, double phaseincr);
+        void            set_sync(bool onoff)                            { b_sync = onoff;}
+    double      csrand();
 private:
-	double	sinetick(void);
-	double	tritick(void);
-	double	squaretick(void);
-	double	sawuptick(void);
-	double	sawdowntick(void);
-	double	randomtick(void);
-	double	randhtick(void);
+        double  sinetick(void);
+        double  tritick(void);
+        double  squaretick(void);
+        double  sawuptick(void);
+        double  sawdowntick(void);
+        double  randomtick(void);
+        double  randhtick(void);
     double  rand_tpdf_tick(void);
     double  rand_gauss_tick(void);
     double  rand_exp_tick(void);
@@ -86,40 +86,38 @@ private:
  //   double  randh_gauss_tick(void);
  //   double  randh_exp_tick(void);
 
-	long	randint31(long seed31);
+        long    randint31(long seed31);
 
-	double	m_srate, m_inv_srate;
-	double twopiovrsr;
-	double curfreq;
-	double curphase;
-	double incr;
-	LfoParam	param;
-	LfoWaveType  m_cur_WaveType;  
-	/* vars for random oscs, with a little help from Csound!*/
-	long		phs;
-	long		kicvt;
-	long		phsmask;
-	long		rand;
-	double		num1,num2;
-	double		dfdmax;
-	/* for krate output */
-	unsigned long		ksamps;
-	unsigned long		kcount;
-	double		lastval;
-	bool	tpdf;
+        double  m_srate, m_inv_srate;
+        double twopiovrsr;
+        double curfreq;
+        double curphase;
+        double incr;
+        LfoParam        param;
+        LfoWaveType  m_cur_WaveType;
+        /* vars for random oscs, with a little help from Csound!*/
+        long            phs;
+        long            kicvt;
+        long            phsmask;
+        long            rand;
+        double          num1,num2;
+        double          dfdmax;
+        /* for krate output */
+        unsigned long           ksamps;
+        unsigned long           kcount;
+        double          lastval;
+        bool    tpdf;
     bool gauss;
     bool biexp;
-	// for lfo sync
-	bool b_sync;
-	double		offset;
-	// for random oscs
-	long curphs;
-	long phs_incr;
-	long phs_offset;
+        // for lfo sync
+        bool b_sync;
+        double          offset;
+        // for random oscs
+        long curphs;
+        long phs_incr;
+        long phs_offset;
     /* for csrand */
     long csseed;
 };
 
 #endif // !defined(AFX_WAVETABLE_H__2F961225_3FF4_11D2_96D4_444553540000__INCLUDED_)
-
-

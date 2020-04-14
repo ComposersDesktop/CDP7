@@ -115,7 +115,8 @@ sfdir(int SFCALLS (*func)(struct sf_direct *filedetails), int flags)
                 dir.targetname[0] = '\0';
 #endif
             sfformat(fdes,&(dir.fmt));
-            strncpy(dir.name, f->d_name, MAXSFNAME);
+            strncpy(dir.name, f->d_name, MAXSFNAME-1);
+            dir.name[MAXSFNAME-1] = '\0';
             if(sfgetprop(fdes, "sample type", (char *)&dir.samptype, sizeof(int)) != sizeof(int))
                 dir.samptype = -1;
             if(sfgetprop(fdes, "sample rate", (char *)&dir.samprate, sizeof(int)) != sizeof(int))
@@ -145,7 +146,8 @@ sfdir(int SFCALLS (*func)(struct sf_direct *filedetails), int flags)
             dir.length = 0xffffffff; /* RWD Aug 2009: unsigned equiv of -1 . need to improve on this system ere long */
             dir.index = 0;
             dir.seclen = -1;
-            strncpy(dir.name, f->d_name, MAXSFNAME);
+            strncpy(dir.name, f->d_name, MAXSFNAME-1);
+            dir.name[MAXSFNAME-1] = '\0';
             dir.samptype = -1;
             dir.samprate = -1;
             dir.nochans = -1;

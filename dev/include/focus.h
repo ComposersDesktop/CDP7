@@ -24,7 +24,7 @@
 
 
 
-#define IS_SPEC_COMPILE		(1)
+#define IS_SPEC_COMPILE         (1)
 
 int  specaccu(dataptr dz);
 int  specexag(int *zero_set,dataptr dz);
@@ -34,5 +34,3 @@ int  outer_focu_loop(dataptr dz);
 int  specfreeze(dataptr dz);
 int  specfreeze2(dataptr dz);
 int  specstep(dataptr dz);
-
-

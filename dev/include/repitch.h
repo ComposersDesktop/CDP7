@@ -24,13 +24,12 @@
 
 
 
-#define IS_SPEC_COMPILE		(1)
+#define IS_SPEC_COMPILE         (1)
 
 int  spectrnsf(dataptr dz);
 int  spectrnsp(dataptr dz);
 int  outer_pitch_loop(dataptr dz);
 int  outer_pichpich_loop(dataptr dz);
-int	 get_anal_envelope(dataptr dz);
+int      get_anal_envelope(dataptr dz);
 int  generate_pitch(dataptr dz);
-int	 convert_pitch_from_binary_to_text(dataptr dz); /*TW March 2004 */
-
+int      convert_pitch_from_binary_to_text(dataptr dz); /*TW March 2004 */

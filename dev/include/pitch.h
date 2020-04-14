@@ -24,7 +24,7 @@
 
 
 
-#define IS_SPEC_COMPILE		(1)
+#define IS_SPEC_COMPILE         (1)
 
 int  specalt(int *pitchcnt,dataptr dz);
 int  specoct(dataptr dz);
@@ -35,4 +35,3 @@ int  spectune(dataptr dz);
 int  specpick(dataptr dz);
 int  reset_shiftps_according_to_depth_value(dataptr dz);
 int  adjust_params_and_setup_internal_params_for_shiftp(dataptr dz);
-

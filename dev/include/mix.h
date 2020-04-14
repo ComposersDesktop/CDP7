@@ -24,11 +24,11 @@
 
 
 
-#define IS_GROUCHO_COMPILE		(1)
+#define IS_GROUCHO_COMPILE              (1)
 
-#include	<pnames.h>
-#include	<flags.h>
-#include	<mixxcon.h>
-#include	<mix1.h>
+#include        <pnames.h>
+#include        <flags.h>
+#include        <mixxcon.h>
+#include        <mix1.h>
 
 int  set_up_mix(dataptr dz);

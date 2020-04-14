@@ -25,92 +25,92 @@
 
 
 /* floatsam version*/
-#define PRE_CMDLINE_DATACNT	 (37)
+#define PRE_CMDLINE_DATACNT      (37)
 
-int 	establish_datastructure(dataptr *dz);
-int 	superfree(dataptr dz);
-int 	get_process_and_mode_from_cmdline(int *cmdlinecnt,char ***cmdline,dataptr dz);
-int 	usage(int argc,char *argv[]);
-int 	usage1(void);
-int 	usage2(char *);
-int 	usage3(char *str1,char *str2);
+int     establish_datastructure(dataptr *dz);
+int     superfree(dataptr dz);
+int     get_process_and_mode_from_cmdline(int *cmdlinecnt,char ***cmdline,dataptr dz);
+int     usage(int argc,char *argv[]);
+int     usage1(void);
+int     usage2(char *);
+int     usage3(char *str1,char *str2);
 
-int 	parse_tk_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,dataptr dz);
-int 	allocate_filespace(dataptr dz);
-int  	setup_particular_application(dataptr dz);
-int  	allocate_filespace(dataptr dz);
-int	 	set_legal_internalparam_structure(int process,int mode,aplptr ap);
-int		read_parameters_and_flags(char ***cmdline,int *cmdlinecnt,dataptr dz);
-int 	read_special_data(char *str,dataptr dz);
-int 	read_and_test_pitch_or_transposition_brkvals(FILE *fp,char *filename,
-			double **brktable,int *brksize,int which_type,double minval,double maxval);
-int 	convert_brkpntdata_to_window_by_window_array
-			(double *brktable,int brksize,float **thisarray,int wlen,float timestep);
-int 	convert_dB_at_or_below_zero_to_gain(double *val);
-void 	out_of_range_in_brkfile(char *filename,double val,double loval,double hival);
-int  	interp_val(double *val,double ttime,double *startoftab,double *endoftab,double **p);
-int 	check_param_validity_and_consistency(dataptr dz);
-int  	get_maxvalue_in_brktable(double *brkmax,int paramno,dataptr dz);
-int  	get_minvalue_in_brktable(double *brkmin,int paramno,dataptr dz);
-int 	convert_pch_or_transpos_data_to_brkpnttable(int *brksize,float *floatbuf,float frametime,int array_no,dataptr dz);
+int     parse_tk_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,dataptr dz);
+int     allocate_filespace(dataptr dz);
+int     setup_particular_application(dataptr dz);
+int     allocate_filespace(dataptr dz);
+int             set_legal_internalparam_structure(int process,int mode,aplptr ap);
+int             read_parameters_and_flags(char ***cmdline,int *cmdlinecnt,dataptr dz);
+int     read_special_data(char *str,dataptr dz);
+int     read_and_test_pitch_or_transposition_brkvals(FILE *fp,char *filename,
+                        double **brktable,int *brksize,int which_type,double minval,double maxval);
+int     convert_brkpntdata_to_window_by_window_array
+                        (double *brktable,int brksize,float **thisarray,int wlen,float timestep);
+int     convert_dB_at_or_below_zero_to_gain(double *val);
+void    out_of_range_in_brkfile(char *filename,double val,double loval,double hival);
+int     interp_val(double *val,double ttime,double *startoftab,double *endoftab,double **p);
+int     check_param_validity_and_consistency(dataptr dz);
+int     get_maxvalue_in_brktable(double *brkmax,int paramno,dataptr dz);
+int     get_minvalue_in_brktable(double *brkmin,int paramno,dataptr dz);
+int     convert_pch_or_transpos_data_to_brkpnttable(int *brksize,float *floatbuf,float frametime,int array_no,dataptr dz);
 
-int 	groucho_process_file(dataptr dz);
-int 	spec_process_file(dataptr dz);
+int     groucho_process_file(dataptr dz);
+int     spec_process_file(dataptr dz);
 
-int 	complete_output(dataptr dz);
-int 	truncate_outfile(dataptr dz);
-int 	write_exact_samps(float *buffer,int samps_to_write,dataptr dz);
-int 	write_samps(float *bbuf,int samps_to_write,dataptr dz);
-int 	write_samps_no_report(float *bbuf,int samps_to_write,int *samps_written,dataptr dz);
-int 	write_samps_to_elsewhere(int ofd, float *buffer,int samps_to_write,dataptr dz);
-int 	write_brkfile(FILE *fptext,int brklen,int array_no,dataptr dz);
+int     complete_output(dataptr dz);
+int     truncate_outfile(dataptr dz);
+int     write_exact_samps(float *buffer,int samps_to_write,dataptr dz);
+int     write_samps(float *bbuf,int samps_to_write,dataptr dz);
+int     write_samps_no_report(float *bbuf,int samps_to_write,int *samps_written,dataptr dz);
+int     write_samps_to_elsewhere(int ofd, float *buffer,int samps_to_write,dataptr dz);
+int     write_brkfile(FILE *fptext,int brklen,int array_no,dataptr dz);
 
 
 
-int 	convert_pch_or_transpos_data_to_brkpnttable(int *brksize,float *floatbuf,
-			float frametime,int array_no,dataptr dz);
-int 	headwrite(int ofd,dataptr dz);
+int     convert_pch_or_transpos_data_to_brkpnttable(int *brksize,float *floatbuf,
+                        float frametime,int array_no,dataptr dz);
+int     headwrite(int ofd,dataptr dz);
 
-int  	create_sized_outfile(char *filename,dataptr dz);
+int     create_sized_outfile(char *filename,dataptr dz);
 /*RWD.7.98  for sfsys98 */
 int     create_sized_outfile_formatted(const char *filename,int srate,int channels, int stype,dataptr dz);
-void 	display_virtual_time(int value,dataptr dz);
+void    display_virtual_time(int value,dataptr dz);
 
-		/* groucho */
-int 	reset(int i,int samples,float *bbuf,int *lastzero,/*int*/float *cyclemax);
-int 	get_mixdata_in_line(int wordcnt,char **wordstor,int total_words,double *time,int *chans,
-			double *llevel,double *lpan,double *rlevel,double *rpan,int filecnt,dataptr dz);
-int  	finalise_and_check_mixdata_in_line(int wordcnt,int chans,
-			double llevel,double *lpan,double *rlevel,double *rpan);
-int  	create_sndbufs_for_envel(dataptr dz);
+                /* groucho */
+int     reset(int i,int samples,float *bbuf,int *lastzero,/*int*/float *cyclemax);
+int     get_mixdata_in_line(int wordcnt,char **wordstor,int total_words,double *time,int *chans,
+                        double *llevel,double *lpan,double *rlevel,double *rpan,int filecnt,dataptr dz);
+int     finalise_and_check_mixdata_in_line(int wordcnt,int chans,
+                        double llevel,double *lpan,double *rlevel,double *rpan);
+int     create_sndbufs_for_envel(dataptr dz);
 /* RWD was byte_windowsize */
-int  	generate_samp_windowsize(fileptr thisfile,dataptr dz);
-void 	upsort(double *scti,int scatcnt);
-int  	open_file_retrieve_props_open(int filecnt,char *filename,int *srate,dataptr dz);
-int 	force_value_at_zero_time(int paramno,dataptr dz);
-int  	establish_groucho_bufptrs_and_extra_buffers(dataptr dz);
-int 	pvoc_preprocess(dataptr dz);
-int 	pvoc_process(dataptr dz);
-int 	pvoc_process_addon(unsigned int samps_so_far,dataptr dz);	 /* was ~bytes~ */
+int     generate_samp_windowsize(fileptr thisfile,dataptr dz);
+void    upsort(double *scti,int scatcnt);
+int     open_file_retrieve_props_open(int filecnt,char *filename,int *srate,dataptr dz);
+int     force_value_at_zero_time(int paramno,dataptr dz);
+int     establish_groucho_bufptrs_and_extra_buffers(dataptr dz);
+int     pvoc_preprocess(dataptr dz);
+int     pvoc_process(dataptr dz);
+int     pvoc_process_addon(unsigned int samps_so_far,dataptr dz);        /* was ~bytes~ */
 
-int 	modspace_pconsistency(dataptr dz);
-int 	modpitch_pconsistency(dataptr dz);
-int		modspace_preprocess(dataptr dz);
-int		scaledpan_preprocess(dataptr dz);
-int 	create_delay_buffers(dataptr dz);
-int 	create_stadium_buffers(dataptr dz);
-int		delay_preprocess(dataptr dz);
-int		do_delay(dataptr dz);
-int 	stadium_pconsistency(dataptr dz);
-int 	do_stadium(dataptr dz);
-int  	create_shred_buffers(dataptr dz);
-int 	shred_pconsistency(dataptr dz);
-int 	shred_preprocess(dataptr dz);
-int  	shred_process(dataptr dz);
+int     modspace_pconsistency(dataptr dz);
+int     modpitch_pconsistency(dataptr dz);
+int             modspace_preprocess(dataptr dz);
+int             scaledpan_preprocess(dataptr dz);
+int     create_delay_buffers(dataptr dz);
+int     create_stadium_buffers(dataptr dz);
+int             delay_preprocess(dataptr dz);
+int             do_delay(dataptr dz);
+int     stadium_pconsistency(dataptr dz);
+int     do_stadium(dataptr dz);
+int     create_shred_buffers(dataptr dz);
+int     shred_pconsistency(dataptr dz);
+int     shred_preprocess(dataptr dz);
+int     shred_process(dataptr dz);
 
-void 	free_wordstors(dataptr dz);
+void    free_wordstors(dataptr dz);
 
-#define INITIALISE_DEFAULT_VALUES 	initialise_param_values
+#define INITIALISE_DEFAULT_VALUES       initialise_param_values
 
 //int create_sized_outfile(char *filename,dataptr dz);
 int setup_param_ranges_and_defaults(dataptr dz);
@@ -140,10 +140,10 @@ int handle_extra_infiles(char ***cmdline,int *cmdlinecnt,dataptr dz);
 int handle_outfile(int *cmdlinecnt,char ***cmdline,int is_launched,dataptr dz);
 int print_messages_and_close_sndfiles(int exit_status,int is_launched,dataptr dz);
 
-int  	x(int y); /* TESTING ONLY */
+int     x(int y); /* TESTING ONLY */
 
 int pvoc_out(int floats_out,unsigned int *bytes_so_far,char *orig_outfilename,
-	char *root_outname, int jj, dataptr dz);
+        char *root_outname, int jj, dataptr dz);
 
 int get_the_vowels(char *filename,double **times,int **vowels,int *vcnt,dataptr dz);
 int get_vowel (char *str);

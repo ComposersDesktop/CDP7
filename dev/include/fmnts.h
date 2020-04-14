@@ -24,7 +24,7 @@
 
 
 
-#define IS_SPEC_COMPILE		(1)
+#define IS_SPEC_COMPILE         (1)
 
 int  specformants(dataptr dz);
 int  specform(dataptr dz);

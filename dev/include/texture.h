@@ -24,9 +24,9 @@
 
 
 
-#define IS_GROUCHO_COMPILE		(1)
+#define IS_GROUCHO_COMPILE              (1)
 
-#include	<pnames.h>
-#include	<flags.h>
-#include	<txtucon.h>
-#include	<texture1.h>
+#include        <pnames.h>
+#include        <flags.h>
+#include        <txtucon.h>
+#include        <texture1.h>

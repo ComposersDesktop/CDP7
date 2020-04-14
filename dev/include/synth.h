@@ -24,25 +24,25 @@
 
 
 
-#define IS_GROUCHO_COMPILE	(1)
+#define IS_GROUCHO_COMPILE      (1)
 
-#define WAVE_TABSIZE 	(256)
+#define WAVE_TABSIZE    (256)
 #define WAVE_DEFAULT_SR (44100)
-#define MAX_SYN_DUR		(7200.0)	/* 2 hrs */
-#define MIN_SYN_DUR		(0.04)		/* Assumes min samprate = 16000 and max chans = 2 */
-									/* Otherwise, internal trap */
-#define	MAX_SYNTH_FRQ	(22000)  	/* lowest conceivable nyquist */
-#define	MIN_SYNTH_FRQ	(0.1)		/*arbitrary */
+#define MAX_SYN_DUR             (7200.0)        /* 2 hrs */
+#define MIN_SYN_DUR             (0.04)          /* Assumes min samprate = 16000 and max chans = 2 */
+                                                                        /* Otherwise, internal trap */
+#define MAX_SYNTH_FRQ   (22000)         /* lowest conceivable nyquist */
+#define MIN_SYNTH_FRQ   (0.1)           /*arbitrary */
 
-#define SYNTH_SPLICELEN	(256)
+#define SYNTH_SPLICELEN (256)
 
 int do_synth(dataptr dz);
 int do_stereo_specsynth(dataptr dz);
 
-#define CHANUP (4)				/* half-band of channels over which same frq can occur */
+#define CHANUP (4)                              /* half-band of channels over which same frq can occur */
 //TW: total amp of 1.0 seems rational, but causes distorttion on resynth
-//#define SPECSYN_MAXAMP (1.0)	/* maximum total amp of a spectrum : guess */
-#define SPECSYN_MAXAMP (0.5)	/* maximum total amp of a spectrum : guess */
+//#define SPECSYN_MAXAMP (1.0)  /* maximum total amp of a spectrum : guess */
+#define SPECSYN_MAXAMP (0.5)    /* maximum total amp of a spectrum : guess */
 //#define SPECSYN_SRATE  (48000)
 //#define SPECSYN_MLEN   (4098)
  /*RWD more economical ones! */
@@ -53,4 +53,3 @@ int do_stereo_specsynth(dataptr dz);
 #define CLICKAMP1 (1.0)
 #define CLICKAMP2 (.5)
 #define CLICKAMP3 (.2)
-

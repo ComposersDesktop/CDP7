@@ -26,23 +26,23 @@
 
 /*********************************** GRAIN ********************************/
 
-#define GRAIN_SPLICELEN	(15.0)	/* mS */	
-#define GRAIN_SAFETY	 (1.0)	/* mS */	
-#define GR_INTERPLIMIT	(1000)	/* stereo-samples */
-#define	CAPITALISE		 (-32)	/* convert lower-case to up[per-case ASCII */
-#define	ALPHABASE		 ('A')	/* lowest ASCII value */
-#define	GR_MAX_TRANSPOS	 (4.0)  /* max grain transposition in octaves */
-#define	GR_MAX_OUT_OF	 (64.0) /* max fraction of omitted grains = 63/64 */
-#define	GR_MIN_TSTRETCH  (.001)
-#define	GR_MAX_TSTRETCH  (1000.0)
-#define	GR_GATE_DEFAULT	 (0.3)
-#define	GR_MAX_OFFSET	 	(32767.0)	/* arbitrary */
-#define	MAX_FIRSTGRAIN_TIME	(32767.0)	/* arbitrary */
-#define	SPLBUF_OFFSET	 (2)			/* first 2 extrabufs are for splices */
-										/* remainder store grains for reordering */
-#define NOMINAL_LENGTH   (2)			/* size of pre-malloced arrays */
+#define GRAIN_SPLICELEN (15.0)  /* mS */
+#define GRAIN_SAFETY     (1.0)  /* mS */
+#define GR_INTERPLIMIT  (1000)  /* stereo-samples */
+#define CAPITALISE               (-32)  /* convert lower-case to up[per-case ASCII */
+#define ALPHABASE                ('A')  /* lowest ASCII value */
+#define GR_MAX_TRANSPOS  (4.0)  /* max grain transposition in octaves */
+#define GR_MAX_OUT_OF    (64.0) /* max fraction of omitted grains = 63/64 */
+#define GR_MIN_TSTRETCH  (.001)
+#define GR_MAX_TSTRETCH  (1000.0)
+#define GR_GATE_DEFAULT  (0.3)
+#define GR_MAX_OFFSET           (32767.0)       /* arbitrary */
+#define MAX_FIRSTGRAIN_TIME     (32767.0)       /* arbitrary */
+#define SPLBUF_OFFSET    (2)                    /* first 2 extrabufs are for splices */
+                                                                                /* remainder store grains for reordering */
+#define NOMINAL_LENGTH   (2)                    /* size of pre-malloced arrays */
 
-#define LOW_RRR_SIZE	 (15)			/* 15 ms is approx size of fast rrr-flap */
+#define LOW_RRR_SIZE     (15)                   /* 15 ms is approx size of fast rrr-flap */
 
-#define NOIS_MIN_FRQ	(6000.0)
+#define NOIS_MIN_FRQ    (6000.0)
 #define GR_MINDUR        (0.1)

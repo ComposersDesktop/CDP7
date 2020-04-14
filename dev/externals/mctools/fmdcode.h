@@ -4,27 +4,27 @@
  * http://www.composersdesktop.com
  * This file is part of the CDP System.
  * The CDP System is free software; you can redistribute it
- * and/or modify it under the terms of the GNU Lesser General Public 
- * License as published by the Free Software Foundation; either 
- * version 2.1 of the License, or (at your option) any later version. 
+ * and/or modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * The CDP System is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * The CDP System is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  * You should have received a copy of the GNU Lesser General Public
  * License along with the CDP System; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
- 
+
 /* fmdcode.h */
 
 /*
  Channel order is WXYZ,RSTUV,KLMNOPQ
- 
+
  The number of channels defines the order of the soundfield:
- 2 channel = UHJ 
+ 2 channel = UHJ
  3 channel = h   = 1st order horizontal
  4 channel = f   = 1st order 3-D
  5 channel = hh  = 2nd order horizontal
@@ -35,30 +35,30 @@
  9 channel = ff  = 2nd order 3-D
  11 channel = ffh = 3rd order horizontal + 2nd order height
  16 channel = fff = 3rd order 3-D
- 
- 
+
+
  Horizontal   Height  Soundfield   Number of    Channels
- order 	      order 	  type      channels 	
- 1 	         0 	       horizontal 	  3 	    WXY
- 1 	         1 	      full-sphere 	  4 	    WXYZ
- 2 	         0 	       horizontal 	  5 	    WXY....UV
- 2 	         1 	       mixed-order    6 	    WXYZ...UV
- 2 	         2 	      full-sphere     9 	    WXYZRSTUV
- 3           0 	       horizontal 	  7 	    WXY....UV.....PQ
- 3 	         1         mixed-order 	  8 	    WXYZ...UV.....PQ
- 3 	         2 	       mixed-order 	 11 	    WXYZRSTUV.....PQ
- 3 	         3 	      full-sphere 	 16 	    WXYZRSTUVKLMNOPQ
+ order        order       type      channels
+ 1               0         horizontal     3         WXY
+ 1               1         full-sphere    4         WXYZ
+ 2               0         horizontal     5         WXY....UV
+ 2               1         mixed-order    6         WXYZ...UV
+ 2               2         full-sphere    9         WXYZRSTUV
+ 3               0         horizontal     7         WXY....UV.....PQ
+ 3               1         mixed-order    8         WXYZ...UV.....PQ
+ 3               2         mixed-order   11         WXYZRSTUV.....PQ
+ 3               3         full-sphere   16         WXYZRSTUVKLMNOPQ
  */
 
 typedef struct abf_samp {
-	float W;
-	float X;
-	float Y;
-	float Z;
+    float W;
+    float X;
+    float Y;
+    float Z;
     float R;
     float S;
     float T;
-	float U;
+    float U;
     float V;
 } ABFSAMPLE;
 

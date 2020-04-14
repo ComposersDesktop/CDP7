@@ -25,24 +25,24 @@
 
 
 /* FORMANT PARAMS */
-#define	FREQWISE_FORMANTS			(0)
-#define	PICHWISE_FORMANTS			(1)
-#define TOP_OF_LOW_OCTAVE_BANDS	  	(4)
-#define CHAN_ABOVE_LOW_OCTAVES    	(8)
-#define IGNORE_ACTUAL_CHAN_FRQS   	(1)
-#define RECTIFY_CHANNEL_FRQ_ORDER 	(2)
-#define MAX_BANDS_PER_OCT	  		(12)	/* semitone is max width */
+#define FREQWISE_FORMANTS                       (0)
+#define PICHWISE_FORMANTS                       (1)
+#define TOP_OF_LOW_OCTAVE_BANDS         (4)
+#define CHAN_ABOVE_LOW_OCTAVES          (8)
+#define IGNORE_ACTUAL_CHAN_FRQS         (1)
+#define RECTIFY_CHANNEL_FRQ_ORDER       (2)
+#define MAX_BANDS_PER_OCT                       (12)    /* semitone is max width */
 
-#define FBAND_DEFAULT				(4)		/* default no of formant bands */
+#define FBAND_DEFAULT                           (4)             /* default no of formant bands */
 
-#define FMNT_BUFMULT	(512)
+#define FMNT_BUFMULT    (512)
 
 /* FORMANTS */
 int  initialise_specenv(int *arraycnt,dataptr dz);
 int  write_formant_descriptor(float **fptr1,float *fptr2,dataptr dz);
 int  initialise_specenv2(dataptr dz);
 int  get_channel_corresponding_to_frq(int *chan,double thisfrq,dataptr dz);
-int	 establish_formant_band_ranges(int channels,aplptr ap);
+int      establish_formant_band_ranges(int channels,aplptr ap);
 int  read_formantband_data_and_setup_formants(char ***cmdline,int *cmdlinecnt,dataptr dz);
 int  initialise_specenv(int *arraycnt,dataptr dz);
 int  extract_specenv(int bufptr_no,int storeno,dataptr dz);

@@ -24,5 +24,4 @@
 
 
 
-#define IS_GROUCHO_COMPILE	(1)
-
+#define IS_GROUCHO_COMPILE      (1)

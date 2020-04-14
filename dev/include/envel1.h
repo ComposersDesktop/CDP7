@@ -24,25 +24,25 @@
 
 
 
-int 	process_envelope(dataptr dz);
-//int 	setup_envel_windowsize(dataptr dz);
-int 	read_env_ramp_brk(char *filename,dataptr dz);
-//int 	read_env_create_file(char *str,dataptr dz);
-int 	envelope_warp(float **env,float **envend,dataptr dz);
+int     process_envelope(dataptr dz);
+//int   setup_envel_windowsize(dataptr dz);
+int     read_env_ramp_brk(char *filename,dataptr dz);
+//int   read_env_create_file(char *str,dataptr dz);
+int     envelope_warp(float **env,float **envend,dataptr dz);
 int     envreplace(float *env,float **envend,float *origenv,float *origend);
-int  	extract_env_from_sndfile(int *bufcnt,int *envcnt,float **env,float **envend,int fileno,dataptr dz);
-int 	impose_envel_on_sndfile(float *env,int envcnt,int bufcnt,int fileno,dataptr dz);
-int 	create_envelope(int *cnt,dataptr dz);
-int 	envel_preprocess(dataptr dz);
-int 	create_sndbufs_for_envel(dataptr dz);
-int 	apply_brkpnt_envelope(dataptr dz);
+int     extract_env_from_sndfile(int *bufcnt,int *envcnt,float **env,float **envend,int fileno,dataptr dz);
+int     impose_envel_on_sndfile(float *env,int envcnt,int bufcnt,int fileno,dataptr dz);
+int     create_envelope(int *cnt,dataptr dz);
+int     envel_preprocess(dataptr dz);
+int     create_sndbufs_for_envel(dataptr dz);
+int     apply_brkpnt_envelope(dataptr dz);
 
-int 	buffers_in_sndfile(int buffer_size,int fileno,dataptr dz);
-int 	windows_in_sndfile(int fileno,dataptr dz);
+int     buffers_in_sndfile(int buffer_size,int fileno,dataptr dz);
+int     windows_in_sndfile(int fileno,dataptr dz);
 
-//int 	create_pluck_buffers(dataptr dz);
-int 	envelope_pluck(dataptr dz);
-int 	envelope_tremol(dataptr dz);
-int  	generate_samp_windowsize(fileptr thisfile,dataptr dz);
-int		do_grids(dataptr dz);
-int		envsyn(dataptr dz);	/*TW March 2004 */
+//int   create_pluck_buffers(dataptr dz);
+int     envelope_pluck(dataptr dz);
+int     envelope_tremol(dataptr dz);
+int     generate_samp_windowsize(fileptr thisfile,dataptr dz);
+int             do_grids(dataptr dz);
+int             envsyn(dataptr dz);     /*TW March 2004 */

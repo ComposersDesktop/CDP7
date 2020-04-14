@@ -24,7 +24,7 @@
 
 
 
-#define IS_SPEC_COMPILE		(1)
+#define IS_SPEC_COMPILE         (1)
 
 int  specavrg(dataptr dz);
 int  specsupr(dataptr dz);
@@ -36,5 +36,3 @@ int  specspread(dataptr dz);
 int  specdrunk(dataptr dz);
 int  specshuffle(dataptr dz);
 int  specweave(dataptr dz);
-
-

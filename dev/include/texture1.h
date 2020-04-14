@@ -51,45 +51,45 @@ void iswap(int *a,int *b);
 //int  get_the_notedatafile(char *str,dataptr dz);
 double octadjust(double thispitch);
 int  do_amp_instr_dur(double *thisamp,unsigned char *thisinstr,double *thisdur,
-	 noteptr tsetnote,double thistime,dataptr dz);
+         noteptr tsetnote,double thistime,dataptr dz);
 int  make_shadow(motifptr tset,int *shadowsize,noteptr **shadow);
 int  erase_shadow(int shadowsize,noteptr *shadow,motifptr tset);
 void setup_decor(double *pptop,double *ppbot,int *shadindex,noteptr *tsetnote,dataptr dz);
 int  setup_ornament
-	 (double *timeadjust,double *thistime,int *gpsize,noteptr *phrlastnote,
- 	 double multiplier,noteptr *phrasenote,int phrno,dataptr dz);
+         (double *timeadjust,double *thistime,int *gpsize,noteptr *phrlastnote,
+         double multiplier,noteptr *phrasenote,int phrno,dataptr dz);
 int  set_motif_amp
-	 (noteptr tsetnote,double *thisamp,int gpsize,double ampstep,noteptr phrasenote,
-	 double rangemult,double *phraseamp,int phrno,unsigned char amptype);
+         (noteptr tsetnote,double *thisamp,int gpsize,double ampstep,noteptr phrasenote,
+         double rangemult,double *phraseamp,int phrno,unsigned char amptype);
 int  set_ornament_amp
-	 (double *phraseamp,noteptr *phrlastnote,double *thisamp,noteptr phrasenote,int phrno,
-	 noteptr tsetnote,double ampstep,double rangemult,int gpsize,dataptr dz);
+         (double *phraseamp,noteptr *phrlastnote,double *thisamp,noteptr phrasenote,int phrno,
+         noteptr tsetnote,double ampstep,double rangemult,int gpsize,dataptr dz);
 int  set_group_params(noteptr tsetnote,noteptr thisnote,double gpdense,double ampstep,double *thisamp,
-	double *thistime,double thisdur,dataptr dz);
+        double *thistime,double thisdur,dataptr dz);
 int  check_next_phrasenote_exists(noteptr *phrasenote,int texflag,dataptr dz);
 noteptr getnextevent_to_decorate(noteptr tsetnote,int *shaddoindex,dataptr dz);
 double  getnotetime(noteptr phrasenote,double time,double multiplier,double timeadjust,dataptr dz);
 int     getmtfdur(noteptr tsetnote,noteptr phrasenote,double *dur,double multiplier,dataptr dz);
 int  orn_or_mtf_amp_setup
-	(int ampdirected,double *phrange,int phrno,double thisamp,int gpsize,double *rangemult,
-	double *ampstep,unsigned char *amptype,unsigned char amptypestor,unsigned char amptypecnt,dataptr dz);
+        (int ampdirected,double *phrange,int phrno,double thisamp,int gpsize,double *rangemult,
+        double *ampstep,unsigned char *amptype,unsigned char amptypestor,unsigned char amptypecnt,dataptr dz);
 int  init_group_spatialisation
-	(noteptr tsetnote,int shaddoindex,noteptr *shadow,int shadowsize,dataptr dz);
+        (noteptr tsetnote,int shaddoindex,noteptr *shadow,int shadowsize,dataptr dz);
 int  setspace(noteptr tsetnote,noteptr thisnote,int gpsize,dataptr dz);
 int  do_mtf_params
-	 (noteptr thisnote,double thisamp,noteptr phrasenote,noteptr tsetnote,
-	 double ampdif,double notetime,double multiplier,dataptr dz);
+         (noteptr thisnote,double thisamp,noteptr phrasenote,noteptr tsetnote,
+         double ampdif,double notetime,double multiplier,dataptr dz);
 int  setup_motif_or_ornament
-	 (double thistime,double *multiplier,int *phrno,noteptr *phrasenote,
-	 motifptr *phrase,dataptr dz);
+         (double thistime,double *multiplier,int *phrno,noteptr *phrasenote,
+         motifptr *phrase,dataptr dz);
 int  position_and_size_decoration
-	 (double *thistime,double tsettime,double gpdense,int *gpsize,dataptr dz);
+         (double *thistime,double tsettime,double gpdense,int *gpsize,dataptr dz);
 int  set_decor_amp
-	 (int ampdirected,double *thisamp,double *ampstep,int gpsize,unsigned char *amptype,
-	 unsigned char amptypecnt,unsigned char amptypestor,dataptr dz);
+         (int ampdirected,double *thisamp,double *ampstep,int gpsize,unsigned char *amptype,
+         unsigned char amptypecnt,unsigned char amptypestor,dataptr dz);
 int  set_group_amp
-	 (noteptr tsetnote,double *thisamp,unsigned char *amptype, double *ampstep,int gpsize,
-	 unsigned char amptypecnt,unsigned char amptypestor,dataptr dz);
+         (noteptr tsetnote,double *thisamp,unsigned char *amptype, double *ampstep,int gpsize,
+         unsigned char amptypecnt,unsigned char amptypestor,dataptr dz);
 int  getvalue(int paramhi,int paramlo,double time,int z,double *val,dataptr dz);
 int  igetvalue(int paramhi,int paramlo,double time,int z,int *ival,dataptr dz);
 int  doperm(int k,int pindex,int *val,dataptr dz);
@@ -99,7 +99,7 @@ int  pscatx(double range,double bottom,int pindex,double *val,dataptr dz);
 int  gettritype(int k,unsigned stor,unsigned char *val);
 int  get_density_val(double thistime,double *gpdense,dataptr dz);
 int  set_motifs(int phrcount,motifptr *phrase,int *phrnotecnt,double *phraseamp,
-		double *phrange,noteptr *phrlastnote);
+                double *phrange,noteptr *phrlastnote);
 
 int  make_new_note(noteptr *thisnote);
 void del_note(noteptr thisnote,motifptr thismotif);

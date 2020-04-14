@@ -24,9 +24,9 @@
 
 
 
-#define IS_GROUCHO_COMPILE		(1)
+#define IS_GROUCHO_COMPILE              (1)
 
-#include	<pnames.h>
-#include	<flags.h>
-#include	<modicon.h>
-#include	<modify1.h>
+#include        <pnames.h>
+#include        <flags.h>
+#include        <modicon.h>
+#include        <modify1.h>

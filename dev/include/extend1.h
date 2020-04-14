@@ -25,7 +25,7 @@
 
 
 /*
- *	2nd header for EXTEND group of sndprgs - graphics compatible version - FUNCTIONS
+ *      2nd header for EXTEND group of sndprgs - graphics compatible version - FUNCTIONS
  */
 
 #define EXTEND1_H_RCSID "$Id$"
@@ -33,20 +33,20 @@
  * $Log$
  */
 /* RWD 6:2001 commented out funcs declare static to ap_extend.c, extprepro.c */
-void 	initialise_random_sequence(int seed_flagno,int seed_paramno,dataptr dz);
-int 	iterate_preprocess(dataptr dz);
-int	 	convert_time_and_vals_to_samplecnts(int paramno,dataptr dz);
-int 	create_drunk_buffers(dataptr dz);
-int 	drunk_preprocess(dataptr dz);
+void    initialise_random_sequence(int seed_flagno,int seed_paramno,dataptr dz);
+int     iterate_preprocess(dataptr dz);
+int             convert_time_and_vals_to_samplecnts(int paramno,dataptr dz);
+int     create_drunk_buffers(dataptr dz);
+int     drunk_preprocess(dataptr dz);
 
-int 	zigzag(dataptr dz);
-int 	do_iteration(dataptr dz);
-int 	do_loops(int *thisstart,int *lastend,int *outbuf_space,int obufno,int splbufno,dataptr dz);
-int 	do_drunken_walk(dataptr dz);
-int 	accent_stream(dataptr dz);
-int		do_sequence(dataptr dz);
-int		do_sequence2(dataptr dz);
-int		do_btob(dataptr dz);
+int     zigzag(dataptr dz);
+int     do_iteration(dataptr dz);
+int     do_loops(int *thisstart,int *lastend,int *outbuf_space,int obufno,int splbufno,dataptr dz);
+int     do_drunken_walk(dataptr dz);
+int     accent_stream(dataptr dz);
+int             do_sequence(dataptr dz);
+int             do_sequence2(dataptr dz);
+int             do_btob(dataptr dz);
 /*TW March 2004 */
-int		do_doubling(dataptr dz);
-int		extend_by_insplice(dataptr dz);
+int             do_doubling(dataptr dz);
+int             extend_by_insplice(dataptr dz);

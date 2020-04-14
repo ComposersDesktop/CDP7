@@ -24,8 +24,7 @@
 
 
 
-#define V_HWIDTH		 (.25)	/* hwidth of formants (in Hz) as fraction of their centre-frq */
-#define CURVIT			 (3)	/* formant slope */
-#define PEAK_RANGE		 (.95)	/* proportion of signal taken up by formant peaking */
-#define FUNDAMENTAL_BASE (.45) 	/* level of fundamental if not in formant */
-
+#define V_HWIDTH                 (.25)  /* hwidth of formants (in Hz) as fraction of their centre-frq */
+#define CURVIT                   (3)    /* formant slope */
+#define PEAK_RANGE               (.95)  /* proportion of signal taken up by formant peaking */
+#define FUNDAMENTAL_BASE (.45)  /* level of fundamental if not in formant */

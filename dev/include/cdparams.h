@@ -25,30 +25,30 @@
 
 
 /* floats version */
-#define CHECKBUTTON	 		(0)
-#define SWITCHED			(1)
-#define LINEAR				(2)
-#define LOG					(3)
-#define PLOG				(4)
-#define FILE_OR_VAL			(5)
-#define FILENAME			(6)
-#define NUMERIC				(7)
-#define GENERIC_FILENAME	(8)
-#define STRING_A			(10)
-#define STRING_B			(11)
-#define STRING_C			(12)
-#define STRING_D			(13)
-#define TIMETYPE			(14)
-#define SRATE				(15)
-#define TWOFAC				(16)
-#define WAVETYPE			(17)
-#define POWTWO				(18)
-#define MIDI				(19)
-#define OCTAVES				(20)
-#define CHORDSORT			(21)
-#define DENSESORT			(22)
-#define LOGNUMERIC			(23)
-#define FILE_OR_VOWELS		(24)
+#define CHECKBUTTON                     (0)
+#define SWITCHED                        (1)
+#define LINEAR                          (2)
+#define LOG                                     (3)
+#define PLOG                            (4)
+#define FILE_OR_VAL                     (5)
+#define FILENAME                        (6)
+#define NUMERIC                         (7)
+#define GENERIC_FILENAME        (8)
+#define STRING_A                        (10)
+#define STRING_B                        (11)
+#define STRING_C                        (12)
+#define STRING_D                        (13)
+#define TIMETYPE                        (14)
+#define SRATE                           (15)
+#define TWOFAC                          (16)
+#define WAVETYPE                        (17)
+#define POWTWO                          (18)
+#define MIDI                            (19)
+#define OCTAVES                         (20)
+#define CHORDSORT                       (21)
+#define DENSESORT                       (22)
+#define LOGNUMERIC                      (23)
+#define FILE_OR_VOWELS          (24)
 
 /*GNU doesn't like duplcate definitions */
 #ifndef _STRUCTURES_H_INCLUDED
@@ -56,24 +56,23 @@
 #endif
 //typedef struct applic *aplptr;
 int  cdparams(int process,int mode,int filetype,int infilesize,int insams,int srate,
-		int channels,int wanted,int wlength,int linecnt,float arate,float frametime,
-		double nyquist,double duration);
+                int channels,int wanted,int wlength,int linecnt,float arate,float frametime,
+                double nyquist,double duration);
 
 int   parse_indata(int argc,char *argv[],int *process,int *mode,int *infilecnt,int *filetype,int *infilesize,
-		int *insams,int *srate,int *channels,int *wanted,int *wlength,int *linecnt,
-		float *arate,float *frametime,double *nyquist,double *duration);
+                int *insams,int *srate,int *channels,int *wanted,int *wlength,int *linecnt,
+                float *arate,float *frametime,double *nyquist,double *duration);
 
 int  set_legal_param_structure(int application_no,int mode, aplptr ap);
-int	 set_legal_option_and_variant_structure(int process,int mode,aplptr ap);
+int      set_legal_option_and_variant_structure(int process,int mode,aplptr ap);
 int  does_process_accept_conflicting_srates(int process);
 int  deal_with_formants(int process,int mode,int channels,aplptr ap);
 int  deal_with_special_data(int process,int mode,int srate,double duration,double nyquist,int wlength,int channels,aplptr ap);
 int  get_param_names(int process,int mode,int total_params,aplptr ap);
 int  get_param_ranges(int process,int mode,int total_params,double nyquist,float frametime,
-		float arate,int srate,int wlength,int insams,
-		int channels,int wanted,int filetype,int linecnt,double duration,aplptr ap);
+                float arate,int srate,int wlength,int insams,
+                int channels,int wanted,int filetype,int linecnt,double duration,aplptr ap);
 int  setup_flagnames(int process,int mode,int bare_flags,aplptr ap);
 
 void mp_message(int process,int mode);
 int  establish_display(int process,int mode,int total_params,float frametime,double duration,aplptr ap);
-
