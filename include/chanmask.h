@@ -25,29 +25,29 @@
 #define NUM_SPEAKER_POSITIONS (18)
 
 
-#define SPEAKER_FRONT_LEFT                      0x1
-#define SPEAKER_FRONT_RIGHT                     0x2
-#define SPEAKER_FRONT_CENTER                    0x4
-#define SPEAKER_LOW_FREQUENCY                   0x8
-#define SPEAKER_BACK_LEFT                       0x10
-#define SPEAKER_BACK_RIGHT                      0x20
-#define SPEAKER_FRONT_LEFT_OF_CENTER            0x40
-#define SPEAKER_FRONT_RIGHT_OF_CENTER           0x80
-#define SPEAKER_BACK_CENTER                     0x100
-#define SPEAKER_SIDE_LEFT                       0x200
-#define SPEAKER_SIDE_RIGHT                      0x400
-#define SPEAKER_TOP_CENTER                      0x800
-#define SPEAKER_TOP_FRONT_LEFT                  0x1000
-#define SPEAKER_TOP_FRONT_CENTER                0x2000
-#define SPEAKER_TOP_FRONT_RIGHT                 0x4000
-#define SPEAKER_TOP_BACK_LEFT                   0x8000
-#define SPEAKER_TOP_BACK_CENTER                 0x10000
-#define SPEAKER_TOP_BACK_RIGHT                  0x20000
-#define SPEAKER_RESERVED                        0x80000000
+#define SPEAKER_FRONT_LEFT              0x1
+#define SPEAKER_FRONT_RIGHT             0x2
+#define SPEAKER_FRONT_CENTER            0x4
+#define SPEAKER_LOW_FREQUENCY           0x8
+#define SPEAKER_BACK_LEFT               0x10
+#define SPEAKER_BACK_RIGHT              0x20
+#define SPEAKER_FRONT_LEFT_OF_CENTER    0x40
+#define SPEAKER_FRONT_RIGHT_OF_CENTER   0x80
+#define SPEAKER_BACK_CENTER             0x100
+#define SPEAKER_SIDE_LEFT               0x200
+#define SPEAKER_SIDE_RIGHT              0x400
+#define SPEAKER_TOP_CENTER              0x800
+#define SPEAKER_TOP_FRONT_LEFT          0x1000
+#define SPEAKER_TOP_FRONT_CENTER        0x2000
+#define SPEAKER_TOP_FRONT_RIGHT         0x4000
+#define SPEAKER_TOP_BACK_LEFT           0x8000
+#define SPEAKER_TOP_BACK_CENTER         0x10000
+#define SPEAKER_TOP_BACK_RIGHT          0x20000
+#define SPEAKER_RESERVED                0x80000000
 
 /* my extras*/
 #define SPKRS_UNASSIGNED        (0)
-#define SPKRS_MONO              (0x00000001)
+#define SPKRS_MONO              (0x00000004)    /* RWD 11:20 correction, was 0x01! */
 #define SPKRS_STEREO            (0x00000003)
 #define SPKRS_GENERIC_QUAD      (0x00000033)
 #define SPKRS_SURROUND_LCRS     (0x00000107)
