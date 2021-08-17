@@ -264,7 +264,7 @@ int read_special_data(char *str,dataptr dz)
     //      int exit_status = FINISHED;
     aplptr ap = dz->application;
     //TW AVOIDS WARNING
-    str = str;
+    //str = str;
 
     switch(ap->special_data) {
     default:
