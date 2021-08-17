@@ -1095,7 +1095,7 @@ int adjust_buffers(int *step,float **inputbuf_end,int *samps_read,int *drnk_bufn
     int baksamps, total_samps_read, seektest;
     int reflect_off_start = FALSE, reflect_off_end = FALSE;
     if(*drnk_bufno < 0) {
-        sprintf(errstr,"ADJUST_BUFFERS START bufno = %ld (less than zero)\n",*drnk_bufno);
+        sprintf(errstr,"ADJUST_BUFFERS START bufno = %d (less than zero)\n",*drnk_bufno);
         return(PROGRAM_ERROR);
     }
     do {
@@ -1147,7 +1147,7 @@ int adjust_buffers(int *step,float **inputbuf_end,int *samps_read,int *drnk_bufn
             reflect_off_end = FALSE;
     } while(reflect_off_end);
     if(*drnk_bufno < 0) {
-        sprintf(errstr,"ADJUST_BUFFERS END bufno = %ld (less than zero)\n",*drnk_bufno);
+        sprintf(errstr,"ADJUST_BUFFERS END bufno = %d (less than zero)\n",*drnk_bufno);
         return(PROGRAM_ERROR);
     }
     return(FINISHED);
@@ -1262,7 +1262,7 @@ int advance_to_correct_bigbuf(float **inputbuf_end,int *samps_read,int *drnk_buf
 {
     int exit_status;
     if(*drnk_bufno < 0) {
-        sprintf(errstr,"advance_to_correct_bigbuf: drnk_bufno = %ld (less than zero)\n",*drnk_bufno);
+        sprintf(errstr,"advance_to_correct_bigbuf: drnk_bufno = %d (less than zero)\n",*drnk_bufno);
         return(PROGRAM_ERROR);
     }
     while(dz->flbufptr[0] >= *inputbuf_end) {       /* ADVANCE ALONG FILE */
