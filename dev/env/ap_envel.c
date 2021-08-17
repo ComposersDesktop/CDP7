@@ -1645,6 +1645,7 @@ int inner_loop
 (int *peakscore,int *descnt,int *in_start_portion,int *least,int *pitchcnt,int windows_in_buf,dataptr dz)
 {
     //TW PREVENT WARNINGS
+#if 0
     peakscore = peakscore;
     descnt = descnt;
     in_start_portion = in_start_portion;
@@ -1652,7 +1653,7 @@ int inner_loop
     pitchcnt = pitchcnt;
     windows_in_buf = windows_in_buf;
     dz = dz;
-
+#endif
     return(FINISHED);
 }
 
