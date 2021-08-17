@@ -95,7 +95,7 @@ int sloom = 1;
 int sloombatch = 0;
 // updated for new modify radical bitreduce mode
 //const char* cdp_version = "7.0.0";
-const char* cdp_version = "6.2.0";
+const char* cdp_version = "7.1.0";
 /******************************* MAIN/CDPARAMS *******************************/
 
 int main(int argc, char *argv[])
@@ -237,18 +237,18 @@ void initialise_application_vals(aplptr ap)
     ap->accepts_conflicting_srates = FALSE;
     ap->param_name                    = NULL;
     ap->flagname                      = NULL;
-    ap->special_data_name     = (char)0;
-    ap->special_data_name2    = (char)0;
+    ap->special_data_name     = (char*)0;
+    ap->special_data_name2    = (char*)0;
     ap->param_cnt                     = (char)0;
     ap->option_cnt                    = (char)0;
     ap->vflag_cnt                     = (char)0;
     ap->variant_param_cnt     = (char)0;
     ap->total_input_param_cnt = (char)0;
-    ap->lo                                    = NULL;
-    ap->hi                                    = NULL;
+    ap->lo                            = NULL;
+    ap->hi                            = NULL;
     ap->default_val                   = NULL;
-    ap->lolo                                  = NULL;
-    ap->hihi                                  = NULL;
+    ap->lolo                          = NULL;
+    ap->hihi                          = NULL;
     ap->display_type                  = NULL;
     ap->has_subrange                  = NULL;
     ap->param_list                    = NULL;
