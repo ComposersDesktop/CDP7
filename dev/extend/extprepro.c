@@ -249,7 +249,7 @@ int sort_zigs(dataptr dz)
     double convert_to_time = 1.0/(double)dz->infile->channels/(double)dz->infile->srate;
     if(minzig > (dz->buflen/2)-1) {
         sprintf(errstr,"splicelen too long to work with available memory\n"
-                "Longest splicelen available %d msecs.\n",
+                "Longest splicelen available %ld msecs.\n",
                 round((double)(((((dz->buflen/2)-1) - safety)/2)/(double)dz->infile->channels/(double)dz->infile->srate) * SECS_TO_MS)-1);
         return(GOAL_FAILED);
     }
