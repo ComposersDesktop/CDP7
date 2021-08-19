@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2020 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -585,8 +585,8 @@ int usage2(char *str)
 int usage3(char *str1,char *str2)
 {
     //TW AVOID WARNINGS
-    str1 = str1;
-    str2 = str2;
+    //str1 = str1;
+    //str2 = str2;
 
     sprintf(errstr,"Insufficient parameters on command line.\n");
     return(USAGE_ONLY);
