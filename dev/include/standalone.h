@@ -39,35 +39,35 @@
 #define ANALJOIN        257
 #define PTOBRK          258
 #define PSOW_STRETCH    259
-#define PSOW_DUPL               260
-#define PSOW_DEL                261
+#define PSOW_DUPL       260
+#define PSOW_DEL        261
 #define PSOW_STRFILL    262
 
-#define ONEFORM_GET             263
-#define ONEFORM_PUT             264
+#define ONEFORM_GET     263
+#define ONEFORM_PUT     264
 #define ONEFORM_COMBINE 265
-#define PSOW_FREEZE             266
-#define PSOW_CHOP               267
-#define PSOW_INTERP             268
-#define NEWGATE                 269
+#define PSOW_FREEZE     266
+#define PSOW_CHOP       267
+#define PSOW_INTERP     268
+#define NEWGATE         269
 #define PSOW_FEATURES   270
-#define PSOW_SYNTH              271
-#define PSOW_IMPOSE             272
-#define PSOW_SPLIT              273
-#define PSOW_SPACE              274
+#define PSOW_SYNTH      271
+#define PSOW_IMPOSE     272
+#define PSOW_SPLIT      273
+#define PSOW_SPACE      274
 #define PSOW_INTERLEAVE 275
 #define PSOW_REPLACE    276
-#define PSOW_EXTEND             277
-#define PSOW_LOCATE             278
-#define PSOW_CUT                279
-#define SPEC_REMOVE             280
+#define PSOW_EXTEND     277
+#define PSOW_LOCATE     278
+#define PSOW_CUT        279
+#define SPEC_REMOVE     280
 #define PSOW_EXTEND2    281
-#define PREFIXSIL               282
-#define STRANS                  283
-#define PSOW_REINF              284
+#define PREFIXSIL       282
+#define STRANS          283
+#define PSOW_REINF      284
 #define PARTIALS_HARM   285
-#define SPECROSS                286
-#define MCHITER                 287
+#define SPECROSS        286
+#define MCHITER         287
 
 /* These are new programs which behave differently to standard CDP progs */
 /* These numbers follow on consecutively from values processno.h */
@@ -206,17 +206,17 @@
 #define MIX_MULTI       (57344) // 1110000000000000     filetype
 
 // These numbers follow on consecutively from values in special.h
-#define TAPDELAY_DATA   68
-#define TAPDELAY_OPTION 69
+#define TAPDELAY_DATA           68
+#define TAPDELAY_OPTION         69
 #define P_BRK_DATA              70
 #define SYNTHBANK               71
 #define TIMEVARYING_SYNTHBANK   72
-#define PSOW_REINFORCEMENT              73
-#define PSOW_INHARMONICS                74
-#define FOFEX_EXCLUDES  75
-#define FOFBANK_INFO    76
+#define PSOW_REINFORCEMENT      73
+#define PSOW_INHARMONICS        74
+#define FOFEX_EXCLUDES          75
+#define FOFBANK_INFO            76
 #define MCHANDATA               77
-#define MANYSIL_DATA    78
+#define MANYSIL_DATA            78
 #define RETIME_DATA             79
 #define FRAMEDATA               80
 #define IDEAL_DATA              81
@@ -225,7 +225,7 @@
 #define WRAP_FOCUS              84
 #define ANTIPHON                85
 #define CROSSPAN                86
-#define RETEMPO_DATA    87
+#define RETEMPO_DATA            87
 #define RETIME_MASK             88
 #define OCHANDATA               89
 #define FLUTTERDATA             90
@@ -234,18 +234,18 @@
 #define MZIGDATA                93
 /* #define TS_HARM              94  in science.h */
 #define TUNING                  95
-#define TUNELOW_DATA    96
+#define TUNELOW_DATA            96
 #define ISOLATES                97
 #define ISOGROUPS               98
 #define ISOSLICES               99
 #define ISOSYLLS                100
 #define PANOLSPKRS              101
 #define PAK_TIMES               102
-#define SYN_PARTIALS    103
+#define SYN_PARTIALS            103
 #define SHRFOC                  104
-#define NTEX_TRANPOS    105
+#define NTEX_TRANPOS            105
 #define CYCLECNTS               106
-#define MAD_SEQUENCE    107
+#define MAD_SEQUENCE            107
 #define SHFCYCLES               108
 #define ENVSERIES               109
 #define SPEKLDATA               110
@@ -253,7 +253,7 @@
 #define ITERTRANS               112
 #define ITERTRANSF              113
 #define SYN_SPEK                114
-#define SYN_FILTERBANK  115
+#define SYN_FILTERBANK          115
 #define COUTHREADS              116
 #define RHYMORLINK              117
 // these numbers follow on consecutively DOWNwards from vals in tkglobals.h
