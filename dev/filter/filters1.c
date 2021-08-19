@@ -263,7 +263,7 @@ void do_attenuation(int atten_index, float *ib2,dataptr dz)
     thisgain = pow(dz->param[FLT_SAMPATTEN],(double)(atten_factor * dz->iparam[FLT_MSAMPDEL]));
     for (n = 0; n < dz->insams[0]; n++) {
         ib2[n] = (float)((double)ib2[n] * thisgain);
-        n++;
+        //   n++;  /* RWD 12/20: can't be right to increment twice */
     }
 }
 
