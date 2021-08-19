@@ -405,7 +405,7 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
 }
 
 /********************** SETUP_PARAMETER_STORAGE_AND_CONSTANTS ********************/
-/* RWD mallo changed to calloc; helps debug verison run as release! */
+/* RWD malloc changed to calloc; helps debug version run as release! */
 
 int setup_parameter_storage_and_constants(int storage_cnt,dataptr dz)
 {
@@ -668,45 +668,45 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             }
             break;
         case(INPUT_FILESIZE+4):
-            if(sscanf(argv[cnt],"%ld",&filesize)!=1) {
+            if(sscanf(argv[cnt],"%d",&filesize)!=1) {
                 sprintf(errstr,"Cannot read infilesize sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->insams[0] = filesize;
             break;
         case(INPUT_INSAMS+4):
-            if(sscanf(argv[cnt],"%ld",&insams)!=1) {
+            if(sscanf(argv[cnt],"%d",&insams)!=1) {
                 sprintf(errstr,"Cannot read insams sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->insams[0] = insams;
             break;
         case(INPUT_SRATE+4):
-            if(sscanf(argv[cnt],"%ld",&dz->infile->srate)!=1) {
+            if(sscanf(argv[cnt],"%d",&dz->infile->srate)!=1) {
                 sprintf(errstr,"Cannot read srate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
         case(INPUT_CHANNELS+4):
-            if(sscanf(argv[cnt],"%ld",&dz->infile->channels)!=1) {
+            if(sscanf(argv[cnt],"%d",&dz->infile->channels)!=1) {
                 sprintf(errstr,"Cannot read channels sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
         case(INPUT_STYPE+4):
-            if(sscanf(argv[cnt],"%ld",&dz->infile->stype)!=1) {
+            if(sscanf(argv[cnt],"%d",&dz->infile->stype)!=1) {
                 sprintf(errstr,"Cannot read stype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
         case(INPUT_ORIGSTYPE+4):
-            if(sscanf(argv[cnt],"%ld",&dz->infile->origstype)!=1) {
+            if(sscanf(argv[cnt],"%d",&dz->infile->origstype)!=1) {
                 sprintf(errstr,"Cannot read origstype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
         case(INPUT_ORIGRATE+4):
-            if(sscanf(argv[cnt],"%ld",&dz->infile->origrate)!=1) {
+            if(sscanf(argv[cnt],"%d",&dz->infile->origrate)!=1) {
                 sprintf(errstr,"Cannot read origrate sent from TK\n");
                 return(DATA_ERROR);
             }
@@ -724,7 +724,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             }
             break;
         case(INPUT_ORIGCHANS+4):
-            if(sscanf(argv[cnt],"%ld",&dz->infile->origchans)!=1) {
+            if(sscanf(argv[cnt],"%d",&dz->infile->origchans)!=1) {
                 sprintf(errstr,"Cannot read origchans sent from TK\n");
                 return(DATA_ERROR);
             }
@@ -737,13 +737,13 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             dz->specenvcnt = dz->infile->specenvcnt;
             break;
         case(INPUT_WANTED+4):
-            if(sscanf(argv[cnt],"%ld",&dz->wanted)!=1) {
+            if(sscanf(argv[cnt],"%d",&dz->wanted)!=1) {
                 sprintf(errstr,"Cannot read wanted sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
         case(INPUT_WLENGTH+4):
-            if(sscanf(argv[cnt],"%ld",&dz->wlength)!=1) {
+            if(sscanf(argv[cnt],"%d",&dz->wlength)!=1) {
                 sprintf(errstr,"Cannot read wlength sent from TK\n");
                 return(DATA_ERROR);
             }
@@ -792,7 +792,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             }
             break;
         case(INPUT_BRKSIZE+4):
-            if(sscanf(argv[cnt],"%ld",&inbrksize)!=1) {
+            if(sscanf(argv[cnt],"%d",&inbrksize)!=1) {
                 sprintf(errstr,"Cannot read brksize sent from TK\n");
                 return(DATA_ERROR);
             }
@@ -829,19 +829,19 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             }
             break;
         case(INPUT_NUMSIZE+4):
-            if(sscanf(argv[cnt],"%ld",&dz->numsize)!=1) {
+            if(sscanf(argv[cnt],"%d",&dz->numsize)!=1) {
                 sprintf(errstr,"Cannot read numsize sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
         case(INPUT_LINECNT+4):
-            if(sscanf(argv[cnt],"%ld",&dz->linecnt)!=1) {
+            if(sscanf(argv[cnt],"%d",&dz->linecnt)!=1) {
                 sprintf(errstr,"Cannot read linecnt sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
         case(INPUT_ALL_WORDS+4):
-            if(sscanf(argv[cnt],"%ld",&dz->all_words)!=1) {
+            if(sscanf(argv[cnt],"%d",&dz->all_words)!=1) {
                 sprintf(errstr,"Cannot read all_words sent from TK\n");
                 return(DATA_ERROR);
             }
