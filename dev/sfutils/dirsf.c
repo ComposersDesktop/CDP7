@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (c) 1983-2013 Martin Atkins, Richard Dobson and Composers Desktop Project Ltd
  * http://people.bath.ac.uk/masrwd
  * http://www.composersdesktop.com
@@ -165,7 +165,7 @@ PROGRAM_NUMBER(0x94589004);
 int
 main(int argc, char *argv[])
 {
-    int rc;
+    int rc = SFDIR_NOTFOUND; /* a guess, to suppress warning */;
     int option = 0;
     int cded = 0;           /* did we cd? */
 #if defined(_WIN32) || defined(__SC__)
