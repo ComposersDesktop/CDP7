@@ -792,7 +792,8 @@ static int read_peak_lsf(int channels, struct sf_file *f)
                 peak[1]  = REVDWBYTES(peak[1]);
 #endif
 
-                f->peaks[i].value = (float) peak[0];
+                //f->peaks[i].value = (float) peak[0]; /* JPFF change - RWD not sure this is OK yet */
+                f->peaks[i].value = *(float *) &(peak[0]);
                 f->peaks[i].position = peak[1];
         }
         return 0;
@@ -833,7 +834,8 @@ static int read_peak_msf(int channels, struct sf_file *f)
                 peak[1]  = REVDWBYTES(peak[1]);
 #endif
 
-                f->peaks[i].value = (float) peak[0]; //*((float *) &peak[0]);
+               //f->peaks[i].value = (float) peak[0]; /* JPFF change - RWD not sure this is OK yet */
+                f->peaks[i].value = *(float *) &(peak[0]);
                 f->peaks[i].position = peak[1];
         }
         return 0;
@@ -7015,9 +7017,9 @@ long cdp_round(double fval)
 {
     int result;
         _asm{
-                fld             fval
+                fld     fval
                 fistp   result
-                mov             eax,result
+                mov     eax,result
         }
         return (long) result;
 }
@@ -7030,7 +7032,7 @@ long cdp_round(double fval)
     int k;
         k = (int)(fabs(fval)+0.5);
         if(fval < 0.0)
-                k = -k;
+            k = -k;
         return (long) k;
 }
 
