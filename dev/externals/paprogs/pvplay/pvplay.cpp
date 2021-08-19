@@ -275,8 +275,8 @@ static unsigned NextPowerOf2(unsigned val)
 }
 
 #define N_BFORMATS (10)
-static const int bformats[N_BFORMATS] = {2,3,4,5,6,7,8,9,11,16};
-static const int layout_chans[] = {1,2,4,4,5,5,6,6,8,8,8,8};
+//static const int bformats[N_BFORMATS] = {2,3,4,5,6,7,8,9,11,16};
+//static const int layout_chans[] = {1,2,4,4,5,5,6,6,8,8,8,8};
 /* no M flag here */
 enum {FLAG_B = 0, FLAG_BM, FLAG_D, FLAG_G, FLAG_H, FLAG_I, FLAG_L, FLAG_NFLAGS};
 
