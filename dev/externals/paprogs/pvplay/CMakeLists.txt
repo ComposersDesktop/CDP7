@@ -1,6 +1,6 @@
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.7  -arch x86_64 -Dunix  -fomit-frame-pointer -funroll-loops")
-  set(CMAKE_CXX_FLAGS "-O2 -Wall -mmacosx-version-min=10.7  -arch x86_64 -Dunix -fomit-frame-pointer -funroll-loops")
+  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.8 -Dunix  -fomit-frame-pointer -funroll-loops")
+  set(CMAKE_CXX_FLAGS "-O2 -Wall -mmacosx-version-min=10.8 -Dunix -fomit-frame-pointer -funroll-loops -std=c++11 -stdlib=libc++")
   include_directories ( /Developer/Headers/FlatCarbon )
   find_library(COREAUDIOLIB CoreAudio)
   find_library(AUDIOTOOLBOX AudioToolbox)
