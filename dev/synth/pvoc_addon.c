@@ -1,28 +1,28 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2020 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
  This file is part of the CDP System.
 
- The CDP System is free software; you can redistribute it
- and/or modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
+    The CDP System is free software; you can redistribute it
+    and/or modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
- The CDP System is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Lesser General Public License for more details.
+    The CDP System is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU Lesser General Public
- License along with the CDP System; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
- 02111-1307 USA
+    You should have received a copy of the GNU Lesser General Public
+    License along with the CDP System; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA
  *
  */
 
-
+/* RWD 22/02/2018  replaced hamming with vonhann window for smooth frame transition. */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,28 +43,29 @@ static int  outfloats(float *nextOut, float *maxsampl,float *minsample,int *num_
 static int  pvoc_float_array(int nnn,float **ptr);
 static int  sndwrite_header(float R,dataptr dz);
 static void hamming(float *win,int winLen,int even);
+static void vonhann(float *win,int winLen,int even);
 static int  pvoc_time_display(int nI,unsigned int samps_so_far,int srate,int *samptime,dataptr dz);
 
 static void reset_file_params_for_analout(int orig_proctype,int orig_srate,
-                                          int orig_chans,int orig_stype,dataptr dz);
+            int orig_chans,int orig_stype,dataptr dz);
 
 /****************************** PVOC_OUT *************************
- *
+ *  
  *  1) This code assumes there is an output analysis file from a previous process.
  *  2) It assumes that the NAME of that file (orig_outfilename) is NOT the name of the new file being created.
  *      In fact its name have a HIGHER numeric index, so when it is deleted there are no gaps
  *      in the numbering of VALID outfiles (which run from 0 upwards).
- *      3) root_outfname is the base outfilename, without its numeric add-on
- *         'jj' is the humeric extension which will be added to that root name.
+ *  3) root_outfname is the base outfilename, without its numeric add-on
+ *     'jj' is the humeric extension which will be added to that root name.
  *  4) any INPUT file(s) to previous process MUST BE CLOSED before calling this function
  *  5) floats_out = number of float samples in analysis file
  *  6) samps_so_far is counter of TOTAL floats written out to any output files so far,
  *      and is accumulated to the write-count sent to the timer-display bar by PVOC.
  *      It does not affect counters in writing of file data.
  *      Time-display for the process containing this function should be calculated as fraction of dz->tempsize,
- *              which itself must hold the total of ALL the samps written out to ALL the files over the whole process.
+ *      which itself must hold the total of ALL the samps written out to ALL the files over the whole process.
  *  7) the original analysis file (input to this function) is closed AND DELETED by this process.
- *      8) mxfft() must be included in compilation, for this to work.
+ *  8) mxfft() must be included in compilation, for this to work.
  */
 
 int pvoc_out
@@ -92,36 +93,36 @@ int pvoc_out
                 return(MEMORY_ERROR);
         }
     }
-    strcpy(dz->wordstor[0],orig_outfilename);       /* save name of file in dz->wordstor[0]: in this case, no malloc reqd */
+    strcpy(dz->wordstor[0],orig_outfilename);   /* save name of file in dz->wordstor[0]: in this case, no malloc reqd */
 
-    strcpy(filename,root_outname);                          /* create new outfilename, for sound output */
-    //TW REVISION new protocol : always pass outfile extension to cmdline
+    strcpy(filename,root_outname);              /* create new outfilename, for sound output */
+//TW REVISION new protocol : always pass outfile extension to cmdline
     insert_new_number_at_filename_end(filename,jj,0);
-    dz->infilecnt = 2;                                              /* tell system we have 1 inputfile */
+    dz->infilecnt = 2;                      /* tell system we have 1 inputfile */
     /*RWD Feb 2004 write full anal props so we can inspect etc */
 #ifdef _DEBUG
     if(sndputprop(dz->ofd,"original sampsize", (char *)&(dz->outfile->origstype), sizeof(int)) < 0){
-        sprintf(errstr,"Failure to write original sample size. headwrite()\n");
-        return(PROGRAM_ERROR);
-    }
-    if(sndputprop(dz->ofd,"original sample rate", (char *)&(dz->outfile->origrate), sizeof(int)) < 0){
-        sprintf(errstr,"Failure to write original sample rate. headwrite()\n");
-        return(PROGRAM_ERROR);
-    }
-    if(sndputprop(dz->ofd,"arate",(char *)&(dz->outfile->arate),sizeof(float)) < 0){
-        sprintf(errstr,"Failed to write analysis sample rate. headwrite()\n");
-        return(PROGRAM_ERROR);
-    }
-    if(sndputprop(dz->ofd,"analwinlen",(char *)&(dz->outfile->Mlen),sizeof(int)) < 0){
-        sprintf(errstr,"Failure to write analysis window length. headwrite()\n");
-        return(PROGRAM_ERROR);
-    }
-    if(sndputprop(dz->ofd,"decfactor",(char *)&(dz->outfile->Dfac),sizeof(int)) < 0){
-        sprintf(errstr,"Failure to write decimation factor. headwrite()\n");
-        return(PROGRAM_ERROR);
-    }
-#endif
-    /* set output file as input file */
+            sprintf(errstr,"Failure to write original sample size. headwrite()\n");
+            return(PROGRAM_ERROR);
+        }
+        if(sndputprop(dz->ofd,"original sample rate", (char *)&(dz->outfile->origrate), sizeof(int)) < 0){
+            sprintf(errstr,"Failure to write original sample rate. headwrite()\n");
+            return(PROGRAM_ERROR);
+        }
+        if(sndputprop(dz->ofd,"arate",(char *)&(dz->outfile->arate),sizeof(float)) < 0){
+            sprintf(errstr,"Failed to write analysis sample rate. headwrite()\n");
+            return(PROGRAM_ERROR);
+        }
+        if(sndputprop(dz->ofd,"analwinlen",(char *)&(dz->outfile->Mlen),sizeof(int)) < 0){
+            sprintf(errstr,"Failure to write analysis window length. headwrite()\n");
+            return(PROGRAM_ERROR);
+        }
+        if(sndputprop(dz->ofd,"decfactor",(char *)&(dz->outfile->Dfac),sizeof(int)) < 0){
+            sprintf(errstr,"Failure to write decimation factor. headwrite()\n");
+            return(PROGRAM_ERROR);
+        }
+#endif  
+/* set output file as input file */
     sndcloseEx(dz->ofd);
     dz->ofd = -1;
     if(dz->ifd == NULL)
@@ -139,7 +140,7 @@ int pvoc_out
         stype = SAMP_SHORT;
     dz->true_outfile_stype = stype;
     if((dz->ofd = sndcreat_formatted(filename,-1,stype,
-                                     1,(int)round(dz->param[SS_SRATE]),CDP_CREATE_NORMAL)) < 0) {
+            1,(int)round(dz->param[SS_SRATE]),CDP_CREATE_NORMAL)) < 0) {
         sprintf(errstr,"Cannot open output intermediate soundfile %s\n", filename);
         return(DATA_ERROR);
     }
@@ -148,7 +149,7 @@ int pvoc_out
     /*RWD need retval - may run out of memory! */
 
     if((exit_status = pvoc_process_addon(*samps_so_far,dz)) < 0)
-        //TW Bare messages break sound Loom messaging system
+//TW Bare messages break sound Loom messaging system
         return exit_status;
     samps_so_far += dz->total_samps_written;
 
@@ -172,33 +173,54 @@ int pvoc_out
 }
 
 /****************************** HAMMING ******************************/
-
+#if 0
 void hamming(float *win,int winLen,int even)
 {
     float Pi,ftmp;
     int i;
 
-    /***********************************************************
-                                        Pi = (float)((double)4.*atan((double)1.));
-    ***********************************************************/
+/***********************************************************
+                    Pi = (float)((double)4.*atan((double)1.));
+***********************************************************/
     Pi = (float)PI;
     ftmp = Pi/winLen;
 
     if (even) {
         for (i=0; i<winLen; i++)
-            *(win+i) = (float)((double).54 + (double).46*cos((double)(ftmp*((float)i+.5))));
+        *(win+i) = (float)((double).54 + (double).46*cos((double)(ftmp*((float)i+.5))));
         *(win+winLen) = 0.0f;}
     else{   *(win) = 1.0f;
         for (i=1; i<=winLen; i++)
-            *(win+i) =(float)((double).54 + (double).46*cos((double)(ftmp*(float)i)));
+        *(win+i) =(float)((double).54 + (double).46*cos((double)(ftmp*(float)i)));
     }
     return;
 }
+#endif
+/*RWD 22/03/18 maybe need to use this? */
+void vonhann(float *win,int winLen,int even)
+{
+    float Pi,ftmp;
+    int i;
+
+    Pi = (float)PI;
+    ftmp = Pi/winLen;
+
+    if (even) {
+        for (i=0; i<winLen; i++)
+            *(win+i) = (float)(.5 + .5 *cos(ftmp*((double)i+.5)));
+        *(win+winLen) = 0.0f;
+    }
+    else{    *(win) = 1.0f;
+        for (i=1; i<=winLen; i++)
+            *(win+i) =(float)(.5 + .5 *cos(ftmp*(double)i));
+    }
+}
+
 
 /****************************** FLOAT_ARRAY ******************************/
 
 int pvoc_float_array(int nnn,float **ptr)
-{       /* set up a floating point array length nnn. */
+{   /* set up a floating point array length nnn. */
     *ptr = (float *) calloc(nnn,sizeof(float));
     if(*ptr==NULL){
         sprintf(errstr,"pvoc: insufficient memory\n");
@@ -214,65 +236,65 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
     int exit_status;
     int num_overflows = 0;
     int samptime = SAMP_TIME_STEP;
-    float   *input,                 /* pointer to start of input buffer */
-        *output,                /* pointer to start of output buffer */
-        *anal,                  /* pointer to start of analysis buffer */
-        *syn,                   /* pointer to start of synthesis buffer */
-        //                      *banal,                 /* pointer to anal[1] (for FFT calls) */
-        *bsyn,                  /* pointer to syn[1]  (for FFT calls) */
-        //                      *nextIn,                /* pointer to next empty word in input */
-        *nextOut,               /* pointer to next empty word in output */
-        *analWindow,    /* pointer to center of analysis window */
-        *synWindow,             /* pointer to center of synthesis window */
-        *maxAmp,                /* pointer to start of max amp buffer */
-        *avgAmp,                /* pointer to start of avg amp buffer */
-        *avgFrq,                /* pointer to start of avg frq buffer */
-        *env,                   /* pointer to start of spectral envelope */
-        *i0,                    /* pointer to amplitude channels */
-        *i1,                    /* pointer to frequency channels */
-        *oldInPhase,    /* pointer to start of input phase buffer */
-        *oldOutPhase,   /* pointer to start of output phase buffer */
-        maxsample = 0.0, minsample = 0.0, biggest;
+    float   *input,         /* pointer to start of input buffer */
+            *output,        /* pointer to start of output buffer */
+            *anal,          /* pointer to start of analysis buffer */
+            *syn,           /* pointer to start of synthesis buffer */
+//          *banal,         /* pointer to anal[1] (for FFT calls) */
+            *bsyn,          /* pointer to syn[1]  (for FFT calls) */
+//          *nextIn,        /* pointer to next empty word in input */
+            *nextOut,       /* pointer to next empty word in output */
+            *analWindow,    /* pointer to center of analysis window */
+            *synWindow,     /* pointer to center of synthesis window */
+            *maxAmp,        /* pointer to start of max amp buffer */
+            *avgAmp,        /* pointer to start of avg amp buffer */
+            *avgFrq,        /* pointer to start of avg frq buffer */
+            *env,           /* pointer to start of spectral envelope */
+            *i0,            /* pointer to amplitude channels */
+            *i1,            /* pointer to frequency channels */
+            *oldInPhase,    /* pointer to start of input phase buffer */
+            *oldOutPhase,   /* pointer to start of output phase buffer */
+            maxsample = 0.0, minsample = 0.0, biggest;
 
-    int             M = 0,                  /* length of analWindow impulse response */
-        D = 0,                  /* decimatin factor */
-        I = 0,                  /* interpolation factor (default will be I=D)*/
-        pvoc_chans = dz->infile->channels - 2,
-        analWinLen,             /* half-length of analysis window */
-        synWinLen;              /* half-length of synthesis window */
+    int     M = 0,          /* length of analWindow impulse response */
+            D = 0,          /* decimation factor */
+            I = 0,          /* interpolation factor (default will be I=D)*/
+            pvoc_chans = dz->infile->channels - 2,
+            analWinLen,     /* half-length of analysis window */
+            synWinLen;      /* half-length of synthesis window */
 
-    int     outCount,               /* number of samples written to output */
-        ibuflen,                /* length of input buffer */
-        obuflen,                /* length of output buffer */
-        nI = 0,                 /* current input (analysis) sample */
-        nO,                             /* current output (synthesis) sample */
-        nMaxOut;                /* last output (synthesis) sample */
-    int     isr,                    /* sampling rate */
-        endsamp = VERY_BIG_INT;
+    int outCount,       /* number of samples written to output */
+            ibuflen,        /* length of input buffer */
+            obuflen,        /* length of output buffer */
+            nI = 0,         /* current input (analysis) sample */
+            nO,             /* current output (synthesis) sample */
+            nMaxOut;        /* last output (synthesis) sample */
+    int isr,            /* sampling rate */
+            endsamp = VERY_BIG_INT;
 
-    float   mag,                    /* magnitude of analysis data */
-        phase,                  /* phase of analysis data */
-        //RoverTwoPi,               /* R/D divided by 2*Pi */
-        TwoPioverR,             /* 2*Pi divided by R/I */
-        sum,                    /* scale factor for renormalizing windows */
-        //rIn,                    /* decimated sampling rate */
-        rOut,                   /* pre-interpolated sampling rate */
-        R;                              /* input sampling rate */
+    float   mag,            /* magnitude of analysis data */
+            phase,          /* phase of analysis data */
+            //RoverTwoPi,     /* R/D divided by 2*Pi */
+            TwoPioverR,     /* 2*Pi divided by R/I */
+            sum,            /* scale factor for renormalizing windows */
+            //rIn,            /* decimated sampling rate */
+            rOut,           /* pre-interpolated sampling rate */
+            R;              /* input sampling rate */
 
-    int             i,j,k,          /* index variables */
-        Dd,                     /* number of new inputs to read (Dd <= D) */
-        Ii,                     /* number of new outputs to write (Ii <= I) */
-        N2,                     /* pvoc_chans/2 */
-        NO,                     /* synthesis NO = pvoc_chans / P */
-        NO2,            /* NO/2 */
-        IO,                     /* synthesis IO = I / P */
-        IOi,            /* synthesis IOi = Ii / P */
-        Mf = 0,         /* flag for even M */
+    int     i,j,k,      /* index variables */
+            Dd,         /* number of new inputs to read (Dd <= D) */
+            Ii,         /* number of new outputs to write (Ii <= I) */
+            N2,         /* pvoc_chans/2 */
+            NO,         /* synthesis NO = pvoc_chans / P */
+            NO2,        /* NO/2 */
+            IO,         /* synthesis IO = I / P */
+            IOi,        /* synthesis IOi = Ii / P */
+            Mf = 0,     /* flag for even M */
 #ifdef SINGLE_SAMP
-        rv,                     /* return value from fgetfloat */
+            rv,         /* return value from fgetfloat */
 #endif
-        flag = 0;       /* end-of-input flag */
-    float   arate;          /* sample rate for header on stdout if -A */
+            flag = 0;   /* end-of-input flag */
+    float   arate;      /* sample rate for header on stdout if -A */
 
     /*RWD*/
     float F = 0.0f;
@@ -286,9 +308,9 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
         char *mem;
 
         if((mem = malloc(64*SECSIZE)) == 0
-           //TW dz->snd_ifd no longer exists
+//TW dz->snd_ifd no longer exists
            /* RWD Nov 2011 not allowed to call sndsetbuf these days! */
-           /*      ||sndsetbuf(dz->ifd[0], mem, 64) < 0 */ ) {                /*RWD*/
+    /*  ||sndsetbuf(dz->ifd[0], mem, 64) < 0 */ ) {        /*RWD*/
             sprintf(errstr, "pvoc: Can't set big input buffer\n");
             return(MEMORY_ERROR);
         }
@@ -296,7 +318,7 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
 
     isr      = dz->infile->origrate;
     arate    = dz->infile->arate;
-    M                = dz->infile->Mlen;
+    M        = dz->infile->Mlen;
     D        = dz->infile->Dfac;
     R        = ((float) D * arate);
 
@@ -319,7 +341,7 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
     obuflen = 4 * M;
 
     I   = D;
-    NO  = pvoc_chans;       /* synthesis transform will be NO points */
+    NO  = pvoc_chans;   /* synthesis transform will be NO points */
     NO2 = NO/2;
     IO  = I;
 
@@ -327,35 +349,37 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
         return(exit_status);
 
     /* set up analysis window: The window is assumed to be symmetric
-       with M total points.  After the initial memory allocation,
-       analWindow always points to the midpoint of the window
-       (or one half sample to the right, if M is even); analWinLen
-       is half the true window length (rounded down). Any low pass
-       window will work; a Hamming window is generally fine,
-       but a Kaiser is also available.  If the window duration is
-       longer than the transform (M > N), then the window is
-       multiplied by a sin(x)/x function to meet the condition:
-       analWindow[Ni] = 0 for i != 0.  In either case, the
-       window is renormalized so that the phase vocoder amplitude
-       estimates are properly scaled.  The maximum allowable
-       window duration is ibuflen/2. */
+        with M total points.  After the initial memory allocation,
+        analWindow always points to the midpoint of the window
+        (or one half sample to the right, if M is even); analWinLen
+        is half the true window length (rounded down). Any low pass
+        window will work; a Hamming window is generally fine,
+        but a Kaiser is also available.  If the window duration is
+        longer than the transform (M > N), then the window is
+        multiplied by a sin(x)/x function to meet the condition:
+        analWindow[Ni] = 0 for i != 0.  In either case, the
+        window is renormalized so that the phase vocoder amplitude
+        estimates are properly scaled.  The maximum allowable
+        window duration is ibuflen/2. */
 
     if((exit_status = pvoc_float_array(M+Mf,&analWindow))<0)
         return(exit_status);
     analWindow += (analWinLen = M/2);
 
-    hamming(analWindow,analWinLen,Mf);
-
+    //hamming(analWindow,analWinLen,Mf);
+    vonhann(analWindow,analWinLen,Mf);
+    
+    
     for (i = 1; i <= analWinLen; i++)
         *(analWindow - i) = *(analWindow + i - Mf);
 
     if (M > pvoc_chans) {
         if (Mf)
-            *analWindow *=(float)
-                ((double)pvoc_chans*sin((double)PI*.5/pvoc_chans)/(double)(PI*.5));
-        for (i = 1; i <= analWinLen; i++)
+        *analWindow *=(float)
+        ((double)pvoc_chans*sin((double)PI*.5/pvoc_chans)/(double)(PI*.5));
+        for (i = 1; i <= analWinLen; i++) 
             *(analWindow + i) *=(float)
-                ((double)pvoc_chans * sin((double) (PI*(i+.5*Mf)/pvoc_chans)) / (PI*(i+.5*Mf)));  /*RWD*/
+            ((double)pvoc_chans * sin((double) (PI*(i+.5*Mf)/pvoc_chans)) / (PI*(i+.5*Mf)));  /*RWD*/
         for (i = 1; i <= analWinLen; i++)
             *(analWindow - i) = *(analWindow + i - Mf);
     }
@@ -364,23 +388,24 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
     for (i = -analWinLen; i <= analWinLen; i++)
         sum += *(analWindow + i);
 
-    sum = (float)(2.0/sum);         /*factor of 2 comes in later in trig identity*/
+    sum = (float)(2.0/sum);     /*factor of 2 comes in later in trig identity*/
 
     for (i = -analWinLen; i <= analWinLen; i++)
         *(analWindow + i) *= sum;
 
     /* set up synthesis window:  For the minimal mean-square-error
-       formulation (valid for N >= M), the synthesis window
-       is identical to the analysis window (except for a
-       scale factor), and both are even in length.  If N < M,
-       then an interpolating synthesis window is used. */
+        formulation (valid for N >= M), the synthesis window
+        is identical to the analysis window (except for a
+        scale factor), and both are even in length.  If N < M,
+        then an interpolating synthesis window is used. */
 
     if((exit_status = pvoc_float_array(M+Mf,&synWindow))<0)
         return(exit_status);
     synWindow += (synWinLen = M/2);
 
     if (M <= pvoc_chans){
-        hamming(synWindow,synWinLen,Mf);
+        //hamming(synWindow,synWinLen,Mf);
+        vonhann(synWindow,synWinLen,Mf);
         for (i = 1; i <= synWinLen; i++)
             *(synWindow - i) = *(synWindow + i - Mf);
 
@@ -396,15 +421,16 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
         for (i = -synWinLen; i <= synWinLen; i++)
             *(synWindow + i) *= sum;
     } else {
-        hamming(synWindow,synWinLen,Mf);
+        //hamming(synWindow,synWinLen,Mf);
+        vonhann(synWindow,synWinLen,Mf);
         for (i = 1; i <= synWinLen; i++)
             *(synWindow - i) = *(synWindow + i - Mf);
 
         if (Mf)
             *synWindow *= (float)((double)IO * sin((double) (PI*.5/IO)) / (double)(PI*.5));
-        for (i = 1; i <= synWinLen; i++)
+        for (i = 1; i <= synWinLen; i++) 
             *(synWindow + i) *=(float)
-                ((double)IO * sin((double) (PI*(i+.5*Mf)/IO)) /(double) (PI*(i+.5*Mf)));
+            ((double)IO * sin((double) (PI*(i+.5*Mf)/IO)) /(double) (PI*(i+.5*Mf)));
         for (i = 1; i <= synWinLen; i++)
             *(synWindow - i) = *(synWindow + i - Mf);
 
@@ -415,30 +441,30 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
     }
 
     /* set up input buffer:  nextIn always points to the next empty
-       word in the input buffer (i.e., the sample following
-       sample number (n + analWinLen)).  If the buffer is full,
-       then nextIn jumps back to the beginning, and the old
-       values are written over. */
+        word in the input buffer (i.e., the sample following
+        sample number (n + analWinLen)).  If the buffer is full,
+        then nextIn jumps back to the beginning, and the old
+        values are written over. */
 
     if((exit_status = pvoc_float_array(ibuflen,&input))<0)
         return(exit_status);
 
-    //      nextIn = input;
+//  nextIn = input;
 
     /* set up output buffer:  nextOut always points to the next word
-       to be shifted out.  The shift is simulated by writing the
-       value to the standard output and then setting that word
-       of the buffer to zero.  When nextOut reaches the end of
-       the buffer, it jumps back to the beginning.  */
+        to be shifted out.  The shift is simulated by writing the
+        value to the standard output and then setting that word
+        of the buffer to zero.  When nextOut reaches the end of
+        the buffer, it jumps back to the beginning.  */
 
     if((exit_status = pvoc_float_array(obuflen,&output))<0)
         return(exit_status);
 
     nextOut = output;
     /* set up analysis buffer for (N/2 + 1) channels: The input is real,
-       so the other channels are redundant. oldInPhase is used
-       in the conversion to remember the previous phase when
-       calculating phase difference between successive samples. */
+        so the other channels are redundant. oldInPhase is used
+        in the conversion to remember the previous phase when
+        calculating phase difference between successive samples. */
 
     if((exit_status = pvoc_float_array(pvoc_chans+2,&anal))<0)
         return(exit_status);
@@ -455,9 +481,9 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
         return(exit_status);
 
     /* set up synthesis buffer for (pvoc_chans/2 + 1) channels: (This is included
-       only for clarity.)  oldOutPhase is used in the re-
-       conversion to accumulate angle differences (actually angle
-       difference per second). */
+        only for clarity.)  oldOutPhase is used in the re-
+        conversion to accumulate angle differences (actually angle
+        difference per second). */
 
     if((exit_status = pvoc_float_array(NO+2,&syn))<0)
         return(exit_status);
@@ -467,33 +493,33 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
         return(exit_status);
 
     /* initialization: input time starts negative so that the rightmost
-       edge of the analysis filter just catches the first non-zero
-       input samples; output time is always T times input time. */
+        edge of the analysis filter just catches the first non-zero
+        input samples; output time is always T times input time. */
 
     outCount = 0;
     //rIn  = (float)(R/(float)D);
     rOut = (float)(R/(float)I);
     //RoverTwoPi = (float)(rIn/TWOPI);
     TwoPioverR = (float)(TWOPI/rOut);
-    nI = -(analWinLen / D) * D;     /* input time (in samples) */
-    nO = nI;                                        /* output time (in samples) */
-    Dd = analWinLen + nI + 1;       /* number of new inputs to read */
-    Ii = 0;                         /* number of new outputs to write */
+    nI = -(analWinLen / D) * D; /* input time (in samples) */
+    nO = nI;                    /* output time (in samples) */
+    Dd = analWinLen + nI + 1;   /* number of new inputs to read */
+    Ii = 0;             /* number of new outputs to write */
     IOi = 0;
     flag = 1;
 
     /* main loop:  If endsamp is not specified it is assumed to be very large
-       and then readjusted when fgetfloat detects the end of input. */
+        and then readjusted when fgetfloat detects the end of input. */
 
     while(nI < (endsamp + analWinLen)){
 #ifdef SINGLE_SAMP
-        for (i = 0; i < pvoc_chans+2; i++){             /* synthesis only */
+        for (i = 0; i < pvoc_chans+2; i++){     /* synthesis only */
             if ((rv = fgetfloat((anal+i),dz->ifd[0])) <= 0){
                 goto epilog;
             }
         }
 #else
-        //TW snd_ibuf no longer exists
+//TW snd_ibuf no longer exists
         if((i = fgetfbufEx(anal, pvoc_chans+2, dz->ifd[0],0)) < 0) {       /*RWD*/
             sfperror("pvoc: read error: ");
             return(PROGRAM_ERROR);
@@ -502,22 +528,22 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
             goto epilog;
 #endif
 
-        /* reconversion: The magnitude and angle-difference-per-second in syn
-           (assuming an intermediate sampling rate of rOut) are
-           converted to real and imaginary values and are returned in syn.
-           This automatically incorporates the proper phase scaling for
-           time modifications. */
+    /* reconversion: The magnitude and angle-difference-per-second in syn
+        (assuming an intermediate sampling rate of rOut) are
+        converted to real and imaginary values and are returned in syn.
+        This automatically incorporates the proper phase scaling for
+        time modifications. */
 
         if (NO <= pvoc_chans){
             for (i = 0; i < NO+2; i++)
                 *(syn+i) = *(anal+i);
         } else {
-            for (i = 0; i <= pvoc_chans+1; i++)
+            for (i = 0; i <= pvoc_chans+1; i++) 
                 *(syn+i) = *(anal+i);
-            for (i = pvoc_chans+2; i < NO+2; i++)
+            for (i = pvoc_chans+2; i < NO+2; i++) 
                 *(syn+i) = 0.0f;
         }
-
+        
         for(i=0, i0=syn, i1=syn+1; i<= NO2; i++,i0+=2,i1+=2) {
             mag = *i0;
             *(oldOutPhase + i) += *i1 - ((float) i * F);
@@ -526,15 +552,15 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
             *i1 = (float)((double)mag * sin((double)phase));
         }
 
-        /* synthesis: The synthesis subroutine uses the Weighted Overlap-Add
-           technique to reconstruct the time-domain signal.  The (pvoc_chans/2 + 1)
-           phase vocoder channel outputs at time n are inverse Fourier
-           transformed, windowed, and added into the output array.  The
-           subroutine thinks of output as a shift register in which
-           locations are referenced modulo obuflen.  Therefore, the main
-           program must take care to zero each location which it "shifts"
-           out (to standard output). The subroutines reals and fft
-           together perform an efficient inverse FFT.  */
+    /* synthesis: The synthesis subroutine uses the Weighted Overlap-Add
+        technique to reconstruct the time-domain signal.  The (pvoc_chans/2 + 1)
+        phase vocoder channel outputs at time n are inverse Fourier
+        transformed, windowed, and added into the output array.  The
+        subroutine thinks of output as a shift register in which 
+        locations are referenced modulo obuflen.  Therefore, the main
+        program must take care to zero each location which it "shifts"
+        out (to standard output). The subroutines reals and fft
+        together perform an efficient inverse FFT.  */
 
         if((exit_status = reals_(syn,bsyn,NO2,2))<0)
             return(exit_status);
@@ -551,7 +577,7 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
             k += NO;
         k = k % NO;
 
-        for (i = -synWinLen; i <= synWinLen; i++) {     /*overlap-add*/
+        for (i = -synWinLen; i <= synWinLen; i++) { /*overlap-add*/
             if (++j >= obuflen)
                 j -= obuflen;
             if (++k >= NO)
@@ -560,7 +586,7 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
         }
 
 #ifdef SINGLE_SAMP
-        for (i = 0; i < IOi; i++) {     /* shift out next IOi values */
+        for (i = 0; i < IOi; i++) { /* shift out next IOi values */
             fputfloat(nextOut,dz->ofd);
             *(nextOut++) = 0.;
             if (nextOut >= (output + obuflen))
@@ -571,7 +597,7 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
         for (i = 0; i < IOi;) { /* shift out next IOi values */
             int j;
             int todo = min(IOi-i, output+obuflen-nextOut);
-            if((exit_status = outfloats(nextOut,&maxsample,&minsample,&num_overflows,todo, dz))<0)
+                if((exit_status = outfloats(nextOut,&maxsample,&minsample,&num_overflows,todo, dz))<0)
                 return(exit_status);
             i += todo;
             outCount += todo;
@@ -581,16 +607,16 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
                 nextOut -= obuflen;
         }
 #endif
-
-        if(flag                                                         /* flag means do this operation only once */
-           && (nI > 0) && (Dd < D)) {                      /* EOF detected */
+                    
+        if(flag                             /* flag means do this operation only once */
+        && (nI > 0) && (Dd < D)) {          /* EOF detected */
             flag = 0;
             endsamp = nI + analWinLen - (D - Dd);
         }
 
-        nI += D;                                /* increment time */
+        nI += D;                /* increment time */
         nO += IO;
-        /* Dd = D except when the end of the sample stream intervenes */
+                                /* Dd = D except when the end of the sample stream intervenes */
         Dd = min(D, max(0, D+endsamp-nI-analWinLen));
 
         if (nO > (synWinLen + I))
@@ -609,7 +635,7 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
 
         if(nI > samptime && (exit_status = pvoc_time_display(nI,samps_so_far,isr,&samptime,dz))<0)
             return(exit_status);
-    }       /* End of main while loop */
+    }   /* End of main while loop */
 
     nMaxOut = endsamp;
     while (outCount <= nMaxOut){
@@ -633,7 +659,7 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
     if((exit_status = pvoc_time_display((int)endsamp,samps_so_far,isr,&samptime,dz))<0)
         return(exit_status);
 
- epilog:
+epilog:
 
 #ifndef NOOVERCHK
     if(num_overflows > 0) {
@@ -651,9 +677,9 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
 }
 
 /*MCA
- *      Convert floats -> shorts explicitly, since we are compiled with
- *      hardware FP(probably), and the sound filing system is not!
- *      (even without this, it should be more efficient!)
+ *  Convert floats -> shorts explicitly, since we are compiled with
+ *  hardware FP(probably), and the sound filing system is not!
+ *  (even without this, it should be more efficient!)
  */
 //TW NO CONVERSION TO FLOATS NEEDED 2002
 int outfloats(float *nextOut,float *maxsample,float *minsample,int *num_overflows,int todo, dataptr dz)
@@ -698,19 +724,19 @@ int outfloats(float *nextOut,float *maxsample,float *minsample,int *num_overflow
     }
 #endif
 
-    //      if(fputfbufEx(sbuf, todo, ofd) < todo) {
+//  if(fputfbufEx(sbuf, todo, ofd) < todo) {
     if(todo > 0) {
         if(write_samps(sbuf, todo, dz) < 0) {
             sfperror("pvoc: write error");
             return(SYSTEM_ERROR);;
         }
     }
-    //TW UPDATE
+//TW UPDATE
     return FINISHED;
 }
 
 /************************************ SNDWRITE_HEADER ************************************/
-/*RWD changed dz->ofd to to dz->ofd */
+ /*RWD changed dz->ofd to to dz->ofd */
 int sndwrite_header(float R,dataptr dz)
 {
     int Nchans = 1;
@@ -732,7 +758,7 @@ int pvoc_time_display(int nI,unsigned int samps_so_far,int srate,int *samptime,d
     true_srate = dz->infile->srate;
     dz->infile->channels = 1;
     dz->infile->srate    = srate;
-    display_virtual_time(nI + samps_so_far,dz);
+    display_virtual_time(nI + samps_so_far,dz); 
     dz->infile->channels = true_chans;
     dz->infile->srate    = true_srate;
     *samptime += SAMP_TIME_STEP;
@@ -740,32 +766,32 @@ int pvoc_time_display(int nI,unsigned int samps_so_far,int srate,int *samptime,d
 }
 
 /*void get_name_of_intermediate_file(char *filename,char *nufilename)
-  {
-  char temp[256];
-  char *p;
-  strcpy(nufilename,filename);
-  p = nufilename + strlen(nufilename) - 1;
-  while(p > nufilename) {
-  if(*p == '/' || *p == '\\' || *p == ':') {
-  p = nufilename;
-  break;
-  }
-  if(*p == '.') {
-  p--;
-  c = *p;
-  c += 2;
-  *p = c;
-  return;
-  }
-  p--;
-  }
-  if(p == nufilename) {
-  p = nufilename + strlen(nufilename) - 1;
-  c = *p;
-  c += 2;
-  *p = c;
-  }
-  }
+{
+    char temp[256];
+    char *p;
+    strcpy(nufilename,filename);
+    p = nufilename + strlen(nufilename) - 1;
+    while(p > nufilename) {
+        if(*p == '/' || *p == '\\' || *p == ':') {
+            p = nufilename;
+            break;
+        }
+        if(*p == '.') {
+            p--;
+            c = *p;
+            c += 2;
+            *p = c;
+            return;
+        }
+        p--;
+    }
+    if(p == nufilename) {
+        p = nufilename + strlen(nufilename) - 1;
+        c = *p;
+        c += 2;
+        *p = c;
+    }
+}
 
 
 */
@@ -778,15 +804,15 @@ void reset_file_params_for_sndout
     else
         stype = SAMP_SHORT;
     dz->true_outfile_stype = stype;
-
+    
     *orig_proctype = dz->process_type;
     *orig_srate    = dz->outfile->srate;
     *orig_chans    = dz->outfile->channels;
-    *orig_stype       = dz->outfile->stype;
+    *orig_stype   = dz->outfile->stype;
     dz->process_type = UNEQUAL_SNDFILE;
     dz->outfile->srate    = dz->infile->srate    = dz->iparam[SS_SRATE];
     dz->outfile->channels = MONO;
-    dz->outfile->stype       = stype;
+    dz->outfile->stype    = /*  dz->outfile->stype = */ stype;    /* RWD: should that be infile->stype? */
 }
 
 void reset_file_params_for_analout
@@ -794,6 +820,6 @@ void reset_file_params_for_analout
     dz->process_type = orig_proctype;
     dz->outfile->srate    = dz->infile->srate    = orig_srate;
     dz->outfile->channels = orig_chans;
-    dz->outfile->stype       = orig_stype;
+    dz->outfile->stype    = /* dz->outfile->stype = */ orig_stype;
 
 }
