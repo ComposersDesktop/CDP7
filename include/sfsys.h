@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1983-2013 Martin Atkins, Richard Dobson and Composers Desktop Project Ltd
- * http://people.bath.ac.uk/masrwd
+ * Copyright (c) 1983-2020 Martin Atkins, Richard Dobson and Composers Desktop Project Ltd
+ * http://www.rwdobson.com
  * http://www.composersdesktop.com
  *
  This file is part of the CDP System.
@@ -32,14 +32,6 @@
  */
 #ifndef __CDP_SFSYS_INCLUDED__
 #define __CDP_SFSYS_INCLUDED__
-#define SFSYS_H_RCSID   "$Id: sfsys.h%v 4.1 1994/10/31 15:19:34 martin Exp $"
-
-/*
- *      $Log: sfsys.h%v $
- * Revision 4.1  1994/10/31  15:19:34  martin
- * Starting with RCS
- *
- */
 
 /*
  *      This version of sfsys.h was introduced with version 2.33 of sfsys.prg
@@ -92,7 +84,7 @@ typedef struct sfprops
         wavetype        type;
         sampletype      samptype;
         fileformat      format;
-        channelformat chformat;
+        channelformat   chformat;
         int             origsize;               /*RWD 3:2000 needs UPDATING in pvoc to register all new sample types */
         int             origrate;
         int             origchans;              /* pitch, formant,transpos only */
@@ -153,8 +145,8 @@ extern void  sffinish(void);
  */
 /* header-size flags*/
 #define SFILE_CDP               (2)
-#define SFILE_PEAKONLY  (1)
-#define SFILE_MINIMUM   (0)
+#define SFILE_PEAKONLY          (1)
+#define SFILE_MINIMUM           (0)
 
 /* support opening read-only files - e.g from CD, also multiple opens */
 /* All new progs should use RDONLY wherever possible, when opening existing files */
@@ -323,7 +315,7 @@ extern int sndtellEx(int sfd);
 #define SAMP_2424       (4)
 #define SAMP_2432       (5)             /* illegal for AIFF, and probably for WAVE too , but what the...*/
 #define SAMP_2024       (6)             /* curioisity value: used by Alesis ADAT */
-#define SAMP_MASKED (7)         /*some weird WAVE_EX format!*/
+#define SAMP_MASKED     (7)         /*some weird WAVE_EX format!*/
 
 
 /*
