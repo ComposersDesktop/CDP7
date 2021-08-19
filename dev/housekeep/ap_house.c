@@ -21,7 +21,7 @@
  02111-1307 USA
  *
  */
-
+/* RWD 14-20: removed usage refs to 'dump' and 'recover' */
 
 
 /* floatsam version TW */
@@ -584,7 +584,7 @@ int usage1(void)
             "\n"
             "extract  copy   remove   chans   respec   bundle   sort   disk\n"
             //TW UPDATES
-            "bakup    dump   recover  gate    batchexpand    endclicks    deglitch\n"
+            "bakup    gate    batchexpand    endclicks    deglitch\n"
 
             "\n"
             "Type 'housekeep chans'  for more info on housekeep chans option... ETC.\n");
