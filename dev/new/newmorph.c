@@ -1,31 +1,29 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2020 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
  This file is part of the CDP System.
 
- The CDP System is free software; you can redistribute it
- and/or modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
+    The CDP System is free software; you can redistribute it
+    and/or modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
- The CDP System is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Lesser General Public License for more details.
+    The CDP System is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU Lesser General Public
- License along with the CDP System; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
- 02111-1307 USA
+    You should have received a copy of the GNU Lesser General Public
+    License along with the CDP System; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA
  *
  */
-
-
-
+ 
 //
-//      MPH_COS = 0
+//  MPH_COS = 0
 
 #define NMPH_COSTABSIZE (512)
 
@@ -50,7 +48,7 @@
 #include <speccon.h>
 // #include <filetype.h>
 // #include <modeno.h>
-#include <ctype.h>
+ #include <ctype.h>
 
 #ifdef unix
 #define round(x) lround((x))
@@ -60,18 +58,18 @@ char errstr[2400];
 const char* cdp_version = "7.1.0";
 
 /* extern */ int sloom = 0;
-/* extern */ int        sloombatch = 0;
+/* extern */ int    sloombatch = 0;
 /* extern */ int anal_infiles = 1;
 /* extern */ int is_converted_to_stereo = -1;
 
 /* CDP LIBRARY FUNCTIONS TRANSFERRED HERE */
 
-static int      set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char *paramlist);
+static int  set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char *paramlist);
 static int  set_vflgs(aplptr ap,char *optflags,int optcnt,char *optlist,
-                      char *varflags,int vflagcnt, int vparamcnt,char *varlist);
-static int      setup_parameter_storage_and_constants(int storage_cnt,dataptr dz);
-static int      initialise_is_int_and_no_brk_constants(int storage_cnt,dataptr dz);
-static int      mark_parameter_types(dataptr dz,aplptr ap);
+                char *varflags,int vflagcnt, int vparamcnt,char *varlist);
+static int  setup_parameter_storage_and_constants(int storage_cnt,dataptr dz);
+static int  initialise_is_int_and_no_brk_constants(int storage_cnt,dataptr dz);
+static int  mark_parameter_types(dataptr dz,aplptr ap);
 static int  establish_application(dataptr dz);
 static int  application_init(dataptr dz);
 static int  initialise_vflags(dataptr dz);
@@ -121,16 +119,16 @@ static int read_the_special_data(dataptr dz);
 int main(int argc,char *argv[])
 {
     int exit_status;
-    /*      FILE *fp   = NULL; */
+/*  FILE *fp   = NULL; */
     dataptr dz = NULL;
-    //      char *special_data_string = NULL;
+//  char *special_data_string = NULL;
     char **cmdline;
     int  cmdlinecnt;
     //aplptr ap;
     int is_launched = FALSE;
 
-    /* CHECK FOR SOUNDLOOM */
-    //TW UPDATE
+                        /* CHECK FOR SOUNDLOOM */
+//TW UPDATE
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
         fflush(stdout);
@@ -145,22 +143,21 @@ int main(int argc,char *argv[])
         return(FAILED);
     }
 
-    /* SET UP THE PRINCIPLE DATASTRUCTURE */
+                          /* SET UP THE PRINCIPLE DATASTRUCTURE */
     if((exit_status = establish_datastructure(&dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-
     if(!sloom) {
-        /* INITIAL CHECK OF CMDLINE DATA */
+                          /* INITIAL CHECK OF CMDLINE DATA */
         if((exit_status = make_initial_cmdline_check(&argc,&argv))<0) {
             print_messages_and_close_sndfiles(exit_status,is_launched,dz);
             return(FAILED);
         }
-        cmdline    = argv;      /* GET PRE_DATA, ALLOCATE THE APPLICATION, CHECK FOR EXTRA INFILES */
+        cmdline    = argv;  /* GET PRE_DATA, ALLOCATE THE APPLICATION, CHECK FOR EXTRA INFILES */
         cmdlinecnt = argc;
-        // get_process_and_mode_from_cmdline -->
-        if (!strcmp(argv[0],"newmorph")) {
+// get_process_and_mode_from_cmdline -->
+        if (!strcmp(argv[0],"newmorph")) {  
             dz->process = SPECMORPH;
             dz->maxmode = 7;
         } else if (!strcmp(argv[0],"newmorph2")) {
@@ -190,19 +187,19 @@ int main(int argc,char *argv[])
         //parse_TK_data() =
         if((exit_status = parse_sloom_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {     /* includes setup_particular_application()      */
             exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);/* and cmdlinelength check = sees extra-infiles */
-            return(exit_status);
+            return(exit_status);         
         }
     }
     //ap = dz->application;
 
-    // parse_infile_and_hone_type() =
+    // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
     // setup_param_ranges_and_defaults = MOVED IN THIS CASE ONLY TO LATER
 
-    /* OPEN FIRST INFILE AND STORE DATA, AND INFORMATION, APPROPRIATELY */
+                    /* OPEN FIRST INFILE AND STORE DATA, AND INFORMATION, APPROPRIATELY */
 
     if((exit_status = open_the_first_infile(cmdline[0],dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -210,7 +207,6 @@ int main(int argc,char *argv[])
     }
     cmdlinecnt--;
     cmdline++;
-
     if(dz->process == SPECMORPH) {
         if((exit_status = handle_the_extra_infiles(&cmdline,&cmdlinecnt,dz))<0) {
             print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -221,12 +217,15 @@ int main(int argc,char *argv[])
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-    // FOR display_virtual_time
-    if(dz->process == SPECMORPH && dz->mode == 6)
-        dz->tempsize = min(dz->insams[0],dz->insams[1]);
-    else
-        dz->tempsize = dz->insams[1] + ((int)round(dz->param[NMPH_STAG]/dz->frametime) * dz->wanted);
+    // FOR display_virtual_time 
 
+    if(dz->process == SPECMORPH) {
+        if(dz->mode == 6)
+            dz->tempsize = min(dz->insams[0],dz->insams[1]);
+        else
+            dz->tempsize = dz->insams[1] + ((int)round(dz->param[NMPH_STAG]/dz->frametime) * dz->wanted);
+    } else 
+            dz->tempsize = dz->insams[0];
     // handle_outfile
     if((exit_status = handle_the_outfile(&cmdlinecnt,&cmdline,is_launched,dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -244,7 +243,7 @@ int main(int argc,char *argv[])
         cmdline++;
     }
     // handle_special_data
-    if((exit_status = read_parameters_and_flags(&cmdline,&cmdlinecnt,dz))<0) {              // CDP LIB
+    if((exit_status = read_parameters_and_flags(&cmdline,&cmdlinecnt,dz))<0) {      // CDP LIB
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
@@ -254,14 +253,14 @@ int main(int argc,char *argv[])
             return(FAILED);
         }
     }
-    // check_param_validity_and_consistency =
+    // check_param_validity_and_consistency = 
     is_launched = TRUE;
 
     if((exit_status = allocate_new_triple_buffer(dz))<0){
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-    // param_preprocess =
+    // param_preprocess = 
     // spec_process_file
     if((exit_status = morph_preprocess(dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -283,7 +282,7 @@ int main(int argc,char *argv[])
 }
 
 /**********************************************
-                REPLACED CDP LIB FUNCTIONS
+        REPLACED CDP LIB FUNCTIONS
 **********************************************/
 
 
@@ -299,7 +298,7 @@ int set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char
             sprintf(errstr,"INSUFFICIENT MEMORY: for param_list\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->param_list,paramlist);
+        strcpy(ap->param_list,paramlist); 
     }
     return(FINISHED);
 }
@@ -309,7 +308,7 @@ int set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char
 int set_vflgs
 (aplptr ap,char *optflags,int optcnt,char *optlist,char *varflags,int vflagcnt, int vparamcnt,char *varlist)
 {
-    ap->option_cnt   = (char) optcnt;                       /*RWD added cast */
+    ap->option_cnt   = (char) optcnt;           /*RWD added cast */
     if(optcnt) {
         if((ap->option_list = (char *)malloc((size_t)(optcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for option_list\n");
@@ -375,7 +374,7 @@ int application_init(dataptr dz)
         return(exit_status);
 
     // establish_infile_constants() replaced by
-    dz->infilecnt = -2;     /* flags 2 or more */
+        dz->infilecnt = -2; /* flags 2 or more */
     // establish_bufptrs_and_extra_buffers
     dz->extra_bufcnt =  0;
     dz->bptrcnt = 5;
@@ -437,48 +436,48 @@ int initialise_is_int_and_no_brk_constants(int storage_cnt,dataptr dz)
 
 int mark_parameter_types(dataptr dz,aplptr ap)
 {
-    int n, m;                                                       /* PARAMS */
+    int n, m;                           /* PARAMS */
     for(n=0;n<ap->max_param_cnt;n++) {
         switch(ap->param_list[n]) {
-        case('0'):      break; /* dz->is_active[n] = 0 is default */
-        case('i'):      dz->is_active[n] = (char)1; dz->is_int[n] = (char)1;dz->no_brk[n] = (char)1; break;
-        case('I'):      dz->is_active[n] = (char)1;     dz->is_int[n] = (char)1;                                                 break;
-        case('d'):      dz->is_active[n] = (char)1;                                                     dz->no_brk[n] = (char)1; break;
-        case('D'):      dz->is_active[n] = (char)1;     /* normal case: double val or brkpnt file */     break;
+        case('0'):  break; /* dz->is_active[n] = 0 is default */
+        case('i'):  dz->is_active[n] = (char)1; dz->is_int[n] = (char)1;dz->no_brk[n] = (char)1; break;
+        case('I'):  dz->is_active[n] = (char)1; dz->is_int[n] = (char)1;                         break;
+        case('d'):  dz->is_active[n] = (char)1;                         dz->no_brk[n] = (char)1; break;
+        case('D'):  dz->is_active[n] = (char)1; /* normal case: double val or brkpnt file */     break;
         default:
             sprintf(errstr,"Programming error: invalid parameter type in mark_parameter_types()\n");
             return(PROGRAM_ERROR);
         }
-    }                                                               /* OPTIONS */
+    }                               /* OPTIONS */
     for(n=0,m=ap->max_param_cnt;n<ap->option_cnt;n++,m++) {
         switch(ap->option_list[n]) {
         case('i'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1; dz->no_brk[m] = (char)1; break;
-        case('I'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1;                                                  break;
-        case('d'): dz->is_active[m] = (char)1;                                                  dz->no_brk[m] = (char)1; break;
+        case('I'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1;                          break;
+        case('d'): dz->is_active[m] = (char)1;                          dz->no_brk[m] = (char)1; break;
         case('D'): dz->is_active[m] = (char)1;  /* normal case: double val or brkpnt file */     break;
         default:
             sprintf(errstr,"Programming error: invalid option type in mark_parameter_types()\n");
             return(PROGRAM_ERROR);
         }
-    }                                                               /* VARIANTS */
+    }                               /* VARIANTS */
     for(n=0,m=ap->max_param_cnt + ap->option_cnt;n < ap->variant_param_cnt; n++, m++) {
         switch(ap->variant_list[n]) {
         case('0'): break;
         case('i'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1; dz->no_brk[m] = (char)1; break;
-        case('I'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1;                                                  break;
-        case('d'): dz->is_active[m] = (char)1;                                                  dz->no_brk[m] = (char)1; break;
-        case('D'): dz->is_active[m] = (char)1; /* normal case: double val or brkpnt file */              break;
+        case('I'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1;                          break;
+        case('d'): dz->is_active[m] = (char)1;                          dz->no_brk[m] = (char)1; break;
+        case('D'): dz->is_active[m] = (char)1; /* normal case: double val or brkpnt file */      break;
         default:
             sprintf(errstr,"Programming error: invalid variant type in mark_parameter_types()\n");
             return(PROGRAM_ERROR);
         }
-    }                                                               /* INTERNAL */
+    }                               /* INTERNAL */
     for(n=0,
-            m=ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt; n<ap->internal_param_cnt; n++,m++) {
+    m=ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt; n<ap->internal_param_cnt; n++,m++) {
         switch(ap->internal_param_list[n]) {
-        case('0'):  break;       /* dummy variables: variables not used: but important for internal paream numbering!! */
-        case('i'):      dz->is_int[m] = (char)1;        dz->no_brk[m] = (char)1;        break;
-        case('d'):                                                              dz->no_brk[m] = (char)1;        break;
+        case('0'):  break;   /* dummy variables: variables not used: but important for internal paream numbering!! */
+        case('i'):  dz->is_int[m] = (char)1;    dz->no_brk[m] = (char)1;    break;
+        case('d'):                              dz->no_brk[m] = (char)1;    break;
         default:
             sprintf(errstr,"Programming error: invalid internal param type in mark_parameter_types()\n");
             return(PROGRAM_ERROR);
@@ -549,7 +548,7 @@ int setup_specmorph_application(dataptr dz)
 {
     int exit_status;
     aplptr ap;
-    if((exit_status = establish_application(dz))<0)         // GLOBAL
+    if((exit_status = establish_application(dz))<0)     // GLOBAL
         return(FAILED);
     ap = dz->application;
     // SEE parstruct FOR EXPLANATION of next 2 functions
@@ -590,22 +589,22 @@ int setup_specmorph_application(dataptr dz)
                 return(FAILED);
             break;
         }
-    }
+    }   
     dz->has_otherfile = FALSE;
     if(dz->process == SPECMORPH2) {
         if (dz->mode == 0) {
             dz->input_data_type = ANALFILE;
-            dz->process_type        = TO_TEXTFILE;
-            dz->outfiletype         = TEXTFILE_OUT;
+            dz->process_type    = TO_TEXTFILE;  
+            dz->outfiletype     = TEXTFILE_OUT;
         } else {
             dz->input_data_type = ANALFILE;
-            dz->process_type        = EQUAL_ANALFILE;
-            dz->outfiletype         = ANALFILE_OUT;
+            dz->process_type    = EQUAL_ANALFILE;   
+            dz->outfiletype     = ANALFILE_OUT;
         }
     } else {
         dz->input_data_type = TWO_ANALFILES;
-        dz->process_type        = BIG_ANALFILE;
-        dz->outfiletype         = ANALFILE_OUT;
+        dz->process_type    = BIG_ANALFILE; 
+        dz->outfiletype     = ANALFILE_OUT;
     }
     return application_init(dz);    //GLOBAL
 }
@@ -782,7 +781,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             }
             if(dz->mode > 0)
                 dz->mode--;
-            //setup_particular_application() =
+            //setup_particular_application()=
             if((exit_status = setup_specmorph_application(dz))<0)
                 return(exit_status);
             //ap = dz->application;
@@ -795,18 +794,18 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             }
             if(infilecnt < 1) {
                 true_cnt = cnt + 1;
-                cnt = PRE_CMDLINE_DATACNT;      /* force exit from loop after assign_file_data_storage */
+                cnt = PRE_CMDLINE_DATACNT;  /* force exit from loop after assign_file_data_storage */
             }
             if((exit_status = assign_file_data_storage(infilecnt,dz))<0)
                 return(exit_status);
             break;
-        case(INPUT_FILETYPE+4):
+        case(INPUT_FILETYPE+4): 
             if(sscanf(argv[cnt],"%d",&dz->infile->filetype)!=1) {
                 sprintf(errstr,"Cannot read filetype sent from TK (%s)\n",argv[cnt]);
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FILESIZE+4):
+        case(INPUT_FILESIZE+4): 
             if(sscanf(argv[cnt],"%d",&filesize)!=1) {
                 sprintf(errstr,"Cannot read infilesize sent from TK\n");
                 return(DATA_ERROR);
@@ -818,7 +817,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                 sprintf(errstr,"Cannot read insams sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = insams;
+            dz->insams[0] = insams; 
             break;
         case(INPUT_SRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->srate)!=1) {
@@ -862,7 +861,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGCHANS+4):
+        case(INPUT_ORIGCHANS+4):    
             if(sscanf(argv[cnt],"%d",&dz->infile->origchans)!=1) {
                 sprintf(errstr,"Cannot read origchans sent from TK\n");
                 return(DATA_ERROR);
@@ -893,7 +892,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                 return(DATA_ERROR);
             }
             break;
-            /* RWD these chanegs to samps - tk will have to deal with that! */
+            /* RWD these changes to samps - tk will have to deal with that! */
         case(INPUT_DESCRIPTOR_BYTES+4):
             if(sscanf(argv[cnt],"%d",&dz->descriptor_samps)!=1) {
                 sprintf(errstr,"Cannot read descriptor_samps sent from TK\n");
@@ -957,11 +956,11 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                         sprintf(errstr,"CDP has not established storage space for input brktable.\n");
                         return(PROGRAM_ERROR);
                     }
-                    dz->brksize[dz->extrabrkno]     = inbrksize;
+                    dz->brksize[dz->extrabrkno] = inbrksize;
                     break;
                 default:
                     sprintf(errstr,"TK sent brktablesize > 0 for input_data_type [%d] not using brktables.\n",
-                            dz->input_data_type);
+                    dz->input_data_type);
                     return(PROGRAM_ERROR);
                 }
                 break;
@@ -1001,7 +1000,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
         case(INPUT_WINDOW_SIZE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->window_size)!=1) {
                 sprintf(errstr,"Cannot read window_size sent from TK\n");
-                return(DATA_ERROR);
+                    return(DATA_ERROR);
             }
             break;
         case(INPUT_NYQUIST+4):
@@ -1010,7 +1009,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DURATION+4):
+        case(INPUT_DURATION+4): 
             if(sscanf(argv[cnt],"%lf",&dz->duration)!=1) {
                 sprintf(errstr,"Cannot read duration sent from TK\n");
                 return(DATA_ERROR);
@@ -1121,7 +1120,7 @@ int open_the_first_infile(char *filename,dataptr dz)
 
 int handle_the_extra_infiles(char ***cmdline,int *cmdlinecnt,dataptr dz)
 {
-    /* OPEN ANY FURTHER INFILES, CHECK COMPATIBILITY, STORE DATA AND INFO */
+                    /* OPEN ANY FURTHER INFILES, CHECK COMPATIBILITY, STORE DATA AND INFO */
     int  exit_status, n;
     char *filename;
 
@@ -1223,7 +1222,7 @@ int handle_the_outfile(int *cmdlinecnt,char ***cmdline,int is_launched,dataptr d
         dz->true_outfile_stype = stype;
         dz->outfilesize = -1;
         if((dz->ofd = sndcreat_formatted(dz->outfilename,dz->outfilesize,stype,
-                                         dz->infile->channels,dz->infile->srate,CDP_CREATE_NORMAL)) < 0) {
+                dz->infile->channels,dz->infile->srate,CDP_CREATE_NORMAL)) < 0) {
             sprintf(errstr,"Cannot open output file %s\n", dz->outfilename);
             return(DATA_ERROR);
         }
@@ -1252,13 +1251,13 @@ int handle_the_outfile(int *cmdlinecnt,char ***cmdline,int is_launched,dataptr d
 int usage1(void)
 {
     fprintf(stderr,
-            "\nNEW TYPES OF SPECTRAL MORPHING\n\n"
-            "USAGE: newmorph NAME mode infile1 infile2 outfile parameters: \n"
-            "\n"
-            "where NAME can be any one of\n"
-            "\n"
-            "newmorph  newmorph2\n\n"
-            "Type 'newmorph newmorph' for more info on newmorph newmorph..ETC.\n");
+    "\nNEW TYPES OF SPECTRAL MORPHING\n\n"
+    "USAGE: newmorph NAME mode infile1 infile2 outfile parameters: \n"
+    "\n"
+    "where NAME can be any one of\n"
+    "\n"
+    "newmorph  newmorph2\n\n"
+    "Type 'newmorph newmorph' for more info on newmorph newmorph..ETC.\n");
     return(USAGE_ONLY);
 }
 
@@ -1266,64 +1265,64 @@ int usage2(char *str)
 {
     if(!strcmp(str,"newmorph")) {
         fprintf(stderr,
-                "USAGE: newmorph newmorph 1-6 analfile1 analfile2 outanalfile\n"
-                "           stagger  startmorph  endmorph  exponent  peaks  [-e] [-n] [-f]\n"
-                "OR:    newmorph newmorph 7 analfile1 analfile2 outanalfile\n"
-                "           peaks  outcnt  [-e] [-n] [-f]\n"
-                "\n"
-                "MORPH BETWEEN DISSIMILAR SPECTRA\n"
-                "\n"
-                "STAGGER    Time before entry of file 2.\n"
-                "STARTMORPH Time (in 1st file) at which morph starts.\n"
-                "ENDMORPH   Time (in 1st file) at which morph ends.\n"
-                "EXPONENT   Exponent of interpolation.\n"
-                "PEAKS      Number of peaks to interpolate.\n"
-                "OUTCNT     Mode 7 makes \"outcnt\" distinct output files.\n"
-                "-e         Retain the loudness envelope of the first sound.\n"
-                "           (in this case output cuts off when 1st sound reaches its end).\n"
-                "-n         No interpolation of anything except the peaks.\n"
-                "-f         Only frq is determined by peaks in sound 2.\n"
-                "\n"
-                "MODES\n"
-                "1   interpolate linearly (exp 1) between the average peak channels\n"
-                "    or over a curve of increasing (exp >1) or decreasing (exp <1) slope,\n"
-                "    simultaneously moving spectral peaks, and interpolating all remaining channels.\n"
-                "\n"
-                "2   interpolate cosinusoidally (exp 1) between the average peak channels\n"
-                "    or over a warped cosinusoidal spline (exp not equal to 1),\n"
-                "    simultaneously moving spectral peaks, and interpolating all remaining channels.\n"
-                "\n"
-                "3   As mode 1, using channel-by-channel calculation of peaks.\n"
-                "4   As mode 2, using channel-by-channel calculation of peaks.\n"
-                "5   Sound 1 (gradually) tuned to (averaged) harmonic field sound 2. Linear.\n"
-                "6   Sound 1 (gradually) tuned to (averaged) harmonic field sound 2. Cosinusoidal.\n"
-                "7   Sound 1 morphed towards sound2 in \"outcnt\" steps, each step a new output file.\n"
-                "\n");
+        "USAGE: newmorph newmorph 1-6 analfile1 analfile2 outanalfile\n"
+        "           stagger  startmorph  endmorph  exponent  peaks  [-e] [-n] [-f]\n"
+        "OR:    newmorph newmorph 7 analfile1 analfile2 outanalfile\n"
+        "           peaks  outcnt  [-e] [-n] [-f]\n"
+        "\n"
+        "MORPH BETWEEN DISSIMILAR SPECTRA\n"
+        "\n"
+        "STAGGER    Time before entry of file 2.\n"
+        "STARTMORPH Time (in 1st file) at which morph starts.\n"
+        "ENDMORPH   Time (in 1st file) at which morph ends.\n"
+        "EXPONENT   Exponent of interpolation.\n"
+        "PEAKS      Number of peaks to interpolate.\n"
+        "OUTCNT     Mode 7 makes \"outcnt\" distinct output files.\n"
+        "-e         Retain the loudness envelope of the first sound.\n"
+        "           (in this case output cuts off when 1st sound reaches its end).\n"
+        "-n         No interpolation of anything except the peaks.\n"
+        "-f         Only frq is determined by peaks in sound 2.\n"
+        "\n"
+        "MODES\n"
+        "1   interpolate linearly (exp 1) between the average peak channels\n"
+        "    or over a curve of increasing (exp >1) or decreasing (exp <1) slope,\n"
+        "    simultaneously moving spectral peaks, and interpolating all remaining channels.\n"
+        "\n"
+        "2   interpolate cosinusoidally (exp 1) between the average peak channels\n"
+        "    or over a warped cosinusoidal spline (exp not equal to 1),\n"
+        "    simultaneously moving spectral peaks, and interpolating all remaining channels.\n"
+        "\n"
+        "3   As mode 1, using channel-by-channel calculation of peaks.\n"
+        "4   As mode 2, using channel-by-channel calculation of peaks.\n"
+        "5   Sound 1 (gradually) tuned to (averaged) harmonic field sound 2. Linear.\n"
+        "6   Sound 1 (gradually) tuned to (averaged) harmonic field sound 2. Cosinusoidal.\n"
+        "7   Sound 1 morphed towards sound2 in \"outcnt\" steps, each step a new output file.\n"
+    "\n");
     } else if(!strcmp(str,"newmorph2")) {
         fprintf(stderr,
-                "USAGE: newmorph newmorph2 1 analfileA outtextfile peakcnt\n"
-                "\n"
-                "Find frequencies of most prominent spectral peaks (in order of prominence).\n"
-                "Ouput these as a textfile list, a \"peaksfile\".\n"
-                "\n"
-                "OR:    newmorph newmorph2 2-3 analfileB peaksfile outanalfile\n"
-                "           startmorph  endmorph  exponent  peakcnt  [-rrand]\n"
-                "\n"
-                "Morph between dissimilar spectra\n"
-                "(Peaks of analfileB move towards peaks extracted from analfileA).\n"
-                "\n"
-                "PEAKCNT    Number of most-prominent source-peaks to find.\n"
-                "PEAKSFILE  Textfile listing goal-peak frequencies: most prominent first.\n"
-                "STARTMORPH Time at which morph starts.\n"
-                "ENDMORPH   Time at which morph ends.\n"
-                "EXPONENT   Exponent of interpolation.\n"
-                "-r         Randomisation of the goal peak frequency. (Range 0 - 1)\n"
-                "\n"
-                "MODES\n"
-                "\n"
-                "2   Sound (gradually) tuned to harmonic field specified in textfile \"peaksfile\".\n"
-                "3   Ditto, but interpolation is timewise-cosinusoidal.\n"
-                "\n");
+        "USAGE: newmorph newmorph2 1 analfileA outtextfile peakcnt\n"
+        "\n"
+        "Find frequencies of most prominent spectral peaks (in order of prominence).\n"
+        "Ouput these as a textfile list, a \"peaksfile\".\n"
+        "\n"
+        "OR:    newmorph newmorph2 2-3 analfileB outanalfile peaksfile \n"  /* RWD 11-20, corrected order */
+        "           startmorph  endmorph  exponent  peakcnt  [-rrand]\n"
+        "\n"
+        "Morph between dissimilar spectra\n"
+         "(Peaks of analfileB move towards peaks extracted from analfileA).\n"
+        "\n"
+        "PEAKCNT    Number of most-prominent source-peaks to find.\n"
+        "PEAKSFILE  Textfile listing goal-peak frequencies: most prominent first.\n"
+        "STARTMORPH Time at which morph starts.\n"
+        "ENDMORPH   Time at which morph ends.\n"
+        "EXPONENT   Exponent of interpolation.\n"
+        "-r         Randomisation of the goal peak frequency. (Range 0 - 1)\n"
+        "\n"
+        "MODES\n"
+        "\n"
+        "2   Sound (gradually) tuned to harmonic field specified in textfile \"peaksfile\".\n"
+        "3   Ditto, but interpolation is timewise-cosinusoidal.\n"
+        "\n");
     } else
         fprintf(stdout,"Unknown option '%s'\n",str);
     return(USAGE_ONLY);
@@ -1365,7 +1364,7 @@ int establish_bufptrs_and_extra_buffers(dataptr dz)
     return(FINISHED);
 }
 
-int read_special_data(char *str,dataptr dz)
+int read_special_data(char *str,dataptr dz) 
 {
     return(FINISHED);
 }
@@ -1401,7 +1400,7 @@ int get_the_mode_from_cmdline(char *str,dataptr dz)
         fprintf(stderr,"Program mode value [%d] is out of range [1 - %d].\n",dz->mode,dz->maxmode);
         return(USAGE_ONLY);
     }
-    dz->mode--;             /* CHANGE TO INTERNAL REPRESENTATION OF MODE NO */
+    dz->mode--;     /* CHANGE TO INTERNAL REPRESENTATION OF MODE NO */
     return(FINISHED);
 }
 
@@ -1412,35 +1411,40 @@ int specmorph(dataptr dz)
 #define FILE0 (0)
 #define FILE1 (1)
 
-    int             exit_status, cc, vc, peakcnt, n, m;
-    int     windows_to_buf0 = 0, windows_to_buf1 = 0, minsize;
-    int     start_of_morph, end_of_morph;
+    int     exit_status, cc, vc, peakcnt, n, m;
+    int windows_to_buf0 = 0, windows_to_buf1 = 0, minsize;
+    int start_of_morph = 0, end_of_morph = 0;
     double  alen = 0.0, interpratio;
-    int     window_position_in_current_buf_for_file1;
-    int     total_windows_processed_from_file0 = 0,
-        total_windows_processed_from_file1 = 0;
-    int             finished_file0 = 0,
-        finished_file1 = 0;
-    int     total_windows_in_file0 = dz->insams[0]/dz->wanted;
-    int     total_windows_in_file1 = dz->insams[1]/dz->wanted;
+    int window_position_in_current_buf_for_file1;
+    int total_windows_processed_from_file0 = 0, 
+            total_windows_processed_from_file1 = 0;
+    int     finished_file0 = 0, 
+            finished_file1 = 0;
+    int total_windows_in_file0 = dz->insams[0]/dz->wanted;
+    int total_windows_in_file1 = dz->insams[1]/dz->wanted;
     double *peakfrq1 = dz->parray[3], *peakamp2 = dz->parray[2];
     char    temp[64];
     int stype = SAMP_FLOAT;
 
-
-    if(dz->process == SPECMORPH && dz->mode == 6) {
-        start_of_morph  = 0;
-        minsize = dz->insams[0];
-        for(n=1;n<dz->infilecnt;n++)
-            minsize = min(dz->insams[n],minsize);
-        dz->wlength = minsize/dz->wanted;
-        end_of_morph = dz->wlength;
-    } else {
+    
+    if(dz->process == SPECMORPH) {
+        if (dz->mode == 6) {
+            start_of_morph  = 0;
+            minsize = dz->insams[0];
+            for(n=1;n<dz->infilecnt;n++)
+                minsize = min(dz->insams[n],minsize);
+            dz->wlength = minsize/dz->wanted;
+            end_of_morph = dz->wlength;
+        } else {
+            start_of_morph  = dz->iparam[NMPH_ASTT];
+            end_of_morph    = dz->iparam[NMPH_AEND];
+            alen            = (double)(dz->iparam[NMPH_AEND] - dz->iparam[NMPH_ASTT]);
+        }
+    } else if(dz->mode > 0) {   //  SPECMORPH2
         start_of_morph  = dz->iparam[NMPH_ASTT];
         end_of_morph    = dz->iparam[NMPH_AEND];
-        alen                    = (double)(dz->iparam[NMPH_AEND] - dz->iparam[NMPH_ASTT]);
+        alen            = (double)(dz->iparam[NMPH_AEND] - dz->iparam[NMPH_ASTT]);
     }
-
     if(dz->process == SPECMORPH && dz->mode != 6)
         window_position_in_current_buf_for_file1 = -dz->iparam[NMPH_STAG];
     else
@@ -1500,7 +1504,7 @@ int specmorph(dataptr dz)
                 sprintf(temp,"%d.ana",m);
                 strcat(dz->outfilename,temp);
                 if((dz->ofd = sndcreat_formatted(dz->outfilename,dz->outfilesize,stype,
-                                                 dz->infile->channels,dz->infile->srate,CDP_CREATE_NORMAL)) < 0) {
+                        dz->infile->channels,dz->infile->srate,CDP_CREATE_NORMAL)) < 0) {
                     sprintf(errstr,"Cannot open output file %s : %s\n", dz->outfilename,sferrstr());
                     return(DATA_ERROR);
                 }
@@ -1591,7 +1595,7 @@ int specmorph(dataptr dz)
             window_position_in_current_buf_for_file1++;
         }
     } while(!finished_file1);
-
+    
     return(FINISHED);
 }
 
@@ -1627,7 +1631,7 @@ int do_newmorph(double alen, dataptr dz)
         case(NMPH_LINEX):
             interpratio = pow(interpratio,dz->param[NMPH_AEXP]);
             break;
-        case(NMPH_LINET):
+        case(NMPH_LINET):  
             interpratio = pow(interpratio,dz->param[NMPH_AEXP]);
             time = (double)dz->total_windows * dz->frametime;
             if((exit_status = read_values_from_all_existing_brktables(time,dz))<0)
@@ -1648,7 +1652,7 @@ int do_newmorph(double alen, dataptr dz)
         }
     } else {
         switch(dz->mode) {
-        case(1):
+        case(1): 
             time = (double)dz->total_windows * dz->frametime;
             if((exit_status = read_values_from_all_existing_brktables(time,dz))<0)
                 return(exit_status);
@@ -1665,7 +1669,7 @@ int do_newmorph(double alen, dataptr dz)
     newmorph_core(interpratio,dz);
     dz->total_windows++;
     return(FINISHED);
-}
+}   
 
 /****************************** WARPED_COSIN ******************************/
 
@@ -1676,11 +1680,11 @@ int warped_cosin(double *interpratio,double exponent,dataptr dz)
         return(exit_status);
     if(*interpratio < .5) {
         if((exit_status = time_warp(interpratio,exponent,dz))<0)
-            return(exit_status);
+        return(exit_status);
     } else if(*interpratio > .5) {
         *interpratio = 1.0 - *interpratio;
         if((exit_status = time_warp(interpratio,exponent,dz))<0)
-            return(exit_status);
+        return(exit_status);
         *interpratio = 1.0 - *interpratio;
     }
     return(FINISHED);
@@ -1715,26 +1719,41 @@ int cosin_lookup(double *interpratio,dataptr dz)
 
 int check_consistency_of_newmorph_params(dataptr dz)
 {
-    double duration0, duration1;
+    double duration0, duration1 = 0.0;
+    int morphing = 0;
     if(dz->process == SPECMORPH && dz->mode == 6)
         return FINISHED;
     duration0  = (dz->insams[0]/dz->wanted) * dz->frametime;
-    duration1 = ((dz->insams[1]/dz->wanted) * dz->frametime) + dz->param[NMPH_STAG];
-    if(dz->param[NMPH_ASTT] < dz->param[NMPH_STAG]) {
-        sprintf(errstr,"start of amp interpolation is set before entry of 2nd soundfile.\n");
-        return(DATA_ERROR);
+    if(dz->process == SPECMORPH) {
+        duration1 = ((dz->insams[1]/dz->wanted) * dz->frametime) + dz->param[NMPH_STAG];
+        if(dz->param[NMPH_ASTT] < dz->param[NMPH_STAG]) {
+            sprintf(errstr,"start of amp interpolation is set before entry of 2nd soundfile.\n");
+            return(DATA_ERROR);
+        }
+        dz->iparam[NMPH_STAG] = round(dz->param[NMPH_STAG]/dz->frametime);
     }
-    if(dz->param[NMPH_AEND] > duration0 || dz->param[NMPH_AEND] > duration1) {
-        sprintf(errstr, "end of interpolation is beyond end of one of soundfiles.\n");
-        return(DATA_ERROR);
+    if(dz->process == SPECMORPH || dz->mode > 0)    //  i.e. also if process is SPECMORPH2 and we're not in mode 0
+        morphing = 1;
+    if(morphing) {
+        if(dz->process == SPECMORPH) {
+            if(dz->param[NMPH_AEND] > duration0 || dz->param[NMPH_AEND] > duration1) {
+                sprintf(errstr, "end of interpolation is beyond end of one of soundfiles.\n");
+                return(DATA_ERROR);
+            }
+        } else {
+            if(dz->param[NMPH_AEND] > duration0) {
+                fprintf(stdout, "WARNING : end of interpolation beyond end of soundfile, truncated to file duration.\n");
+                fflush(stdout);
+                dz->param[NMPH_AEND] = duration0;
+            }
+        }
+        if(dz->param[NMPH_AEND] <= dz->param[NMPH_ASTT]) {
+            sprintf(errstr,"interpolation starttime is after (or equal to) its endtime.\n");
+            return(USER_ERROR);
+        }
+        dz->iparam[NMPH_AEND] = round(dz->param[NMPH_AEND]/dz->frametime);      //  Convert to count in windows
+        dz->iparam[NMPH_ASTT] = round(dz->param[NMPH_ASTT]/dz->frametime);
     }
-    if(dz->param[NMPH_AEND] <= dz->param[NMPH_ASTT]) {
-        sprintf(errstr,"interpolation starttime is after (or equal to) its endtime.\n");
-        return(USER_ERROR);
-    }
-    dz->iparam[NMPH_AEND] = round(dz->param[NMPH_AEND]/dz->frametime);              //      Convert to count in windows
-    dz->iparam[NMPH_ASTT] = round(dz->param[NMPH_ASTT]/dz->frametime);
-    dz->iparam[NMPH_STAG] = round(dz->param[NMPH_STAG]/dz->frametime);
     return(FINISHED);
 }
 
@@ -1744,7 +1763,7 @@ int morph_preprocess(dataptr dz)
 {
     int exit_status;
     if((dz->process == SPECMORPH && (dz->mode==NMPH_COSIN || dz->mode==NMPH_COSINX || dz->mode==NMPH_COSINT)) \
-       || (dz->process == SPECMORPH2 && dz->mode==2))  {
+    || (dz->process == SPECMORPH2 && dz->mode==2))  {
         if((exit_status = make_newmorph_costable(dz))<0)
             return(exit_status);
     }
@@ -1772,11 +1791,11 @@ int make_newmorph_costable(dataptr dz)
         d2 += 1.0;
         d2 /= 2.0;
         d2 = 1.0 - d2;
-        d2 = min(d2,1.0);       /* trap calc errors */
+        d2 = min(d2,1.0);   /* trap calc errors */
         d2 = max(d2,0.0);
         dz->parray[0][n] = d2;
     }
-    dz->parray[0][n++] = 1.0;       /* wrap-around point */
+    dz->parray[0][n++] = 1.0;   /* wrap-around point */
     return(FINISHED);
 }
 
@@ -1852,19 +1871,19 @@ int find_the_average_spectral_peaks(dataptr dz)
             for(cc=0,vc=0;cc < dz->clength;cc++,vc+=2) {
                 peakamp1[cc] += fabs(dz->flbufptr[0][AMPP]);
                 if(totwcnt == 1)
-                    peakfrq1[cc] = fabs(dz->flbufptr[0][FREQ]);                                                     //      Get total amplitude for each channel
+                    peakfrq1[cc] = fabs(dz->flbufptr[0][FREQ]);                         //  Get total amplitude for each channel
                 else
-                    peakfrq1[cc] = (peakfrq1[cc] + fabs(dz->flbufptr[0][FREQ]))/2.0;        //      Get average freq for each channel
+                    peakfrq1[cc] = (peakfrq1[cc] + fabs(dz->flbufptr[0][FREQ]))/2.0;    //  Get average freq for each channel
                 totwcnt++;
             }
-        }
+        }           
     }
     for(n=0;n<dz->clength;n++) {
         if(peakamp1[n] > 0.0)
             peaks_possible1++;
     }
 
-    for(n=0;n < dz->clength - 1;n++) {                                                                                      //      Sort into loudness order
+    for(n=0;n < dz->clength - 1;n++) {                                          //  Sort into loudness order
         for(m = n+1; m < dz->clength;m++) {
             if(peakamp1[n] < peakamp1[m]) {
                 tempamp = peakamp1[n];
@@ -1884,7 +1903,7 @@ int find_the_average_spectral_peaks(dataptr dz)
         return SYSTEM_ERROR;
     }
 
-    samps_left = dz->insams[1];                                                     //      Same with 2nd file
+    samps_left = dz->insams[1];                         //  Same with 2nd file
     totwcnt = 0;
     while(samps_left) {
         if((exit_status = read_specific_file_to_specific_buf(FILE1,&windows_to_buf,dz->bigfbuf,dz))<0)
@@ -1903,7 +1922,7 @@ int find_the_average_spectral_peaks(dataptr dz)
                     peakfrq2[cc] = (peakfrq2[cc] + fabs(dz->flbufptr[0][FREQ]))/2.0;
             }
             totwcnt++;
-        }
+        }           
     }
     for(n=0;n < dz->clength - 1;n++) {
         for(m = n+1; m < dz->clength;m++) {
@@ -1924,31 +1943,31 @@ int find_the_average_spectral_peaks(dataptr dz)
         sprintf(errstr,"Sound seek failed in file 2\n");
         return SYSTEM_ERROR;
     }
-    //      Eliminate equivalents of peak in adjacent channels
+                                //  Eliminate equivalents of peak in adjacent channels
     done = 0;
     for(n=0;n<dz->clength-1;n++) {
         peaklo = peakno1[n] * dz->chwidth;
         peakhi = peaklo + dz->halfchwidth;
         peaklo = peaklo - dz->halfchwidth;
         for(m=n+1;m<dz->clength;m++) {
-            if(m >= peakcnt) {                                                                      //      once we have peakcnt valid peaks, quit
+            if(m >= peakcnt) {                                  //  once we have peakcnt valid peaks, quit
                 done = 1;
                 break;
             }
-            if(peakfrq1[m] > peaklo && peakfrq1[m] < peakhi) {      //      equivalent peak (with lower amp, as amps sorted into descending order)
+            if(peakfrq1[m] > peaklo && peakfrq1[m] < peakhi) {  //  equivalent peak (with lower amp, as amps sorted into descending order)
                 for(k = m+1; k < dz->clength; k++) {
-                    peakamp1[k-1] = peakamp1[k];                            //      eliminate
+                    peakamp1[k-1] = peakamp1[k];                //  eliminate
                     peakfrq1[k-1] = peakfrq1[k];
                     peakno1[k-1] = peakno1[k];
                 }
-                m--;                                                                                    //      stay at same place in loop
+                m--;                                            //  stay at same place in loop
             }
         }
         if(done)
             break;
     }
     done = 0;
-    //      Same for 2nd file
+                            //  Same for 2nd file 
     for(n=0;n<dz->clength-1;n++) {
         peaklo = peakno2[n] * dz->chwidth;
         peakhi = peaklo + dz->halfchwidth;
@@ -1984,7 +2003,7 @@ int find_the_average_spectral_peaks(dataptr dz)
         dz->iparam[NMPH_APKS] = peakcnt;
     }
 
-    // Finally : sort peaks into ascending order
+    // Finally : sort peaks into ascending order    
 
     for(n=0;n<peakcnt-1;n++) {
         for(m = n+1;m < peakcnt;m++) {
@@ -2014,7 +2033,7 @@ void newmorph_core(double interpratio,dataptr dz)
     memset((char *)dz->flbufptr[2],0,dz->wanted * sizeof(float));
 
     if((dz->process == SPECMORPH && dz->mode >= 4) || dz->process == SPECMORPH2) {
-        for(cc=0,vc=0;cc < dz->clength;cc++,vc+=2) {            //      Now do normal interpolation
+        for(cc=0,vc=0;cc < dz->clength;cc++,vc+=2) {        //  Now do normal interpolation
             frq0 = dz->flbufptr[0][FREQ];
             frq1 = peakfrq1[cc];
             if(dz->param[NMPH_RAND] > 0.0) {
@@ -2040,8 +2059,8 @@ void newmorph_core(double interpratio,dataptr dz)
     }
     if(dz->mode > 1)
         find_the_spectral_peaks(&peakcnt,dz);
-
-    for(n=0;n<peakcnt;n++) {                                                //      Interpolate between peak values, storing in 3rd buffer
+    
+    for(n=0;n<peakcnt;n++) {                        //  Interpolate between peak values, storing in 3rd buffer
         vc = peakno1[n];
         amp0 = dz->flbufptr[0][AMPP];
         frq0 = dz->flbufptr[0][FREQ];
@@ -2054,7 +2073,7 @@ void newmorph_core(double interpratio,dataptr dz)
         frq += frq0;
         cc = (int)round(frq/dz->chwidth);
         vc = cc * 2;
-        if(dz->vflag[2])                                                        //      If only the frq is determined by sound 2, retain the sound 1 (peak) amp
+        if(dz->vflag[2])                            //  If only the frq is determined by sound 2, retain the sound 1 (peak) amp
             dz->flbufptr[2][AMPP] = dz->flbufptr[0][AMPP];
         else
             dz->flbufptr[2][AMPP] = (float)amp;
@@ -2062,7 +2081,7 @@ void newmorph_core(double interpratio,dataptr dz)
         newpeak[n] = vc;
     }
     totamp_before = 0.0;
-    for(cc=0,vc=0;cc < dz->clength;cc++,vc+=2) {            //      Now do normal interpolation
+    for(cc=0,vc=0;cc < dz->clength;cc++,vc+=2) {        //  Now do normal interpolation
         totamp_before += dz->flbufptr[0][AMPP];
         frq0 = dz->flbufptr[0][FREQ];
         frq1 = dz->flbufptr[1][FREQ];
@@ -2070,10 +2089,10 @@ void newmorph_core(double interpratio,dataptr dz)
         frq += frq0;
         origvc = vc;
         done = 0;
-        for(n=0;n < peakcnt; n++) {                                             //      For channels with peak value, but not in same channel as peak in other file,
-            if(vc == peakno1[n] && vc != peakno2[n] ) {     //      give (originally a peak) an amp intermediate between adjacent channels (kludge!!)
-                vc -= 2;                                                                //      IF peak moces out oc channel, then orig peak-channel will not be too loud (hopefully)
-                if(vc < 0)                                                              //      If peaks doesn't move between chans, this interpd-val will be overwritten below.
+        for(n=0;n < peakcnt; n++) {                     //  For channels with peak value, but not in same channel as peak in other file,
+            if(vc == peakno1[n] && vc != peakno2[n] ) { //  give (originally a peak) an amp intermediate between adjacent channels (kludge!!)
+                vc -= 2;                                //  IF peak moces out oc channel, then orig peak-channel will not be too loud (hopefully)   
+                if(vc < 0)                              //  If peaks doesn't move between chans, this interpd-val will be overwritten below.
                     loamp = 0.0;
                 else
                     loamp = dz->flbufptr[0][AMPP];
@@ -2087,7 +2106,7 @@ void newmorph_core(double interpratio,dataptr dz)
                 amp1 = dz->flbufptr[1][AMPP];
                 done = 1;
                 break;
-            } else if(vc == peakno2[n] && vc != peakno1[n] ) {      // ditto
+            } else if(vc == peakno2[n] && vc != peakno1[n] ) {  // ditto
                 vc -= 2;
                 if(vc < 0)
                     loamp = 0.0;
@@ -2106,30 +2125,30 @@ void newmorph_core(double interpratio,dataptr dz)
             }
         }
         vc = origvc;
-        if(dz->vflag[1]) {                                                      // if -n flag set (no other interps), only interp the "done" (peak) chans
-            if(done) {                                                              //      leaving all other channels with their file1 values
+        if(dz->vflag[1]) {                          // if -n flag set (no other interps), only interp the "done" (peak) chans
+            if(done) {                              //  leaving all other channels with their file1 values
                 amp = (amp1 - amp0) * interpratio;
                 amp += amp0;
                 dz->flbufptr[0][AMPP] = (float)amp;
                 dz->flbufptr[0][FREQ] = (float)frq;
             }
         } else {
-            if (!done) {                                                            //      In standard case (NOT -n): if no pre-interp already done
-                amp0 = dz->flbufptr[0][AMPP];                   //      set up original chans for normal interp
+            if (!done) {                                //  In standard case (NOT -n): if no pre-interp already done 
+                amp0 = dz->flbufptr[0][AMPP];           //  set up original chans for normal interp
                 amp1 = dz->flbufptr[1][AMPP];
             }
-            amp = (amp1 - amp0) * interpratio;                      //      Now do the interp on pre-interpd (peak) chans AND on other chans
+            amp = (amp1 - amp0) * interpratio;          //  Now do the interp on pre-interpd (peak) chans AND on other chans
             amp += amp0;
             dz->flbufptr[0][AMPP] = (float)amp;
             dz->flbufptr[0][FREQ] = (float)frq;
         }
-    }                                                                                               //      THEN
-    for(n=0;n < peakcnt; n++) {                                             //      Overwrite normal interp with interpd-peaks
+    }                                               //  THEN
+    for(n=0;n < peakcnt; n++) {                     //  Overwrite normal interp with interpd-peaks  
         vc = newpeak[n];
         dz->flbufptr[0][AMPP] = dz->flbufptr[2][AMPP];
-        dz->flbufptr[0][FREQ] = dz->flbufptr[2][FREQ];
+        dz->flbufptr[0][FREQ] = dz->flbufptr[2][FREQ]; 
     }
-    if(dz->vflag[0]) {                                                              //      If -e, set window level to orig file1 window-level
+    if(dz->vflag[0]) {                              //  If -e, set window level to orig file1 window-level
         totamp_after  = 0.0;
         for(cc=0,vc=0;cc < dz->clength;cc++,vc+=2)
             totamp_after += dz->flbufptr[0][AMPP];
@@ -2150,7 +2169,7 @@ int allocate_new_triple_buffer(dataptr dz)
         sprintf(errstr,"Insufficient bufptrs established in allocate_new_triple_buffer()\n");
         return(PROGRAM_ERROR);
     }
-    //TW REVISED: buffers don't need to be multiples of secsize
+//TW REVISED: buffers don't need to be multiples of secsize
     buffersize = dz->wanted;
     dz->buflen = buffersize;
     if((dz->bigfbuf = (float*)malloc(dz->buflen*3 * sizeof(float)))==NULL) {
@@ -2185,9 +2204,9 @@ void find_the_spectral_peaks(int *peakcnt,dataptr dz)
     }
     for(cc=0,vc=0;cc < dz->clength;cc++,vc+=2) {
         peakamp1[cc] = fabs(dz->flbufptr[0][AMPP]);
-        peakfrq1[cc] = fabs(dz->flbufptr[0][FREQ]);                                                     //      Get total amplitude for each channel
+        peakfrq1[cc] = fabs(dz->flbufptr[0][FREQ]);                         //  Get total amplitude for each channel
     }
-    for(n=0;n < dz->clength - 1;n++) {                                                                                      //      Sort into loudness order
+    for(n=0;n < dz->clength - 1;n++) {                                          //  Sort into loudness order
         for(m = n+1; m < dz->clength;m++) {
             if(peakamp1[n] < peakamp1[m]) {
                 tempamp = peakamp1[n];
@@ -2204,9 +2223,9 @@ void find_the_spectral_peaks(int *peakcnt,dataptr dz)
     }
     for(cc=0,vc=0;cc < dz->clength;cc++,vc+=2) {
         peakamp2[cc] = fabs(dz->flbufptr[1][AMPP]);
-        peakfrq2[cc] = fabs(dz->flbufptr[1][FREQ]);                                                     //      Get total amplitude for each channel
+        peakfrq2[cc] = fabs(dz->flbufptr[1][FREQ]);                         //  Get total amplitude for each channel
     }
-    for(n=0;n < dz->clength - 1;n++) {                                                                                      //      Sort into loudness order
+    for(n=0;n < dz->clength - 1;n++) {                                          //  Sort into loudness order
         for(m = n+1; m < dz->clength;m++) {
             if(peakamp2[n] < peakamp2[m]) {
                 tempamp = peakamp2[n];
@@ -2228,24 +2247,24 @@ void find_the_spectral_peaks(int *peakcnt,dataptr dz)
         peakhi = peaklo + dz->halfchwidth;
         peaklo = peaklo - dz->halfchwidth;
         for(m=n+1;m<dz->clength;m++) {
-            if(m >= *peakcnt) {                                                                     //      once we have peakcnt valid peaks, quit
+            if(m >= *peakcnt) {                                 //  once we have peakcnt valid peaks, quit
                 done = 1;
                 break;
             }
-            if(peakfrq1[m] > peaklo && peakfrq1[m] < peakhi) {      //      equivalent peak (with lower amp, as amps sorted into descending order)
+            if(peakfrq1[m] > peaklo && peakfrq1[m] < peakhi) {  //  equivalent peak (with lower amp, as amps sorted into descending order)
                 for(k = m+1; k < dz->clength; k++) {
-                    peakamp1[k-1] = peakamp1[k];                            //      eliminate
+                    peakamp1[k-1] = peakamp1[k];                //  eliminate
                     peakfrq1[k-1] = peakfrq1[k];
                     peakno1[k-1] = peakno1[k];
                 }
-                m--;                                                                                    //      stay at same place in loop
+                m--;                                            //  stay at same place in loop
             }
         }
         if(done)
             break;
     }
     done = 0;
-    //      Same for 2nd file
+                            //  Same for 2nd file 
     for(n=0;n<dz->clength-1;n++) {
         peaklo = peakno2[n] * dz->chwidth;
         peakhi = peaklo + dz->halfchwidth;
@@ -2302,7 +2321,7 @@ void do_morphenv(dataptr dz)
 {
     int cc, vc;
     double totamp_before = 0.0, totamp_after = 0.0, normaliser;
-    for(cc=0,vc=0;cc < dz->clength;cc++,vc+=2) {            //      Now do normal interpolation
+    for(cc=0,vc=0;cc < dz->clength;cc++,vc+=2) {        //  Now do normal interpolation
         totamp_before += dz->flbufptr[0][AMPP];
         totamp_after  += dz->flbufptr[1][AMPP];
         if(totamp_after > 0) {
@@ -2312,7 +2331,7 @@ void do_morphenv(dataptr dz)
         }
     }
     dz->total_windows++;
-}
+}   
 
 /******************** FIND_THE_AVERAGE_SPECTRAL_PEAKS_AND_CORRELATES ****************************/
 
@@ -2329,7 +2348,7 @@ int find_the_average_spectral_peaks_and_correlates(dataptr dz)
     int totwcnt = 0, cc, vc, done, peaks_possible = 0;
 
     if((dz->process != SPECMORPH2) || dz->mode == 0) {
-
+    
         for(n=0;n < dz->clength;n++) {
             peakamp2[n] = 0.0;
             peakno2[n]  = n * 2;
@@ -2384,7 +2403,7 @@ int find_the_average_spectral_peaks_and_correlates(dataptr dz)
                 return SYSTEM_ERROR;
             }
         }
-        //      Eliminate equivalents of peak in adjacent channels
+                                    //  Eliminate equivalents of peak in adjacent channels
         done = 0;
 
         for(n=0;n<dz->clength-1;n++) {
@@ -2493,7 +2512,7 @@ int handle_the_special_data(char *str,dataptr dz)
         p = temp;
         while(isspace(*p))
             p++;
-        if(*p == ';' || *p == ENDOFSTR) //      Allow comments in file
+        if(*p == ';' || *p == ENDOFSTR) //  Allow comments in file
             continue;
         while(get_float_from_within_string(&p,&dummy)) {
             if(dummy < 0.0 || dummy > dz->nyquist) {
@@ -2523,7 +2542,7 @@ int read_the_special_data(dataptr dz)
     int cnt = 0;
     FILE *fp;
     char temp[800], *p;
-
+        
     if((fp = fopen(dz->wordstor[0],"r"))==NULL) {
         sprintf(errstr,"Cannot open file %s to read peak data.\n",dz->wordstor[0]);
         return(DATA_ERROR);
@@ -2532,7 +2551,7 @@ int read_the_special_data(dataptr dz)
         p = temp;
         while(isspace(*p))
             p++;
-        if(*p == ';' || *p == ENDOFSTR) //      Allow comments in file
+        if(*p == ';' || *p == ENDOFSTR) //  Allow comments in file
             continue;
         while(get_float_from_within_string(&p,&dummy))
             peakfrq2[cnt++] = dummy;
@@ -2540,3 +2559,4 @@ int read_the_special_data(dataptr dz)
     fclose(fp);
     return FINISHED;
 }
+
