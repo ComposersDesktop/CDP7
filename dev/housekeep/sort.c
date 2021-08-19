@@ -238,8 +238,13 @@ int do_file_sorting(dataptr dz)
     char ***lstore   = NULL;
     double *lenstore = NULL;
     double *sortlens = NULL;
+#ifdef NOTDEF
     char *file48 = ENDOFSTR, *file44 = ENDOFSTR, *file32 = ENDOFSTR;
     char *file24 = ENDOFSTR, *file22 = ENDOFSTR, *file16 = ENDOFSTR;
+#else
+    char *file48 = NULL, *file44 = NULL, *file32 = NULL;
+    char *file24 = NULL, *file22 = NULL, *file16 = NULL;
+#endif
     int is_file48=FALSE, is_file44=FALSE, is_file32=FALSE, is_file24=FALSE, is_file22=FALSE, is_file16=FALSE;
     int is_mono_list=FALSE,  is_stereo_list=FALSE,is_quad_list=FALSE, is_anal_list=FALSE,is_pitch_list=FALSE;
     int is_trans_list=FALSE, is_fmnt_list=FALSE,  is_env_list=FALSE, is_other_list=FALSE;
