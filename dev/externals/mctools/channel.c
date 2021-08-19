@@ -247,7 +247,7 @@ int main(int argc,char *argv[])
         }
     }
 
-    printf("Extracting %d channels from '%s':\n%ld sample frames\n",numchans,filename,nframes);
+    printf("Extracting %d channels from '%s':\n%d sample frames\n",numchans,filename,nframes);
 
     //stopwatch(1);
     for(i=0;i < nframes; i++){
