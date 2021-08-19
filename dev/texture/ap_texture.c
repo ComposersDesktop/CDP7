@@ -22,7 +22,7 @@
  *
  */
 
-
+/* 03/2020: TW/RWD: corrected usage message argument lists */
 
 /* floatsam version: no changes */
 #include <stdio.h>
@@ -752,7 +752,7 @@ int usage2(char *str)
         fprintf(stdout,
                 "TEXTURE OF MOTIFS, FORCED ONTO A HARMONIC FIELD: USAGE:\n"
                 "texture motifsin mode infile [infile2..] outfile notedata outdur packing\n"
-                "scatter tgrid sndfirst sndlast mingain maxgain mindur maxdur\n"
+                "scatter tgrid sndfirst sndlast mingain maxgain\n"
                 "minpitch maxpitch phgrid gpspace gpsprange amprise  contour multlo multhi\n"
                 "                [-aatten] [-pposition] [-sspread] [-rseed] [-w] [-d] [-i]\n"
                 "MODES:-\n"
@@ -783,7 +783,7 @@ int usage2(char *str)
         fprintf(stdout,
                 "TIMED TEXTURE OF MOTIFS, FORCED ONTO A HARMONIC FIELD: USAGE:\n"
                 "texture tmotifsin mode infile [infile2...] outfile notedata sndfirst sndlast\n"
-                "mingain maxgain mindur maxdur minpich maxpich phgrid gpspace gpsprange\n"
+                "mingain maxgain minpich maxpich phgrid gpspace gpsprange\n"
                 "amprise contour multlo multhi [-aatten] [-ppos] [-sspread] [-rseed] [-w] [-d]\n"
                 "MODES:-\n"
                 "1) ON HARMONIC-FIELD 2) CHANGING HFLDS 3) HARMONIC-SET 4) CHANGING HSETS\n"
@@ -811,7 +811,7 @@ int usage2(char *str)
         fprintf(stdout,
                 "TEXTURE OF MOTIFS, (1ST NOTES ONLY, FORCED ONTO HARMONIC FIELD/SET, IF USED)\n"
                 "USAGE: texture motifs mode infile [infile2...] outfile notedata outdur packing\n"
-                "scatter tgrid sndfirst sndlast mingain maxgain mindur maxdur minpich maxpich\n"
+                "scatter tgrid sndfirst sndlast mingain maxgain minpich maxpich\n"
                 "phgrid gpspace gpsprange amprise contour multlo multhi\n"
                 "                 [-aatten] [-pposition] [-sspread] [-rseed] [-w] [-d]\n"
                 "MODES:-\n"
@@ -842,7 +842,7 @@ int usage2(char *str)
         fprintf(stdout,
                 "TIMED TEXTURE OF MOTIFS, THEMSELVES NOT FORCED ONTO HARMONIC FIELD: USAGE:\n"
                 "texture tmotifs mode infile [infile2...] outfile notedata outdur skip\n"
-                "sndfirst sndlast mingain maxgain mindur maxdur minpitch maxpitch phgrid\n"
+                "sndfirst sndlast mingain maxgain minpitch maxpitch phgrid\n"
                 "gpspace gpsprange amprise contour multlo multhi\n"
                 "                    [-aatten] [-pposition] [-sspread] [-rseed] [-w] [-d]\n"
                 "MODES:-\n"
