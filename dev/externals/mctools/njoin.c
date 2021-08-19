@@ -540,7 +540,7 @@ int main(int argc, char* argv[])
     /* try to make a legal wave file! */
     if((outprops.chans > 2 || outprops.samptype > PSF_SAMP_IEEE_FLOAT)
        && (outprops.format==PSF_STDWAVE))
-        outprops.chformat = PSF_WAVE_EX;
+        outprops.chformat = /* PSF_WAVE_EX */ MC_STD;   //RWD 10:03:21
     block_frames = (long)(blockdur * outprops.srate);
     buflen = block_frames * outprops.chans;
     inframe = malloc(buflen * sizeof(float));
