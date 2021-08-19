@@ -1,5 +1,5 @@
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.7  -arch x86_64 -Dunix")
+  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.8 -Dunix")
 else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O2 -Wall -DWIN32")
@@ -26,6 +26,9 @@ add_executable(constrict constrict.c)
 target_link_libraries(constrict cdp2k sfsys ${EXTRA_LIBRARIES})
 
 my_install(constrict)
+
+add_executable(dshift dshift.c)
+target_link_libraries(dshift ${EXTRA_LIBRARIES})
 
 add_executable(envnu envnu.c)
 target_link_libraries(envnu cdp2k sfsys ${EXTRA_LIBRARIES})
