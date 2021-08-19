@@ -243,7 +243,7 @@ report(void)
     else
         fprintf(stdout,"INFO: Location of maximum sample:   %d min %7.4lf sec\n",mins,sec);
     if(!in_header) {
-        fprintf(stdout,"INFO: Number of times found:        %-ld\n",repeats);
+        fprintf(stdout,"INFO: Number of times found:        %-d\n",repeats);
     }
     fprintf(stdout,"INFO: Maximum possible dB gain:     %-7.3lf\n",20.0*log10(1.0/maxdamp));
     fprintf(stdout,"INFO: Maximum possible gain factor: %-9.3lf\n",1.0/maxdamp);
