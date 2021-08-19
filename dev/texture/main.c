@@ -49,7 +49,7 @@ char errstr[6000];
 /*extern*/ int sloombatch = 0;
 /*extern*/ int anal_infiles = 0;
 /*extern*/ int is_converted_to_stereo = -1;
-const char* cdp_version = "7.1.0";
+const char* cdp_version = "7.1.1";
 
 /**************************************** MAIN *********************************************/
 
