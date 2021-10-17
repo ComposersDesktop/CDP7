@@ -7,7 +7,7 @@ if(APPLE)
   find_library(AULIB AudioUnit)
   find_library(CARBONLIB Carbon)
   #RWD only need this for APPLE?
-  find_library(AAIOLIB names libaaio.a paths /usr/local/lib)
+  find_library(AAIOLIB NAMES libaaio.a )
   set(EXTRA_LIBRARIES1 pthread ${AAIOLIB} ${COREAUDIOLIB} ${AUDIOTOOLBOX} ${AULIB} ${CARBONLIB} ${EXTRA_LIBRARIES})
 else()
   if(MINGW)
@@ -20,7 +20,7 @@ else()
   endif()
 endif()
 
-link_directories(../../lib ../portaudio/lib/.libs ../../../sfsys)
+link_directories(../../lib ../portaudio/lib/.libs ../../../sfsys /usr/local/lib)
 
 include_directories(../../../include ../include ../portaudio/include ../portaudio/src/common /usr/local/include)
 

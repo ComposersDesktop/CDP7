@@ -159,7 +159,7 @@ if(APPLE)
   endif()
 
    if(EXISTS ${CMAKE_OSX_SYSROOT})
-    set(CMAKE_OSX_DEPLOYMENT_TARGET 10.7)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET 10.8)
   endif()
 
 endif()
@@ -253,7 +253,7 @@ endif()
 
 if(APPLE)
     message(STATUS "Building on OSX")
-    add_definitions(-mmacosx-version-min=10.7 -arch x86_64 -Dunix)
+    add_definitions(-mmacosx-version-min=10.8 -Dunix)
     list(APPEND LIBCDP_LIBS m)
 endif()
 
@@ -286,9 +286,9 @@ endif()
 
 set (CPACK_PACKAGE_NAME "cdp")
 set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
-set (CPACK_PACKAGE_VERSION "7.0.0")
+set (CPACK_PACKAGE_VERSION "7.1.0")
 set (CPACK_PACKAGE_VERSION_MAJOR "7")
-set (CPACK_PACKAGE_VERSION_MINOR "0")
+set (CPACK_PACKAGE_VERSION_MINOR "1")
 set (CPACK_PACKAGE_VERSION_PATCH "0")
 include (CPack)
 

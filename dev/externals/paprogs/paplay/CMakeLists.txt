@@ -1,12 +1,12 @@
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.7  -arch x86_64 -Dunix -fomit-frame-pointer -funroll-loops")
+  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.8 -Dunix -fomit-frame-pointer -funroll-loops")
   include_directories ( /Developer/Headers/FlatCarbon )
   find_library(COREAUDIOLIB CoreAudio)
   find_library(AUDIOTOOLBOX AudioToolbox)
   find_library(AULIB AudioUnit)
   find_library(CARBONLIB Carbon)
   #RWD only need this for APPLE?
-  find_library(AAIOLIB names libaaio.a paths /usr/local/lib)
+  find_library(AAIOLIB NAMES libaaio.a)
   set(EXTRA_LIBRARIES1 portsf pthread ${AAIOLIB} ${COREAUDIOLIB} ${AUDIOTOOLBOX} ${AULIB} ${CARBONLIB} ${EXTRA_LIBRARIES})
   
 else()
