@@ -1,0 +1,72 @@
+Building CDP.
+
+This assumes general familiarity with the command line, and with 
+standard build tools. 
+
+All platforms: the CDP programs use the CMake system for building makefiles:
+https://cmake.org/install/
+
+Mac users may prefer to use homebrew. Once installed, use:
+brew install cmake
+
+
+Windows:  install the Msys/MinGW linux-like environment.
+   see: https://sourceforge.net/projects/mingwbundle/
+   
+ You will also need the Directx9 SDK dx9mgw.zip for MinGW, provided in the /externals directory.
+ (from https://download.tuxfamily.org/allegro/)
+ 
+ Currently we only build 32bit CDP binaries, under this older version of MinGW.
+ This will be revised in due course to use the newer MinGW-w64 tools, which offer newer
+ version of the compilers, and the option to build either or both 32bit and 64bit binaries.
+ 
+ Git: this is not needed simply to build the programs, 
+ but recommended if you want to pick up updates, bugfixes, etc, easily:
+ https://gitforwindows.org/
+ 
+ 
+ 
+ MacOS:    install Xcode along with the command line tools. This should also install Git.
+               Otherwise, see: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+           install CMake (see above).
+ 
+Linux:     we assume everything you need is already present!
+
+
+
+Currently, one or two third-party libraries need to be built 
+before commencing the main CDP build.
+
+1: aaiolib (Linux and MacOS):  emulation of Windows keyboard functions (getch etc)
+    unpack, then ./configure; sudo make install
+
+
+2: portaudio (for the CDP play/record programs: paplay, pvplay, recsf, listaudevs).
+
+    see the applicable "pa...build.txt" in the externals directory.
+    
+    Windows NB: the unpacked portaudio directory uses a custom modification to the 
+             "configure.in" file, to plug a few gaps in the default portaudio configure setup. 
+             We recommend to use this as is, rather than start from a freshly unpacked archive.
+             
+             
+To Build the CDP programs
+  
+   The canonical approach with CMake is to create a top-level "build" directory 
+   (the directory containing the top-level "CMakeLists.txt" )
+   
+   then:
+   
+   cd build
+   cmake ..
+   
+   (this creates Makefiles for each program and group of programs)
+   
+   then:
+   
+   make
+   
+   All compiled programs will be written to the top-level Release/ directory.
+
+   
+   
