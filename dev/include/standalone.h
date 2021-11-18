@@ -942,3 +942,6 @@ typedef struct soundoutmchan *sndoutmchptr;
 #define NMPH_GETTEX     (6)
 #define NMPH_LINTEX     (7)
 #define NMPH_COSTEX     (8)
+// RWD needed here and there
+#define IBUF    0
+#define OBUF    1
