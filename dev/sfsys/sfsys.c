@@ -792,8 +792,8 @@ static int read_peak_lsf(int channels, struct sf_file *f)
                 peak[1]  = REVDWBYTES(peak[1]);
 #endif
 
-                //f->peaks[i].value = (float) peak[0]; /* JPFF change - RWD not sure this is OK yet */
-                f->peaks[i].value = *(float *) &(peak[0]);
+                f->peaks[i].value = (float) peak[0]; /* JPFF change - RWD not sure this is OK yet */
+                //f->peaks[i].value = *(float *) &(peak[0]);
                 f->peaks[i].position = peak[1];
         }
         return 0;
@@ -834,8 +834,8 @@ static int read_peak_msf(int channels, struct sf_file *f)
                 peak[1]  = REVDWBYTES(peak[1]);
 #endif
 
-               //f->peaks[i].value = (float) peak[0]; /* JPFF change - RWD not sure this is OK yet */
-                f->peaks[i].value = *(float *) &(peak[0]);
+                f->peaks[i].value = (float) peak[0]; /* JPFF change - RWD not sure this is OK yet */
+                //f->peaks[i].value = *(float *) &(peak[0]);
                 f->peaks[i].position = peak[1];
         }
         return 0;

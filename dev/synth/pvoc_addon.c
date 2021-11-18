@@ -42,7 +42,9 @@
 static int  outfloats(float *nextOut, float *maxsampl,float *minsample,int *num_overflows,int todo, dataptr dz);
 static int  pvoc_float_array(int nnn,float **ptr);
 static int  sndwrite_header(float R,dataptr dz);
+#if 0
 static void hamming(float *win,int winLen,int even);
+#endif
 static void vonhann(float *win,int winLen,int even);
 static int  pvoc_time_display(int nI,unsigned int samps_so_far,int srate,int *samptime,dataptr dz);
 

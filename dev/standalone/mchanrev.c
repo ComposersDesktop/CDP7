@@ -2233,8 +2233,8 @@ int generate_delays(dataptr dz)
 
 /******************************** CREATE_STADIUM_BUFFERS **********************************/
 
-//#define IBUF    (0) /* RWD 12/20: in standalone.h */
-//#define OBUF    (1)
+#define IBUF    (0) /* RWD 12/20: in standalone.h */
+#define OBUF    (1)
 #define OBUFEND (2)
 #define PADSTRT (3)
 
