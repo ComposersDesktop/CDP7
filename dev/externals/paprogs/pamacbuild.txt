@@ -1,36 +1,40 @@
-pamacbuild.txt:
+pamacbuild.txt 19-10-2021
 
-Use this combination command to configure portaudio to build as a (single architecture) static library on OS X,
-required by the audio programs (paplay, pvplay, recsf, listaudevs).
+This outlines the procedure to configure portaudio to build as a native static library on OS X,
+required by the audio programs (paplay, pvplay, recsf, listaudevs). 
+This assumes a full Xcode installation complete with all
+required command-line tools.
 
-The CDP programs build only for the 32bit architecture (-arch i386), 
-as they have not yet been fully tested for correctness with a 64bit architecture.
+The version of portaudio included here is a "stable" version (as indicated by the version number in the archive filename).
+This does not know about M1-based Macs, but in principle should still build if done only as a native build.
+A more recent "stable" build is now available, and once tested (including on an M1 machine), 
+this document will be updated accordingly.
 
-Portaudio tends to assume all architectures are available, but this is not always the case from Xcode 4.x onwards (e.g. no ppc support)
-You may need to edit the Makefile (or configure.in) by hand to add or exclude architectures. 
+The CDP github repository already includes an already-expanded portaudio directory. 
+This is required for Windows/Mingw builds as the ./configure.in file is slightly modified. 
+On the Mac you may prefer to delete this portaudio directory and expand the pa_stable...tgz file
 
-On a 32bit OS:
+This portaudio distribution only supports CMake for Windows platforms. 
+To build for the Mac, follow the usual procedures based on autoconf. 
 
-CFLAGS=$CFLAGS-mmacosx-version-min=10.4  ./configure --enable-shared=no --enable-mac-universal=no 
+Portaudio by default tries to build for the earliest possible versions of MacOS (in theory, as far back as 10.4, say),
+but modern installations of Xcode do not provide compatible versions of system libraries, so a build
+specifying an early minimum version may fail with link errors. 
+The configure flag --enable-mac-universal=no ensures portaudio is only built 
+for the current native architecture, and for available recent OS versions.
 
-If building on a 64bit machine, omit --enable-mac-universal=no and  make sure to add -arch i386 to the CFLAGS if not present, removing any which are not supported or needed, e.g:
+Run ./configure as shown here - the CDP audio programs only require the static library, not dylibs.
 
-CFLAGS="$CFLAGS -arch i386 -arch x86_64"
+CFLAGS=$CFLAGS-mmacosx-version-min=10.8  ./configure --enable-shared=no --enable-mac-universal=no
 
 Then run make as usual to build. 
 
-The CDP makefiles look for the local lib/.libs folder for libportaudio.a
-There is no need to run sudo make install
+The CDP makefiles look for the local (to the CDP programs) lib/.libs folder for libportaudio.a
+This procedure therefore does not replace any version of portaudio already installed in /usr folders.
 
-This is to avoid a couple of warnings when compiling pa_mac-core.c.
-The macosx version setting is to prevent warnings  about deprecated APIs.
-The configure script specifies -Werror ("treat warnings as errors"), 
-which means that any such warning stops the build.
 
-The command --enable-shared=no also seems to be needed, otherwise (for some reason) 
-the linker fails to find the Pa_Until functions.
 
-Newer builds of portaudio can of course be used; they may obviate some or all of the above issues; but may introduce new ones too!
+
 
 
 
