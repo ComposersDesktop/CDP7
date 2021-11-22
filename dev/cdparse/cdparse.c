@@ -74,9 +74,9 @@ void maxsamp(int ifd,double *maxamp,double *maxloc,int *maxrep);
 /* END OF NEW CODE */
 
 #define POSSIBLE                                (TRUE)
-
-char    errstr[400];
-
+#ifdef IS_CDPARSE
+char    errstr[400];       /* RWD Nov 21: needed for app, not for library */
+#endif
 //RWD debugging
 #define LOCALMEMBYTES (4000)
 
