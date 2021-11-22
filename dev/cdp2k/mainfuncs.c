@@ -1848,6 +1848,7 @@ int establish_peak_status(dataptr dz)
         case(ANALJOIN):         case(ONEFORM_GET):      case(ONEFORM_PUT):      case(ONEFORM_COMBINE):
         case(SPEC_REMOVE):      case(SPECROSS):         case(SPECLEAN):         case(SPECTRACT):
         case(BRKTOPI):          case(SPECSLICE):
+            case(TUNEVARY):                 /* RWD Nov 21, may need to add other progs here... */
                 dz->needpeaks = 0;
                 return FINISHED;
 
