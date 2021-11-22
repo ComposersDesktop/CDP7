@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1983-2013 Richard Dobson and Composers Desktop Project Ltd
- * http://people.bath.ac.uk/masrwd
+ * http://www.rwdobson.com
  * http://www.composersdesktop.com
  * This file is part of the CDP System.
  * The CDP System is free software; you can redistribute it
@@ -30,8 +30,9 @@
 #include <assert.h>
 #include <time.h>
 #include <string.h>
+#ifndef WIN32
 #include <aaio.h>
-
+#endif
 #ifdef _WIN32
 #define _WIN32_WINNT 0x0500
 #include <conio.h>
