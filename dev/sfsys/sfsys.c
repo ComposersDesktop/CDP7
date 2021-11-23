@@ -792,17 +792,9 @@ static int read_peak_lsf(int channels, struct sf_file *f)
                 peak[1]  = REVDWBYTES(peak[1]);
 #endif
 
-                {
-                  union { //Avoid dubious aliasing
-                    DWORD d[2];
-                    float f[2];
-                  } cheat;
-                  cheat.d[0] = peak[0];
-                  f->peaks[i].value = cheat.f[0];
-                  //f->peaks[i].value = (float) peak[0]; 
-                  //f->peaks[i].value = *(float *) &(peak[0]);
-                  f->peaks[i].position = peak[1];
-                }
+                f->peaks[i].value = (float) peak[0]; /* JPFF change - RWD not sure this is OK yet */
+                //f->peaks[i].value = *(float *) &(peak[0]);
+                f->peaks[i].position = peak[1];
         }
         return 0;
 }
@@ -841,16 +833,10 @@ static int read_peak_msf(int channels, struct sf_file *f)
                 peak[0] = REVDWBYTES(peak[0]);
                 peak[1]  = REVDWBYTES(peak[1]);
 #endif
-                {
-                  union {
-                    DWORD d[2];
-                    float f[2];
-                  } cheat;
-                  cheat.d[0] = peak[0];
-                  f->peaks[i].value = cheat.f[0]; /* JPFF change - RWD not sure this is OK yet */
-                  //f->peaks[i].value = *(float *)&(peak[0]);
-                  f->peaks[i].position = peak[1];
-                }
+
+                f->peaks[i].value = (float) peak[0]; /* JPFF change - RWD not sure this is OK yet */
+                //f->peaks[i].value = *(float *) &(peak[0]);
+                f->peaks[i].position = peak[1];
         }
         return 0;
 }
