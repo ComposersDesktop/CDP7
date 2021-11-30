@@ -791,9 +791,7 @@ static int read_peak_lsf(int channels, struct sf_file *f)
                 peak[0] = REVDWBYTES(peak[0]);
                 peak[1]  = REVDWBYTES(peak[1]);
 #endif
-
-                f->peaks[i].value = (float) peak[0]; /* JPFF change - RWD not sure this is OK yet */
-                //f->peaks[i].value = *(float *) &(peak[0]);
+                f->peaks[i].value = *(float *) &(peak[0]);          /* RWD TODO: replace with union */
                 f->peaks[i].position = peak[1];
         }
         return 0;
@@ -833,9 +831,7 @@ static int read_peak_msf(int channels, struct sf_file *f)
                 peak[0] = REVDWBYTES(peak[0]);
                 peak[1]  = REVDWBYTES(peak[1]);
 #endif
-
-                f->peaks[i].value = (float) peak[0]; /* JPFF change - RWD not sure this is OK yet */
-                //f->peaks[i].value = *(float *) &(peak[0]);
+                f->peaks[i].value = *(float *) &(peak[0]);        /* RWD TODO: replace with union */
                 f->peaks[i].position = peak[1];
         }
         return 0;
@@ -3523,14 +3519,14 @@ freesffile(int i)
         struct property *pp = sf_files[i]->props;
         struct aiffchunk *ap = sf_files[i]->aiffchunks;
 
-        while(pp != 0) {
+        while(pp != /* 0 */ NULL) {
                 struct property *pnext = pp->next;
                 free(pp->name);
                 free(pp->data);
                 free(pp);
                 pp = pnext;
         }
-        while(ap != 0) {
+        while(ap != /* 0 */ NULL) {
                 struct aiffchunk *anext = ap->next;
                 free(ap->buf);
                 free(ap);
@@ -3542,7 +3538,7 @@ freesffile(int i)
                 free(sf_files[i]->peaks);
 
         free(sf_files[i]);
-        sf_files[i] = 0;
+        sf_files[i] = /* 0 */ NULL;
 }
 
 #ifdef unix
