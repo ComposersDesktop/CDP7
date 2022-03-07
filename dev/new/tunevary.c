@@ -53,6 +53,8 @@
 #include <srates.h>
 #include <standalone.h>
 
+//RWD 25-01-22 v7.1.2: fixed buffer overruns in data file import.
+
 //    Data is stored in arrays as follows...
 
 //    Array 0                    Times of input-tunings, length TIMECOUNT
@@ -83,7 +85,7 @@ int anal_infiles = 1;
 int    sloom = 0;
 int sloombatch = 0;
 
-const char* cdp_version = "7.1.0";
+const char* cdp_version = "7.1.2";
 
 /* CDP LIBRARY FUNCTIONS TRANSFERRED HERE */
 
@@ -170,7 +172,7 @@ int main(int argc,char *argv[])
         }
         cmdline    = argv;
         cmdlinecnt = argc;
-        if((get_the_process_no(argv[0],dz))<0) {
+        if((exit_status = get_the_process_no(argv[0],dz))<0) {
             print_messages_and_close_sndfiles(exit_status,is_launched,dz);
             return(FAILED);
         }
@@ -266,78 +268,6 @@ int main(int argc,char *argv[])
 /**********************************************
         REPLACED CDP LIB FUNCTIONS
 **********************************************/
-
-/************************ HANDLE_THE_EXTRA_INFILE *********************/
-
-int handle_the_extra_infile(char ***cmdline,int *cmdlinecnt,dataptr dz)
-{
-    /* OPEN ONE EXTRA ANALFILE, CHECK COMPATIBILITY */
-    int  exit_status;
-    char *filename;
-    fileptr fp2;
-    int fileno = 1;
-    double maxamp, maxloc;
-    int maxrep;
-    int getmax = 0, getmaxinfo = 0;
-    infileptr ifp;
-    fileptr fp1 = dz->infile;
-    filename = (*cmdline)[0];
-    if((dz->ifd[fileno] = sndopenEx(filename,0,CDP_OPEN_RDONLY)) < 0) {
-        sprintf(errstr,"cannot open input file %s to read data.\n",filename);
-        return(DATA_ERROR);
-    }
-    if((ifp = (infileptr)malloc(sizeof(struct filedata)))==NULL) {
-        sprintf(errstr,"INSUFFICIENT MEMORY to store data on later infile. (1)\n");
-        return(MEMORY_ERROR);
-    }
-    if((fp2 = (fileptr)malloc(sizeof(struct fileprops)))==NULL) {
-        sprintf(errstr,"INSUFFICIENT MEMORY to store data on later infile. (2)\n");
-        return(MEMORY_ERROR);
-    }
-    if((exit_status = readhead(ifp,dz->ifd[1],filename,&maxamp,&maxloc,&maxrep,getmax,getmaxinfo))<0)
-        return(exit_status);
-    copy_to_fileptr(ifp,fp2);
-    if(fp2->filetype != ANALFILE) {
-        sprintf(errstr,"%s is not an analysis file.\n",filename);
-        return(DATA_ERROR);
-    }
-    if(fp2->origstype != fp1->origstype) {
-        sprintf(errstr,"Incompatible original-sample-type in input file %s.\n",filename);
-        return(DATA_ERROR);
-    }
-    if(fp2->origrate != fp1->origrate) {
-        sprintf(errstr,"Incompatible original-sample-rate in input file %s.\n",filename);
-        return(DATA_ERROR);
-    }
-    if(fp2->arate != fp1->arate) {
-        sprintf(errstr,"Incompatible analysis-sample-rate in input file %s.\n",filename);
-        return(DATA_ERROR);
-    }
-    if(fp2->Mlen != fp1->Mlen) {
-        sprintf(errstr,"Incompatible analysis-window-length in input file %s.\n",filename);
-        return(DATA_ERROR);
-    }
-    if(fp2->Dfac != fp1->Dfac) {
-        sprintf(errstr,"Incompatible decimation factor in input file %s.\n",filename);
-        return(DATA_ERROR);
-    }
-    if(fp2->channels != fp1->channels) {
-        sprintf(errstr,"Incompatible channel-count in input file %s.\n",filename);
-        return(DATA_ERROR);
-    }
-    if((dz->insams[fileno] = sndsizeEx(dz->ifd[fileno]))<0) {        /* FIND SIZE OF FILE */
-        sprintf(errstr, "Can't read size of input file %s.\n"
-                "open_checktype_getsize_and_compareheader()\n",filename);
-        return(PROGRAM_ERROR);
-    }
-    if(dz->insams[fileno]==0) {
-        sprintf(errstr, "File %s contains no data.\n",filename);
-        return(DATA_ERROR);
-    }
-    (*cmdline)++;
-    (*cmdlinecnt)--;
-    return(FINISHED);
-}
 
 /****************************** SET_PARAM_DATA *********************************/
 
@@ -487,7 +417,7 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
 }
 
 /********************** SETUP_PARAMETER_STORAGE_AND_CONSTANTS ********************/
-/* RWD mallo changed to calloc; helps debug verison run as release! */
+/* RWD malloc changed to calloc; helps debug version run as release! */
 
 int setup_parameter_storage_and_constants(int storage_cnt,dataptr dz)
 {
@@ -1387,23 +1317,23 @@ int handle_the_special_data(char *str,dataptr dz)
         sprintf(errstr,"INSUFFICIENT MEMORY to establish input tuning data stores.\n");
         return(MEMORY_ERROR);
     }
-    if((dz->parray[0] = (double *)malloc(linecnt * sizeof(double *)))==NULL) {            // Times store, 1 entry per line
+    if((dz->parray[0] = (double *)malloc(linecnt * sizeof(double)))==NULL) {            // Times store, 1 entry per line
         sprintf(errstr,"INSUFFICIENT MEMORY to store input tuning data timings.\n");
         return(MEMORY_ERROR);
     }
     for(n= 1; n <= linecnt; n++) {                //    Tuning stores, dz->itemcnt entries per line
-        if((dz->parray[n] = (double *)malloc(dz->itemcnt * sizeof(double *)))==NULL) {
+        if((dz->parray[n] = (double *)malloc(dz->itemcnt * sizeof(double)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY to store input tuning data.\n");
             return(MEMORY_ERROR);
         }
     }
     dz->is_mapping = n;                //    is_mapping used to store index of array of fundamentals
     //    Arrays to store actual tunings, and the associated harmonics
-    if((dz->parray[FF] = (double *)malloc(dz->itemcnt * sizeof(double *)))==NULL) {
+    if((dz->parray[FF] = (double *)malloc(dz->itemcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY to store momentary tunings array.\n");
         return(MEMORY_ERROR);
     }
-    if((dz->parray[HH] = (double *)malloc(dz->itemcnt * sizeof(double *)))==NULL) {
+    if((dz->parray[HH] = (double *)malloc(dz->itemcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY to store harmonics array.\n");
         return(MEMORY_ERROR);
     }                                //    Array to store the channel-by-channel tuning template
