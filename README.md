@@ -27,20 +27,19 @@
 The CDP System is a large suite of command line programs for sound processing, in the *musique concrete* tradition. For general information, visit the [CDP Home Page](http://www.composersdesktop.com).  
 For Linux, MacOS and Windows platforms. Builds are currently confirmed only for 32bit Windows (Win32).
 
-#### GUI front ends
+#### Inclusions  
+This repository includes sources for: 
+
+* The [CDP Multi-Channel Toolkit](http://www.rwdobson.com/mctools.html) by Richard Dobson (BSD Licence)
+* the **portsf** soundfile library developed originally for the [Audio Programming Book](https://mitpress.mit.edu/books/audio-programming-book) (Public Domain)
+
+---------------------------------------------------------
+
+#### Available GUI front ends (not included in this repository)
 
 * **Soundloom** by Trevor Wishart (TCL/TK, all platforms)
 	
 * **SoundShaper** by Robert Fraser  (currently Windows only)
 
 Refer to the [CDP Download Page](https://www.unstablesound.net/cdp.html) for details, including documentation.
-
-#### Inclusions
-
-This repository includes sources for: 
-
-* The [CDP Multi-Channel Toolkit](http://www.rwdobson.com/mctools.html) by Richard Dobson (BSD Licence)
-* the **portsf** soundfile library developed originally for the [Audio Programming Book](https://mitpress.mit.edu/books/audio-programming-book) (Public Domain)
-
-
 
