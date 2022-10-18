@@ -11,9 +11,9 @@ endif()
 include_directories(../../include)
 
 if(MINGW)
-	set(SFSYS_SRCS sfsys.c snd.c sfdir.c osbind.c props.c shortcuts.c scandir.c alias.c)
+   set(SFSYS_SRCS sfsys.c snd.c sfdir.c osbind.c props.c shortcuts.c scandir.c alias.c ieee80.c)
 else()
-	set(SFSYS_SRCS sfsys.c snd.c sfdir.c osbind.c props.c)
+   set(SFSYS_SRCS sfsys.c snd.c sfdir.c osbind.c props.c ieee80.c)
 endif()
-add_library(sfsys ${SFSYS_SRCS})
 
+add_library(sfsys ${SFSYS_SRCS})
