@@ -162,6 +162,8 @@ int CDP_COM_READY = 0;   /*global flag, ah well...(define in alias.h will access
 
 
 #include <chanmask.h>
+/* RWD oct 2022 to eliminate pointer aliasing in AIFF srate handling */
+#include "ieee80.h"
 
 //static char *sfsys_h_rcsid = SFSYS_H_RCSID;
 
@@ -277,6 +279,12 @@ extern int sampsize[];
 #else
 #define POS64(x) (x)
 #endif
+
+typedef union {
+    DWORD lsamp;
+    float fsamp;
+    unsigned char bytes[4];
+} SND_SAMP;
 
 
 struct fmtchunk {
@@ -496,7 +504,7 @@ int rsferrno = 0;
 char *rsferrstr = "no previous error";
 
 static struct sf_file *sf_files[SF_MAXFILES];
-//static enum sndfiletype gettypefromname(const char *path);              //RWD98: lets declare this here...
+//static enum sndfiletype gettypefromname(const char *path);              //RWD98: lets declare this here
 static enum sndfiletype gettypefromname98(const char *path);
 static enum sndfiletype gettypefromfile(struct sf_file *f);
 static int wrwavhdr98(struct sf_file *f, int channels, int srate, int stype);
@@ -751,6 +759,8 @@ static int write_peak_lsf(int channels, struct sf_file *f)
 {
         int i;
         DWORD peak[2];
+        SND_SAMP ssamp;
+    
 #ifdef _DEBUG
         if(f->peaks==NULL){
                 printf("\nerror: attempt to write uninitialized peak data");
@@ -758,9 +768,11 @@ static int write_peak_lsf(int channels, struct sf_file *f)
         }
 #endif
         for(i=0; i < channels; i++){
-                /*long*/ DWORD  *pdw;
-                pdw = (/*long*/DWORD *) &(f->peaks[i].value);
-                peak[0] = *pdw;
+                // /*long*/ DWORD  *pdw;
+                // pdw = (/*long*/DWORD *) &(f->peaks[i].value);    /* RWD replaced with union */
+                ssamp.fsamp = f->peaks[i].value;
+                //peak[0] = *pdw;
+                peak[0] = ssamp.lsamp;
                 peak[1] = f->peaks[i].position;
 #ifdef MSBFIRST
                 peak[0] = REVDWBYTES(peak[0]);
@@ -778,6 +790,7 @@ static int read_peak_lsf(int channels, struct sf_file *f)
 {
         int i;
         DWORD peak[2];
+        SND_SAMP ssamp;
 #ifdef _DEBUG
         if(f->peaks==NULL){
                 printf("\nerror: attempt to write uninitialized peak data");
@@ -791,7 +804,9 @@ static int read_peak_lsf(int channels, struct sf_file *f)
                 peak[0] = REVDWBYTES(peak[0]);
                 peak[1]  = REVDWBYTES(peak[1]);
 #endif
-                f->peaks[i].value = *(float *) &(peak[0]);          /* RWD TODO: replace with union */
+                ssamp.lsamp = peak[0];
+                //f->peaks[i].value = *(float *) &(peak[0]);          /* RWD TODO: replaced with union */
+                f->peaks[i].value = ssamp.fsamp;
                 f->peaks[i].position = peak[1];
         }
         return 0;
@@ -801,11 +816,13 @@ static int write_peak_msf(int channels, struct sf_file *f)
 {
         int i;
         DWORD peak[2];
-
+        SND_SAMP ssamp;
         for(i=0; i < channels; i++){
-                /*long*/DWORD  *pdw;
-                pdw = (/*long*/DWORD *) &(f->peaks[i].value);
-                peak[0] = *pdw;
+                // /*long*/DWORD  *pdw;
+                //pdw = (/*long*/DWORD *) &(f->peaks[i].value);      /* RWD replaced with union */
+                ssamp.fsamp = f->peaks[i].value;
+                // peak[0] = *pdw;
+                peak[0] = ssamp.lsamp;
                 peak[1] = f->peaks[i].position;
 #ifdef LSBFIRST
                 peak[0] = REVDWBYTES(peak[0]);
@@ -823,7 +840,7 @@ static int read_peak_msf(int channels, struct sf_file *f)
 {
         int i;
         DWORD peak[2];
-
+        SND_SAMP ssamp;
         for(i=0;i < channels; i++){
                 if(doread(f,(char *)peak,2 * sizeof(DWORD)))
                         return 1;
@@ -831,7 +848,9 @@ static int read_peak_msf(int channels, struct sf_file *f)
                 peak[0] = REVDWBYTES(peak[0]);
                 peak[1]  = REVDWBYTES(peak[1]);
 #endif
-                f->peaks[i].value = *(float *) &(peak[0]);        /* RWD TODO: replace with union */
+                ssamp.lsamp = peak[0];
+                //f->peaks[i].value = *(float *) &(peak[0]);        /* RWD replaced with union */
+                f->peaks[i].value = ssamp.fsamp;
                 f->peaks[i].position = peak[1];
         }
         return 0;
@@ -839,121 +858,16 @@ static int read_peak_msf(int channels, struct sf_file *f)
 /*
  *      Fudge Apple extended format, for sample rates
  */
-#ifdef TABLE_IEEE754
+/* RWD Oct 2022 removed old "TABLE_IEEE754" code */
+/* now using compact Csound code */
 
-static struct sr_map {
-        DWORD rate;
-        unsigned char ext[10];
-} sr_map[] = {
-        22050,          { 0x40, 0x0d, 0xac, 0x44, 0,0,0,0, 0,0 },
-        44100,          { 0x40, 0x0e, 0xac, 0x44, 0,0,0,0, 0,0 },
-        48000,          { 0x40, 0x0e, 0xbb, 0x80, 0,0,0,0, 0,0 },
-        0,              { 0,0,0,0, 0,0,0,0, 0,0}
-};
 
-static int
-read_ex_todw(DWORD *dwp, struct sf_file *f)
-{
-        struct sr_map *srmp;
-        char buf[10];   /* for 80-bit extended float */
 
-        if(doread(f, buf, 10))
-                return 1;
-        for(srmp = sr_map; srmp->rate > 0; srmp++)
-                if(memcmp(buf, srmp->ext, 10) == 0)
-                        break;
-        *dwp = srmp->rate;
-        return 0;
-}
-
-static int
-write_dw_toex(DWORD dw, struct sf_file *f)
-{
-        struct sr_map *srmp;
-
-        for(srmp = sr_map; srmp->rate > 0; srmp++)
-                if(srmp->rate == dw)
-                        return dowrite(f, srmp->ext, 10);
-        return 1;
-}
-
-#else
-
-#define TWOPOW32        (4.0*1024.0*1024.0*1024.0)
-
-/* RWD this is the Csound routine...*/
-#ifdef TEST_IEEE_80
-#define ULPOW2TO31      ((/*unsigned long*/DWORD)0x80000000L)
-#define DPOW2TO31       ((double)2147483648.0)  /* 2^31 */
-
-/* have to deal with ulong's 32nd bit conditionally as double<->ulong casts
-   don't work in some C compilers */
-
-static double myUlongToDouble(/*unsigned long*/DWORD ul)
-{
-        double val;
-
-        /* in THINK_C, ulong -> double apparently goes via long, so can only
-           apply to 31 bit numbers.  If 32nd bit is set, explicitly add on its
-           value */
-        if (ul & ULPOW2TO31)
-                val = DPOW2TO31 + (ul & (~ULPOW2TO31));
-        else
-                val = ul;
-        return val;
-}
-
-static double ieee_80_to_double(unsigned char *p)
-{
-char sign;
-short exp = 0;
-/*unsigned long*/DWORD mant1 = 0;
-/*unsigned long*/DWORD mant0 = 0;
-double val;
-        exp = *p++;
-        exp <<= 8;
-        exp |= *p++;
-        sign = (exp & 0x8000) ? 1 : 0;
-        exp &= 0x7FFF;
-
-        mant1 = *p++;
-        mant1 <<= 8;
-        mant1 |= *p++;
-        mant1 <<= 8;
-        mant1 |= *p++;
-        mant1 <<= 8;
-        mant1 |= *p++;
-
-        mant0 = *p++;
-        mant0 <<= 8;
-        mant0 |= *p++;
-        mant0 <<= 8;
-        mant0 |= *p++;
-        mant0 <<= 8;
-        mant0 |= *p++;
-
-        /* special test for all bits zero meaning zero
-           - else pow(2,-16383) bombs */
-        if (mant1 == 0 && mant0 == 0 && exp == 0 && sign == 0)
-                return 0.0;
-        else{
-                val = myUlongToDouble(mant0) * pow(2.0,-63.0);
-                val += myUlongToDouble(mant1) * pow(2.0,-31.0);
-                val *= pow(2.0,((double) exp) - 16383.0);
-                return sign ? -val : val;
-                }
-}
-
-#endif
-
+#ifdef DW_EX_OLDCODE
 static int
 read_ex_todw(DWORD *dwp, struct sf_file *f)
 {
         double neg = 1.0;
-        /* RWD test Csound version */
-#ifdef TEST_IEEE_80
-        double Csound_res = 0.0;
-#endif
         WORD exp;
         /*unsigned long*/DWORD ms_sig;
         double res;
@@ -961,13 +875,13 @@ read_ex_todw(DWORD *dwp, struct sf_file *f)
 
         if(doread(f, buf, 10))
                 return 1;
-#ifdef LSBFIRST
+# ifdef LSBFIRST
         exp = REVWBYTES(*(WORD *)&buf[0]);
-        ms_sig = (/*unsigned long*/DWORD)REVDWBYTES(*(DWORD *)&buf[2]);
-#else
+        ms_sig = (/*unsigned long*/DWORD)REVDWBYTES(*(DWORD *)&buf[2]);   /* RWD TODO replace with union */
+# else
         exp = *(WORD *)&buf[0];
-        ms_sig = (/*unsigned long*/DWORD)*(DWORD *)&buf[2];
-#endif
+        ms_sig = (/*unsigned long*/DWORD)*(DWORD *)&buf[2];               /* RWD TODO replace with union */
+# endif
         if(exp & 0x8000) {
                 exp &= ~0x8000;
                 neg = -1.0;
@@ -975,46 +889,64 @@ read_ex_todw(DWORD *dwp, struct sf_file *f)
         exp -= 16382;
         res = (double)ms_sig/TWOPOW32;
         res = neg*ldexp(res, exp);
-#ifdef TEST_IEEE_80
-        //RWD test Csound code */
-        Csound_res = ieee_80_to_double((unsigned char *) buf);
-#endif
         *dwp = (DWORD)(res+0.5);
-
-
         return 0;
 }
 
 static int
 write_dw_toex(DWORD dw, struct sf_file *f)
 {
-        double val = (double)dw;
-        int neg = 0;
-        /*unsigned long*/DWORD mant;
-        int exp;
-        char buf[10];
-
-        if(val < 0.0) {
-                val = -val;
-                neg++;
-        }
-        mant = (/*unsigned long*/DWORD)(frexp(val, &exp) * TWOPOW32 + 0.5);
-        exp += 16382;
-        if(neg)
-                exp |= 0x8000;
-#ifdef LSBFIRST
-        *(WORD *)&buf[0] = REVWBYTES(exp);
-        *(DWORD *)&buf[2] = REVDWBYTES((DWORD)mant);
+    double val = (double)dw;
+    int neg = 0;
+    /*unsigned long*/DWORD mant;
+    int exp;
+    char buf[10];
+    
+    if(val < 0.0) {
+        val = -val;
+        neg++;
+    }
+    mant = (/*unsigned long*/DWORD)(frexp(val, &exp) * TWOPOW32 + 0.5);
+    exp += 16382;
+    if(neg)
+        exp |= 0x8000;
+# ifdef LSBFIRST
+    *(WORD *)&buf[0] = REVWBYTES(exp);              /* RWD TODO replace all with union? */
+    *(DWORD *)&buf[2] = REVDWBYTES((DWORD)mant);
+# else
+    *(WORD *)&buf[0] = exp;
+    *(DWORD *)&buf[2] = mant;
+# endif
+    *(DWORD *)&buf[6] = 0;
+    return dowrite(f, buf, 10);
+}
 #else
-        *(WORD *)&buf[0] = exp;
-        *(DWORD *)&buf[2] = mant;
-#endif
-        *(DWORD *)&buf[6] = 0;
-        return dowrite(f, buf, 10);
+/* use Csound funcs */
+static int
+read_ex_todw(DWORD *dwp, struct sf_file *f)
+{
+    double Csound_res = 0.0;
+    char buf[10];   /* for 80-bit extended float */
+
+    if(doread(f, buf, 10))
+        return 1;
+    Csound_res = ieee_80_to_double((unsigned char *) buf);
+    *dwp = (DWORD) Csound_res;
+    return 0;
+}
+
+static int
+write_dw_toex(DWORD dw, struct sf_file *f)
+{
+    double val = (double)dw;
+    char buf[10];
+    double_to_ieee_80(val,(unsigned char *) buf);
+    return dowrite(f,buf,10);
 }
 
 
-#endif
+#endif  // DW_EX_OLDCODE
+
 
 /*
  *      wave file-format specific routines
@@ -3353,12 +3285,14 @@ ioerror:
 /*
  *      Initialization routines
  */
+#if 0
 int
 sfinit()
 {
         return sflinit("%no name app%");
 }
-
+#endif
+            
 static void
 rsffinish(void)
 {
@@ -3403,12 +3337,14 @@ sflinit(const char *name)
 /*
  *      Misc other stuff
  */
+#if 0
 void
 sffinish()
 {
         /* leave everything to atexit! */
 }
-
+#endif
+            
 char *
 sfgetbigbuf(int *secsize)
 {
@@ -3430,13 +3366,13 @@ sfperror(const char *s)
 }
 
 char *
-sferrstr()
+sferrstr(void)
 {
         return rsferrstr;
 }
 
 int
-sferrno()
+sferrno(void)
 {
         return rsferrno;
 }
@@ -3754,14 +3690,14 @@ mksfpath(const char *name)
         if( filetype == unknown_wave) {
                 char *newpath;
                 char *ext;
-        char *ext_default = "wav";
+                char *ext_default = "wav";
 // RWD MAR 2015 we may have unset CDP_SOUND_EXT, but not removed it completely!
                 if((ext = getenv("CDP_SOUND_EXT")) == NULL || strlen(ext) == 0 ) {
             //rsferrno = ESFBADPARAM;
                         //rsferrstr = "unknown sound file type - extension not set";
                         //free(path);
                         //return NULL;
-            ext = ext_default;
+                        ext = ext_default;
                 }
                 if(_stricmp(ext, "wav") != 0
                  &&_stricmp(ext, "aif") != 0
