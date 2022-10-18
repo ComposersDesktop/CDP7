@@ -5,24 +5,24 @@
  *
  This file is part of the CDP System.
 
- The CDP System is free software; you can redistribute it
- and/or modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
+    The CDP System is free software; you can redistribute it
+    and/or modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
- The CDP System is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Lesser General Public License for more details.
+    The CDP System is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU Lesser General Public
- License along with the CDP System; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
- 02111-1307 USA
+    You should have received a copy of the GNU Lesser General Public
+    License along with the CDP System; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA
  *
  */
 /*
- *      emulation of Misc Atari OS routines
+ *  emulation of Misc Atari OS routines
  */
 
 /*
@@ -33,8 +33,8 @@
  * Initial revision
  *
  */
-/*RWD 16/1/96 changed hz200 to GetSystemTime() from GetLocalTime() */
-/*RWD 7/9/96 fixed bug in getdrivefreespace() */
+ /*RWD 16/1/96 changed hz200 to GetSystemTime() from GetLocalTime() */
+ /*RWD 7/9/96 fixed bug in getdrivefreespace() */
 #ifdef _WIN32
 #include <windows.h>
 #include <time.h>
@@ -65,7 +65,7 @@
 
 /*RWD May 2005: has to be a signed value sadly!*/
 /* RWD Jan 2014 not any longer... */
-#define BIGFILESIZE     (0xFFFFFFFFLU)
+#define BIGFILESIZE (0xFFFFFFFFLU)
 
 
 void *
@@ -99,7 +99,7 @@ Mfree(void *ptr)
 
 #ifdef _WIN32
 unsigned int
-hz200()
+hz200(void)
 {
     unsigned long secs, ticks;
     SYSTEMTIME st;
@@ -112,7 +112,7 @@ hz200()
 }
 /*TW*/
 unsigned int
-hz1000()
+hz1000(void)
 {
     unsigned long secs, ticks;
     SYSTEMTIME st;
@@ -138,7 +138,7 @@ getdrivefreespace(const char *path)
         pbuf[0] = path[0];
         pbuf[1] = ':';
         pbuf[2] = '\\';
-        pbuf[3] = '\0';         /*RWD*/
+        pbuf[3] = '\0';     /*RWD*/
         path = pbuf;
     } else
         path = 0;
@@ -148,7 +148,7 @@ getdrivefreespace(const char *path)
 
     freesectors = (__int64)freeclusters * sectorspercluster;
     if(freesectors > BIGFILESIZE/bytespersector)
-        return BIGFILESIZE;     /* next line would overflow!! */
+        return BIGFILESIZE; /* next line would overflow!! */
     return (unsigned int)(freesectors * bytespersector);
 }
 
@@ -169,12 +169,12 @@ legalfilename(char *filename)
     path[3] = '\0';
 
     if(!GetVolumeInformation(path,
-                             (LPTSTR)0, 0,   /* volume name */
-                             (LPDWORD)0,     /* volume serial number */
-                             &maxcl,         /* maximum component length */
-                             (LPDWORD)0,     /* filesystem flags */
-                             fstname, 10     /* file system type name */
-                             ))
+                    (LPTSTR)0, 0,   /* volume name */
+                    (LPDWORD)0, /* volume serial number */
+                    &maxcl,     /* maximum component length */
+                    (LPDWORD)0, /* filesystem flags */
+                    fstname, 10 /* file system type name */
+            ))
         return "Illegal filename: can't get volume information";
 
     if(strcmp(fstname, "FAT") == 0 && maxcl == 12) {/* don't know what vfat under windows4 will look like! */
@@ -197,7 +197,7 @@ legalfilename(char *filename)
 
 #ifdef unix
 unsigned int
-hz200()
+hz200(void)
 {
     struct timeval tv;
 
@@ -231,7 +231,7 @@ getdrivefreespace(const char *path)
             avail = BIGFILESIZE;
         else
             avail = diskstat.f_bsize * diskstat.f_bfree;
-    }
+    }   
     return (unsigned int) avail;
 }
 
@@ -327,16 +327,15 @@ legalfilename(char *filename)
 
 /* for both WIN32 and unix! */
 
-#include <time.h>
-
 void
-initrand48()
+initrand48(void)
 {
     srand(time((time_t *)0));
 }
 
 double
-drand48()
+drand48(void)
 {
     return (double)rand()/(double)RAND_MAX;
 }
+
