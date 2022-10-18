@@ -1091,7 +1091,7 @@ fgetfloatEx(float *fp, int sfd,int expect_floats)
                 ssamp.bytes[2] = sfp->next[1];
                 ssamp.bytes[3] = sfp->next[2];
 #else
-        ssamp.bytes[0] = sfp->next[0];
+                ssamp.bytes[0] = sfp->next[0];
                 ssamp.bytes[1] = sfp->next[1];
                 ssamp.bytes[2] = sfp->next[2];
 #endif
@@ -1163,7 +1163,7 @@ int
 fputfloatEx(float *fp, int sfd)
 {
         register struct sndfile *sfp;
-    SND_SAMP ssamp;
+        SND_SAMP ssamp;
 
         if(!mapsndfd(&sfd))
                 return -1;
@@ -1175,7 +1175,7 @@ fputfloatEx(float *fp, int sfd)
         /* sndtell checks this*/
         sfp->flags |= SNDFLG_LASTWR;
 #endif
-    ssamp.lsamp = 0;
+        ssamp.lsamp = 0;
         switch(sfp->samptype){
 
 
@@ -1196,7 +1196,7 @@ fputfloatEx(float *fp, int sfd)
                 sfp->next[1] = ssamp.bytes[2];
                 sfp->next[2] = ssamp.bytes[3];
 #else
-        sfp->next[0] = ssamp.bytes[0] & 0xf0;
+                sfp->next[0] = ssamp.bytes[0] & 0xf0;
                 sfp->next[1] = ssamp.bytes[1];
                 sfp->next[2] = ssamp.bytes[2];
 
