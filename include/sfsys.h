@@ -129,10 +129,11 @@ extern char *  sferrstr(void);
 /*
  *      return the numeric error indication.
  */
-extern int  sferrno();
+extern int  sferrno(void);
 
-
+#if 0
 extern int sfinit();     /* deprecated */
+#endif
 #define sfexit exit      /* deprecated */
 
 /*
