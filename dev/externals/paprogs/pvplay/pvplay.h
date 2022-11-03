@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1983-2013 Richard Dobson and Composers Desktop Project Ltd
- * http://people.bath.ac.uk/masrwd
+ * Copyright (c) 1983-2020 Richard Dobson and Composers Desktop Project Ltd
+ * http://www.rwdobson.com
  * http://www.composersdesktop.com
  * This file is part of the CDP System.
  * The CDP System is free software; you can redistribute it
@@ -20,10 +20,6 @@
  
 //
 //  pvplay.h
-//  
-//
-//  Created by Archer on 28/01/2013.
-//  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
 //
 
 #ifndef _pvthreads_h
@@ -62,14 +58,6 @@ int stricmp(const char *a, const char *b);
 int strnicmp(const char *a, const char *b, const int length);
 
 #endif
-
-#ifdef CPLONG64
-
-#define MYLONG int
-#else
-#define MYLONG long
-#endif
-
 
 /* need this to avoid clashes of GUID defs, etc */
 #ifdef _WIN32
@@ -121,8 +109,8 @@ extern HANDLE ghEvent;
 
 typedef struct {
 	float *buffer;
-	long nframes;
-	MYLONG used;
+	int nframes;
+	int used;
 }
 psf_buffer;
 
@@ -159,13 +147,13 @@ typedef struct {
     fmhdecodefunc decodefunc;
     fmhcopyfunc copyfunc;
     double gain;
-	unsigned long frames_played;  // for .ana, .pvx files, these are analysis frames
-    unsigned long from_frame;
-    unsigned long to_frame;
-    unsigned long memFramelength;
-    unsigned long memFramePos;
-    unsigned long inbuflen;
-    unsigned long current_frame;
+	unsigned int frames_played;  // for .ana, .pvx files, these are analysis frames
+    unsigned int from_frame;
+    unsigned int to_frame;
+    unsigned int memFramelength;
+    unsigned int memFramePos;
+    unsigned int inbuflen;
+    unsigned int current_frame;
     int srate;
     int inchans;
     int outchans;
@@ -192,7 +180,7 @@ typedef struct {
 //extern int file_playing;
 //extern psfdata *g_pdata = NULL;  // for timer interrupt routine
 
-void stereo_interls(const float *in_l,const float *in_r,float *out,long insize);
+void stereo_interls(const float *in_l,const float *in_r,float *out,int insize);
 int show_devices(void);
 
 
