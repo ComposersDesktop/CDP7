@@ -9,9 +9,9 @@ extern "C" {
 
 #define VERY_TINY_VAL (1e-20)
 
-#define ODD(x)	  			((x)&1)
-#define EVEN(x)	  			(!ODD(x))
-#define CHAN_SRCHRANGE_F	(4)
+#define ODD(x)              ((x)&1)
+#define EVEN(x)             (!ODD(x))
+#define CHAN_SRCHRANGE_F    (4)
 
 
 #ifndef max
@@ -31,13 +31,14 @@ typedef enum pvoc_scaletype {PVOC_S_TIME,PVOC_S_PITCH,PVOC_S_NONE} pv_scaletype;
 
 typedef enum pvoc_frametype { PVOC_AMP_FREQ,PVOC_AMP_PHASE,PVOC_COMPLEX } pv_frametype;
 typedef enum pvoc_windowtype {PVOC_DEFAULT,
-								PVOC_HAMMING,
-								PVOC_HANN,
-								PVOC_KAISER,
-								PVOC_RECT,
-								PVOC_CUSTOM} pv_wtype;
+                                PVOC_HAMMING,
+                                PVOC_HANN,
+                                PVOC_KAISER,
+                                PVOC_RECT,
+                                PVOC_CUSTOM} pv_wtype;
 
 #ifdef __cplusplus
 }
 #endif
 #endif
+
