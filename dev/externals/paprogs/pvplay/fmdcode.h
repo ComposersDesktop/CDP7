@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
- 
+
 /* fmdcode.h FMH decode functions */
 
 /*
@@ -35,8 +35,8 @@
  9 channel = ff  = 2nd order 3-D
  11 channel = ffh = 3rd order horizontal + 2nd order height
  16 channel = fff = 3rd order 3-D
- 
- 
+
+
  Horizontal   Height  Soundfield   Number of    Channels
  order 	      order 	  type      channels 	
  1 	         0 	       horizontal 	  3 	    WXY
@@ -48,7 +48,7 @@
  3 	         1         mixed-order 	  8 	    WXYZ...UV.....PQ
  3 	         2 	       mixed-order 	 11 	    WXYZRSTUV.....PQ
  3 	         3 	      full-sphere 	 16 	    WXYZRSTUVKLMNOPQ
- */
+*/
 
 typedef struct abf_samp {
 	float W;
