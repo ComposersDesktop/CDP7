@@ -71,7 +71,7 @@ void playhandler(int sig)
 void alarm_wakeup (int i)
 {
     struct itimerval tout_val;
-    
+
     signal(SIGALRM,alarm_wakeup);
     if(file_playing && g_pdata->stream) {
         //printf("%.4f secs\r",(float)(g_pdata->frames_played /(double) g_pdata->srate));
@@ -99,7 +99,7 @@ void finishedCallback(void *userData)
 VOID CALLBACK TimerCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired)
 {
     psfdata *pdata = (psfdata*) lpParam;
-    
+
     if(file_playing && pdata->stream) {
         //printf("%.4f secs\r",(float)(g_pdata->frames_played /(double) g_pdata->srate));
         pdata->lastTime = Pa_GetStreamTime(pdata->stream ) - pdata->startTime;
@@ -141,7 +141,7 @@ static PaError startThread( psfdata* pdata, threadfunc fn )
     /* Set file thread to a little higher priority than normal */
     SetThreadPriority(pdata->hThread, THREAD_PRIORITY_ABOVE_NORMAL);
 //#endif
-    
+
 #else
 #if defined(__APPLE__) || defined(__GNUC__)
     if(pthread_create(&pdata->hThread,NULL,/*(void*)*/ fn,pdata))
@@ -149,10 +149,10 @@ static PaError startThread( psfdata* pdata, threadfunc fn )
     /* Wait for thread to startup */
     while (pdata->flag) {
         Pa_Sleep(10);
-    } 
+    }
 #endif
 #endif
-    
+
     return paNoError;
 }
 #if 0
@@ -175,7 +175,7 @@ static int stopThread( psfdata* pdata )
     return paNoError;
 }
 #endif
-
+// NB Portaudio def want long for 3rd arg
 static int paplayCallback(const void *inputBuffer, void *outputBuffer,
                           unsigned long framesPerBuffer,
                           const PaStreamCallbackTimeInfo* timeInfo,
@@ -188,11 +188,11 @@ static int paplayCallback(const void *inputBuffer, void *outputBuffer,
     float *out = (float*) outputBuffer;
     int framesToPlay = sampsToPlay / data->outchans;
     int played;
-    
+
     // if framestoplay < framesPerBuffer, need to clean up the remainder
     memset(out,0,framesPerBuffer * data->outchans * sizeof(float));
     played = PaUtil_ReadRingBuffer(&data->ringbuf, out, framesToPlay);
-    
+
     data->frames_played += played;      
     if(data->flag) {
         //printf("callback - complete\n");
@@ -208,18 +208,18 @@ static int MemCallback(const    void *inputBuffer, void *outputBuffer,
                        void *userData )
 {
     psfdata *pdata = (psfdata *)userData;
-    
+
     float *out = (float*) outputBuffer;
-    unsigned long inSamps,outSamps, inSampPos;
-    unsigned long i;
-    unsigned long framesToPlay = framesPerBuffer;
-    
+    unsigned int inSamps,outSamps, inSampPos;
+    unsigned int i;
+    unsigned int framesToPlay = framesPerBuffer;
+
     // if framesToPlay < framesPerBuffer, need to clean up the remainder
     memset(out,0,framesPerBuffer * pdata->outchans * sizeof(float));
     inSamps = pdata->memFramelength * pdata->inchans;
     outSamps = framesPerBuffer * pdata->inchans;
     inSampPos = pdata->memFramePos * pdata->inchans;
-    
+
     if(pdata->play_looped){
         for(i=0;i < outSamps; i++){
             pdata->inbuf[i] = pdata->membuf[inSampPos++] * pdata->gain;
@@ -250,7 +250,7 @@ static int MemCallback(const    void *inputBuffer, void *outputBuffer,
         }
     }
     else {  // inchans = outchans
-        memcpy(out,pdata->inbuf,framesToPlay * sizeof(float) * pdata->inchans);  
+        memcpy(out,pdata->inbuf,framesToPlay * sizeof(float) * pdata->inchans);
     }
     pdata->memFramePos = inSampPos / pdata->inchans;
     pdata->frames_played += framesToPlay;
@@ -351,9 +351,7 @@ int main(int argc,char **argv)
     unsigned int i=0;
     int anal_nframes;
     PaDeviceIndex device;
-    //long framesread;
     int filesize;
-    //long framesize = 0;
     unsigned int ringframelen = RINGBUF_NFRAMES;   // length of ring buffer in m/c frames
     unsigned int frames_per_buffer = 0;            // default is to let portaudio decide
     unsigned int nFramesToPlay = 0;
@@ -380,15 +378,14 @@ int main(int argc,char **argv)
     //int pvfile = -1;
     //pvoc_frametype inframetype;
     pvoc_windowtype wtype;
-    
+
     //double oneovrsr;
     int anal_buflen,overlap,winlen;
     // for sfiles only, for now 
     //int framesize_factor = 0;
     //phasevocoder  *pv = NULL, *pv_r = NULL;
     PLAYTYPE playtype = PLAY_SFILE;
-    
-    
+
 #ifdef WIN32
     HANDLE hTimerQueue;
     ghEvent = CreateEvent(NULL,TRUE,FALSE,NULL);
@@ -402,14 +399,14 @@ int main(int argc,char **argv)
         return 1;
     }
 #endif
-    
-    
+
+
     /* CDP version number; now set for release 7 */
     if(argc==2 && (stricmp(argv[1],"--version")==0)){
         printf("7.1.0\n");
         return 0;
     }
-    
+
     signal(SIGINT,playhandler);
     //sf_frames = FRAMESIZE;  // need this for pvoc playback reporting
     sfdata.inbuf = NULL;
@@ -421,8 +418,8 @@ int main(int argc,char **argv)
     sfdata.outbuf_l = NULL;
     sfdata.outbuf_r = NULL;
     sfdata.pvfile = -1;
-    
-    printf("PvPlay: play multi-channel PCM and analysis files (.ana, .pvx). V7.0.0 RWD,CDP 2014\n");
+
+    printf("PvPlay: play multi-channel PCM and analysis files (.ana, .pvx). V7.1.0 RWD,CDP 2014,2022\n");
     file_playing = 0;
     err = Pa_Initialize();
     if( err != paNoError ) {
@@ -542,7 +539,7 @@ int main(int argc,char **argv)
                     Pa_Terminate();
                     return 1;
                 }
-                
+
                 ringframelen = atoi(&(argv[1][2]));
                 if(ringframelen <= 1024){
                     printf("-B: framesize value must be >=1024!n");
@@ -564,22 +561,22 @@ int main(int argc,char **argv)
         }
         argv++;  argc--;
     }
-    
+
     if(frames_per_buffer > ringframelen/4){
         printf(" hardware (-h) framesize %u too large for file buffer (-B) size %u\n",
                frames_per_buffer,ringframelen);
         Pa_Terminate();
         return 1;
     }
-    
+
     if(argc < 2 || argc > 4){
         usage();
         show_devices();
         Pa_Terminate();
         return 1;
     }
-    
-    if(argc>=3){        
+
+    if(argc>=3){
         fromdur = atof(argv[2]);
         if(fromdur < 0.0){
             printf("Error: start position must be positive\n");
@@ -595,7 +592,7 @@ int main(int argc,char **argv)
             return 1;
         }
     }
-    
+
     if(!init_pvsys()){
         puts("\nUnable to start pvsys.");
         return 1;
@@ -604,9 +601,9 @@ int main(int argc,char **argv)
         puts("\nUnable to start sfsys.");
         return 1;
     }   
-    
+
     /* get pvocex filetype from extension */
-    ext = strrchr(argv[1],'.');   
+    ext = strrchr(argv[1],'.');
     if(ext && stricmp(ext,".pvx")==0){
         p_pvdata =  new PVOCDATA;
         if(p_pvdata==NULL){
@@ -643,14 +640,14 @@ int main(int argc,char **argv)
         double dur = (double) filesize  / (double)(p_pvdata->fAnalysisRate);
         filesize = (int)(dur * props.srate);
 
-        sfdata.anal_framesize = (p_pvdata->nAnalysisBins/*- 1*/) * 2; 
+        sfdata.anal_framesize = (p_pvdata->nAnalysisBins/*- 1*/) * 2;
         sfdata.fftsize = sfdata.anal_framesize-2;
         winlen = p_pvdata->dwWinlen;
         overlap = p_pvdata->dwOverlap;
         sfdata.inframetype = (pvoc_frametype) p_pvdata->wAnalFormat;
-        
+
 //        oneovrsr = 1.0 / (double) props.srate;
-        wtype = (pvoc_windowtype) p_pvdata->wWindowType;        
+        wtype = (pvoc_windowtype) p_pvdata->wWindowType;
         
         /* adjust buffer size to multiple of overlap   */
         anal_buflen = sfdata.anal_framesize * NUM_ANALFRAMES;
@@ -695,14 +692,13 @@ int main(int argc,char **argv)
                 goto error;
             }
         } 
-                
+
         if(totime > 0.0){
-            int targetframe = (long)(totime * (props.srate/overlap));
+            int targetframe = (int)(totime * (props.srate/overlap));
             if(targetframe >= to_frame){
                 printf("Error: end time is beyond end of file\n");
                 goto error;
             }
-                    
             if(targetframe <= from_frame){
                 printf("Start time must be less than end time.\n");
                 goto error;
@@ -713,7 +709,6 @@ int main(int argc,char **argv)
             // but we will not use in-memory system in this case
             }
             nFramesToPlay = to_frame - from_frame;
-                    
             printf("Playing %d analysis frames\n",(int) nFramesToPlay);
         } 
         playtype = PLAY_PVXFILE; 
@@ -739,7 +734,7 @@ int main(int argc,char **argv)
             printf("File is empty!\n");
             return 1;
         }
-        
+
         bool adjusted = false; // in case we have to increase ringframelen for huge FFT size
         switch(props.type){
             case wt_analysis:
@@ -755,7 +750,7 @@ int main(int argc,char **argv)
                 winlen = props.winlen;
                 /* TODO: match ringbuf length to multiple of FFT size */
                 sfdata.fftsize = sfdata.anal_framesize - 2;
-                        
+
                 sfdata.pv_l = new phasevocoder;
                 if(!sfdata.pv_l->init(props.origrate,sfdata.anal_framesize-2,props.winlen,props.decfac,1.0,
                         PVOC_S_NONE,PVOC_HAMMING,PVPP_STREAMING)){
@@ -771,27 +766,26 @@ int main(int argc,char **argv)
                     printf("Error: start is beyond end of file\n");
                     goto error;
                 }
-                
                 to_frame = anal_nframes -1;
-                
+
                 if(totime > 0.0){
-                    to_frame = (long)(totime * props.arate + 0.5);
+                    to_frame = (int)(totime * props.arate + 0.5);
                     if(to_frame >= anal_nframes){
                         printf("Error: end time is beyond end of file\n");
                         goto error;
                     }
-                    
+
                     if(to_frame <= from_frame){
                         printf("Start time must be less than end time.\n");
                         goto error;
                     }
-                    
+
                     if(to_frame - from_frame < 1){
                         to_frame = from_frame +1;   // maybe we can in fact freeze on a single frame!
                         // but we will not use in-memory system in this case
                     }
                     nFramesToPlay = to_frame - from_frame;
-                    
+
                     printf("Playing %d analysis frames\n",(int) nFramesToPlay);
                 }
                if(from_frame > 0){
@@ -808,7 +802,7 @@ int main(int argc,char **argv)
                     ringframelen <<= 1;
                     adjusted = true;
                 }
-                    
+
                 //printf("from = %d, to = %d\n",from_frame, to_frame);
                 playtype = PLAY_ANAFILE; 
                 printf("Opened %s: %d frames, %d channels\n",argv[1],anal_nframes,props.chans);
@@ -818,10 +812,8 @@ int main(int argc,char **argv)
             case wt_wave:
                 playtype = PLAY_SFILE;
                 printf("Opened %s: %d frames, %d channels\n",argv[1],filesize,props.chans);
-                //framesize_factor = (long) (48000/ props.srate);
-                //framesize_factor += 1;
                 filesize /= inchans;
-                                
+
                 if(props.format == WAVE_EX){
                     if(do_speakermask){
                         int mask;
@@ -838,7 +830,7 @@ int main(int argc,char **argv)
                         }
                     }
                 }
-                from_frame = (long)(fromdur * props.srate);
+                from_frame = (int)(fromdur * props.srate);
                 if(from_frame >= filesize){
                     printf("Error: start is beyond end of file\n");
                     goto error;
@@ -866,8 +858,7 @@ int main(int argc,char **argv)
                     }
                     sfdata.current_frame = from_frame;
                 }
-                
-                
+
                 outchans = inchans = props.chans;
                 if(props.chformat==MC_BFMT){
                     flags[FLAG_B] = 1;
@@ -901,7 +892,7 @@ int main(int argc,char **argv)
                         fprintf(stderr,"Unsupported channel count (%u) for B-format file.\n",inchans);
                         return 1;
                     }
-                    
+
                     switch(layout-1) {
                     case FM_MONO:
                         printf("Decoding to Mono\n");
@@ -996,7 +987,7 @@ int main(int argc,char **argv)
                         break;
                     }
                 }  // MC_BFMT            
-                
+
                 /* just read peaks for soundfile */
                 fpeaks = (CHPEAK *) calloc(inchans,sizeof(CHPEAK));
                 if(fpeaks==NULL){
@@ -1011,12 +1002,12 @@ int main(int argc,char **argv)
                 }
                 if(res > 0) {
                     printf("PEAK data:\ncreation time: %s",ctime( &in_peaktime));
-                    
+
                     for(i=0;i < inchans;i++){
                         printf("CH %d: %.4f at frame %u: \t%.4f secs\n",
                                i,fpeaks[i].value,fpeaks[i].position,(double)(fpeaks[i].position / (double) props.srate));
                     }
-                }        
+                }
                 break;
             default:
                 fprintf(stderr,"\nSorry: Pvplay can only play soundfiles and analysis files.");
@@ -1035,7 +1026,6 @@ int main(int argc,char **argv)
         sfdata.memFramePos = 0;
         playcallback = MemCallback;
         printf("RAM block size =  %u\n",nFramesToPlay);
-                    
     }
     else {
         // set up pcm ring buffer  NB must be power of 2 size
@@ -1047,15 +1037,14 @@ int main(int argc,char **argv)
         if( sfdata.ringbufData == NULL )   {
             puts("Could not allocate play buffer.\n");
             goto error;
-        }                 
+        }
         // number of elements has to be a power of two, so each element has to be a full m/c frame
         if (PaUtil_InitializeRingBuffer(&sfdata.ringbuf, sizeof(float) * outchans, ringframelen , sfdata.ringbufData) < 0) {
             puts("Could not initialise play buffer.\n");
             goto error;
-        }            
+        }
     } 
-    
-    
+
     /* create input side workspace buffer, used for both soundfiles and analysis files! */
     sfdata.inbuf = (float *) PaUtil_AllocateMemory(ringframelen * sizeof(float) * inchans);
     if(sfdata.inbuf==NULL){
@@ -1069,12 +1058,12 @@ int main(int argc,char **argv)
         sfdata.outbuf_r = (float *) PaUtil_AllocateMemory(ringframelen * sizeof(float) );
         
     }
-    
+
     if(props.srate > 48000)
         frames_per_buffer *= 2;
     if(frames_per_buffer > 0)
         printf("Audio buffer size = %u\n",frames_per_buffer);
-    
+
     sfdata.inchans      = inchans;
     sfdata.outchans     = outchans;
     sfdata.frames_played  = 0;
@@ -1139,9 +1128,8 @@ int main(int argc,char **argv)
         // else
         //    printf("API unknown!);
     }
-#endif    
-    
-    
+#endif
+
     err = Pa_OpenStream(
             &stream,
             NULL,  /* No input */
@@ -1151,9 +1139,9 @@ int main(int argc,char **argv)
             paClipOff,      /* we won't output out of range samples so don't bother clipping them */
             playcallback,
             &sfdata );
-    
+
     if( err != paNoError ){
-        fprintf(stderr,"Unable to open audio device: err = %d\n", err);   
+        fprintf(stderr,"Unable to open audio device: err = %d\n", err);
         exit(1);
     }
     err =  Pa_SetStreamFinishedCallback( stream, finishedCallback );
@@ -1179,8 +1167,7 @@ int main(int argc,char **argv)
     }
 
     // should this go in read thread func too?
-    
-    
+
 #ifdef NOTDEF
     // TODO: any benefits in using this?
     pterror = Pt_Start(200, porttimeCallback, NULL);
@@ -1189,7 +1176,7 @@ int main(int argc,char **argv)
         return 1;
     }
 #endif
-    
+
     /* if small block, read it all into memory
      NB not doing paplay channel mapping  */
     if(sfdata.memFramelength > 0){
@@ -1219,9 +1206,9 @@ int main(int argc,char **argv)
     /* Start the file reading thread */
     
     sfdata.startTime = Pa_GetStreamTime(stream );
-    
+
     switch(playtype){
-        case PLAY_SFILE:    
+        case PLAY_SFILE:
             if(sfdata.memFramelength == 0){
                 err = startThread(&sfdata, threadFunctionReadFromRawFile);
                 if( err != paNoError ) goto error;
@@ -1241,9 +1228,9 @@ int main(int argc,char **argv)
         default:
             printf("Internal error: no playback file type!\n");
             return 1;
-            
+
     }
-    
+
 #ifdef _WIN32
     if(do_updatemessages){
         if(!CreateTimerQueueTimer(&sfdata.hTimer, hTimerQueue,
@@ -1258,7 +1245,7 @@ int main(int argc,char **argv)
         fprintf(stderr,"Unable to start playback.\n");
         goto error;
     }
-    
+
     while((!sfdata.finished) && file_playing){
         // nothing to do!
         Pa_Sleep(20);
@@ -1287,32 +1274,30 @@ error:
 #endif
     if( sfdata.ringbufData )       
         PaUtil_FreeMemory(sfdata.ringbufData);
-    
+
     if(sfdata.inbuf)
         PaUtil_FreeMemory(sfdata.inbuf);
-    
+
     if(sfdata.membuf)
         PaUtil_FreeMemory(sfdata.membuf);
-    
+
     if(sfdata.outbuf_l)
         PaUtil_FreeMemory(sfdata.outbuf_l);
-    
+
     if(sfdata.outbuf_r)
         PaUtil_FreeMemory(sfdata.outbuf_r); 
-    
+
     if(sfdata.ifd >= 0)
         sndcloseEx(sfdata.ifd);
-    
+
     if(sfdata.pvfile >= 0)
         pvoc_closefile(sfdata.pvfile);
-        
+
     if(fpeaks)
         free(fpeaks);
-    
-    //sffinish();
-    
+
     pvsys_release();
-    
+
     if(err != paNoError){
         fprintf( stderr, "An error occured while using the portaudio stream\n" ); 
         fprintf( stderr, "Error number: %d\n", err );
@@ -1332,7 +1317,7 @@ int show_devices(void)
 #endif
         PaError  err;
         int nOutputDevices = 0;
-        
+
 #ifdef USE_ASIO
         printf("For ASIO multi-channel, you may need to select the highest device no.\n");      
 #endif
@@ -1387,12 +1372,12 @@ int stricmp(const char *a, const char *b)
     while(*a != '\0' && *b != '\0') {
         int ca = islower(*a) ? toupper(*a) : *a;
         int cb = islower(*b) ? toupper(*b) : *b;
-        
+
         if(ca < cb)
             return -1;
         if(ca > cb)
             return 1;
-        
+
         a++;
         b++;
     }
@@ -1407,19 +1392,19 @@ int
 strnicmp(const char *a, const char *b, const int length)
 {
     int len = length;
-    
+
     while(*a != '\0' && *b != '\0') {
         int ca = islower(*a) ? toupper(*a) : *a;
         int cb = islower(*b) ? toupper(*b) : *b;
-        
+
         if(len-- < 1)
             return 0;
-        
+
         if(ca < cb)
             return -1;
         if(ca > cb)
             return 1;
-        
+
         a++;
         b++;
     }
@@ -1430,6 +1415,4 @@ strnicmp(const char *a, const char *b, const int length)
     return -1;
 }
 #endif
-
-
 
