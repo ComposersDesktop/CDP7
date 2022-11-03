@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1983-2020 Richard Dobson and Composers Desktop Project Ltd
- * http://people.bath.ac.uk/masrwd
+ * http://www.rwdobson.com
  * http://www.composersdesktop.com
  * This file is part of the CDP System.
  * The CDP System is free software; you can redistribute it
@@ -66,108 +66,107 @@ __inline static int round(double fval)
 phasevocoder::phasevocoder()
 {
 
-        input       =  NULL;
-        output      = NULL;
-        anal        = NULL;
-        syn         =  NULL;        /* pointer to start of synthesis buffer */
-        banal       =  NULL;        /* pointer to anal[1] (for FFT calls) */
-        bsyn        =  NULL;        /* pointer to syn[1]  (for FFT calls) */
-        nextIn      =  NULL;    /* pointer to next empty word in input */
-        nextOut     =  NULL;    /* pointer to next empty word in output */
-        analWindow  =  NULL;    /* pointer to center of analysis window */
-        synWindow   =  NULL;    /* pointer to center of synthesis window */
-        maxAmp      =  NULL;    /* pointer to start of max amp buffer */
-        avgAmp      =  NULL;    /* pointer to start of avg amp buffer */
-        avgFrq      =  NULL;    /* pointer to start of avg frq buffer */
-        env     =  NULL;        /* pointer to start of spectral envelope */
-        i0      =  NULL;        /* pointer to amplitude channels */
-        i1      =  NULL;        /* pointer to frequency channels */
-        oi      =  NULL;        /* pointer to old phase channels */
-        oldInPhase      =  NULL;    /* pointer to start of input phase buffer */
-        oldOutPhase     =  NULL;    /* pointer to start of output phase buffer */
-        m = n = 0;
+    input       =  NULL;
+    output      = NULL;
+    anal        = NULL;
+    syn         =  NULL;        /* pointer to start of synthesis buffer */
+    banal       =  NULL;        /* pointer to anal[1] (for FFT calls) */
+    bsyn        =  NULL;        /* pointer to syn[1]  (for FFT calls) */
+    nextIn      =  NULL;    /* pointer to next empty word in input */
+    nextOut     =  NULL;    /* pointer to next empty word in output */
+    analWindow  =  NULL;    /* pointer to center of analysis window */
+    synWindow   =  NULL;    /* pointer to center of synthesis window */
+    maxAmp      =  NULL;    /* pointer to start of max amp buffer */
+    avgAmp      =  NULL;    /* pointer to start of avg amp buffer */
+    avgFrq      =  NULL;    /* pointer to start of avg frq buffer */
+    env     =  NULL;        /* pointer to start of spectral envelope */
+    i0      =  NULL;        /* pointer to amplitude channels */
+    i1      =  NULL;        /* pointer to frequency channels */
+    oi      =  NULL;        /* pointer to old phase channels */
+    oldInPhase      =  NULL;    /* pointer to start of input phase buffer */
+    oldOutPhase     =  NULL;    /* pointer to start of output phase buffer */
+    m = n = 0;
 
-        N = 0;      /* number of phase vocoder channels (bands) */
-        M = 0;      /* length of analWindow impulse response */
-        L = 0;      /* length of synWindow impulse response */
-        D = 0;      /* decimation factor (default will be M/8) */
-        I = 0;      /* interpolation factor (default will be I=D)*/
-        W = -1;     /* filter overlap factor (determines M, L) */
-        //F = 0;        /* fundamental frequency (determines N) */
-        //F2 = 0;       /* F/2 */
-        /*RWD */
-        Fexact = 0.0f;
-        analWinLen = 0, /* half-length of analysis window */
-        synWinLen = 0;  /* half-length of synthesis window */
+    N = 0;      /* number of phase vocoder channels (bands) */
+    M = 0;      /* length of analWindow impulse response */
+    L = 0;      /* length of synWindow impulse response */
+    D = 0;      /* decimation factor (default will be M/8) */
+    I = 0;      /* interpolation factor (default will be I=D)*/
+    W = -1;     /* filter overlap factor (determines M, L) */
+    //F = 0;        /* fundamental frequency (determines N) */
+    //F2 = 0;       /* F/2 */
+    /*RWD */
+    Fexact = 0.0f;
+    analWinLen = 0, /* half-length of analysis window */
+    synWinLen = 0;  /* half-length of synthesis window */
 
-    
-        sampsize = 0;   /* sample size for output file */       
-        outCount = 0;   /* number of samples written to output */
-        ibuflen= 0; /* length of input buffer */
-        obuflen= 0; /* length of output buffer */
-        nI = 0;     /* current input (analysis) sample */
-        nO= 0;      /* current output (synthesis) sample */
-        nMaxOut= 0; /* last output (synthesis) sample */
-        nMin = 0;   /* first input (analysis) sample */
-        nMax = 100000000;   /* last input sample (unless EOF) */
+    sampsize = 0;   /* sample size for output file */
+    outCount = 0;   /* number of samples written to output */
+    ibuflen= 0; /* length of input buffer */
+    obuflen= 0; /* length of output buffer */
+    nI = 0;     /* current input (analysis) sample */
+    nO= 0;      /* current output (synthesis) sample */
+    nMaxOut= 0; /* last output (synthesis) sample */
+    nMin = 0;   /* first input (analysis) sample */
+    nMax = 100000000;   /* last input sample (unless EOF) */
 /***************************** 6:2:91  OLD CODE **************
                         long    origsize;
 *******************************NEW CODE **********************/
-        origsize = 0;   /* sample type of file analysed */
-        ch = 0;
-        ifd =  ofd = -1;
-        beta = 6.8f;    /* parameter for Kaiser window */
-        real = 0.0f;        /* real part of analysis data */
-        imag= 0.0f;     /* imaginary part of analysis data */
-        mag= 0.0f;      /* magnitude of analysis data */
-        phase= 0.0f;        /* phase of analysis data */
-        angleDif= 0.0f; /* angle difference */
-        RoverTwoPi= 0.0f;   /* R/D divided by 2*Pi */
-        TwoPioverR= 0.0f;   /* 2*Pi divided by R/I */
-        sum= 0.0f;      /* scale factor for renormalizing windows */
-        ftot = 0.0f,    /* scale factor for calculating statistics */
-        rIn= 0.0f;      /* decimated sampling rate */
-        rOut= 0.0f;     /* pre-interpolated sampling rate */
-        invR= 0.0f;     /* 1. / srate */
-        time= 0.0f;     /* nI / srate */
-        tvx0 = 0.0f;
-        tvx1 = 0.0f;
-        tvdx = 0.0f;
-        tvy0 = tvy1 = 0.0f;
-        tvdy = 0.0f;
-        frac = 0.0f;
-        warp = 0.0f;    /* spectral envelope warp factor */
-        R = 0.0f;       /* input sampling rate */
-        P = 1.0f;       /* pitch scale factor */
-        Pinv= 0.0f;     /* 1. / P */
-        T = 1.0f;       /* time scale factor ( >1 to expand)*/
-        //Mlen,
-        Mf = 0;     /* flag for even M */
-        Lf = 0;     /* flag for even L */
-        //Dfac,
-        flag = 0;       /* end-of-input flag */
-        C = 0;      /* flag for resynthesizing even or odd chans */
-        Ci = 0;     /* flag for resynthesizing chans i to j only */
-        Cj = 0;     /* flag for resynthesizing chans i to j only */
-        CC = 0;     /* flag for selected channel resynthesis */
-        X = 0;      /* flag for magnitude output */
-        E = 0;      /* flag for spectral envelope output */ 
-        tvflg = 0;  /* flag for time-varying time-scaling */
-        tvnxt = 0;
-        tvlen = 0;
-        timecheckf= 0.0f;
-        K = H = 0;  /* default window is Hamming */
-        Nchans = 0;
-        NO2 = 0;
-        vH = 0;                     /* RWD set to 1 to set von Hann window */
-        bin_index = 0;
-        m_mode = PVPP_NOT_SET;
-        synWindow_base = NULL;
-        analWindow_base = NULL;
+    origsize = 0;   /* sample type of file analysed */
+    ch = 0;
+    ifd =  ofd = -1;
+    beta = 6.8f;    /* parameter for Kaiser window */
+    real = 0.0f;        /* real part of analysis data */
+    imag= 0.0f;     /* imaginary part of analysis data */
+    mag= 0.0f;      /* magnitude of analysis data */
+    phase= 0.0f;        /* phase of analysis data */
+    angleDif= 0.0f; /* angle difference */
+    RoverTwoPi= 0.0f;   /* R/D divided by 2*Pi */
+    TwoPioverR= 0.0f;   /* 2*Pi divided by R/I */
+    sum= 0.0f;      /* scale factor for renormalizing windows */
+    ftot = 0.0f,    /* scale factor for calculating statistics */
+    rIn= 0.0f;      /* decimated sampling rate */
+    rOut= 0.0f;     /* pre-interpolated sampling rate */
+    invR= 0.0f;     /* 1. / srate */
+    time= 0.0f;     /* nI / srate */
+    tvx0 = 0.0f;
+    tvx1 = 0.0f;
+    tvdx = 0.0f;
+    tvy0 = tvy1 = 0.0f;
+    tvdy = 0.0f;
+    frac = 0.0f;
+    warp = 0.0f;    /* spectral envelope warp factor */
+    R = 0.0f;       /* input sampling rate */
+    P = 1.0f;       /* pitch scale factor */
+    Pinv= 0.0f;     /* 1. / P */
+    T = 1.0f;       /* time scale factor ( >1 to expand)*/
+    //Mlen,
+    Mf = 0;     /* flag for even M */
+    Lf = 0;     /* flag for even L */
+    //Dfac,
+    flag = 0;       /* end-of-input flag */
+    C = 0;      /* flag for resynthesizing even or odd chans */
+    Ci = 0;     /* flag for resynthesizing chans i to j only */
+    Cj = 0;     /* flag for resynthesizing chans i to j only */
+    CC = 0;     /* flag for selected channel resynthesis */
+    X = 0;      /* flag for magnitude output */
+    E = 0;      /* flag for spectral envelope output */
+    tvflg = 0;  /* flag for time-varying time-scaling */
+    tvnxt = 0;
+    tvlen = 0;
+    timecheckf= 0.0f;
+    K = H = 0;  /* default window is Hamming */
+    Nchans = 0;
+    NO2 = 0;
+    vH = 0;                     /* RWD set to 1 to set von Hann window */
+    bin_index = 0;
+    m_mode = PVPP_NOT_SET;
+    synWindow_base = NULL;
+    analWindow_base = NULL;
 };
 
 /* use when decfac needs specifying directly: cuts out other options */
-bool phasevocoder::init(long outsrate,long fftlen,long winlen,long decfac,float scalefac,
+bool phasevocoder::init(int outsrate,int fftlen,int winlen,int decfac,float scalefac,
                         pvoc_scaletype stype,pvoc_windowtype wtype,pvocmode mode)
 {       
     N = fftlen;  
@@ -199,7 +198,6 @@ bool phasevocoder::init(long outsrate,long fftlen,long winlen,long decfac,float 
         /* for now, anything else just sets Hamming window! */
         break;
     }
-
     if(N <=0)
         return false;
     if(D < 0)
@@ -529,13 +527,13 @@ bool phasevocoder::init(long outsrate,long fftlen,long winlen,long decfac,float 
 
 /* closer to PVOC command-line format; we will need a full array of settings ere long */
 /* e.g to install a custom window...*/
-bool phasevocoder::init(long outsrate,long fftlen,pvoc_overlapfac ofac,float scalefac,
+bool phasevocoder::init(int outsrate,int fftlen,pvoc_overlapfac ofac,float scalefac,
                         pvoc_scaletype stype,pvoc_windowtype wtype,pvocmode mode)
 {
     N   = fftlen;
     D   = 0;
     //D = N/4;      /* one problem - when M is larger, overlap is larger too */
-    switch(ofac){
+    switch(ofac){   
     case PVOC_O_W0:
         W = 0;
         break;
@@ -554,10 +552,10 @@ bool phasevocoder::init(long outsrate,long fftlen,pvoc_overlapfac ofac,float sca
     }
     switch(wtype){
     case PVOC_HANN:
-        H = 1;
+        H = 1;      
         break;
     case PVOC_KAISER:
-        K = 1;
+        K = 1;      
         break;
     default:
         /* for now, anything else just sets Hamming window! */
@@ -580,7 +578,7 @@ bool phasevocoder::init(long outsrate,long fftlen,pvoc_overlapfac ofac,float sca
         break;
     }
 
-    
+
     if(N <=0)
         return false;
     if(D < 0)
@@ -612,7 +610,7 @@ bool phasevocoder::init(long outsrate,long fftlen,pvoc_overlapfac ofac,float sca
             break;
         case 3: M = N2;
             break;
-        default:        
+        default:
             break;
         }
 
@@ -626,7 +624,7 @@ bool phasevocoder::init(long outsrate,long fftlen,pvoc_overlapfac ofac,float sca
 
     if (W == -1)
         W = (int)(3.322 * log10((double)(4. * N) / M));/* cosmetic */
-
+    
     if (Cj == 0)
         Cj = N2;
     if (Cj > N2)
@@ -793,7 +791,7 @@ bool phasevocoder::init(long outsrate,long fftlen,pvoc_overlapfac ofac,float sca
         (fftw_real*) synWindow_base,1,NULL,1);
 
 #endif
-    
+
     try{
 
         /* set up input buffer:  nextIn always points to the next empty
@@ -1049,7 +1047,7 @@ void phasevocoder::vonhann(float *win,int winLen,int even)
 
 
 
-long phasevocoder::process_frame(float *anal,float *outbuf,pvoc_frametype frametype)
+int phasevocoder::process_frame(float *anal,float *outbuf,pvoc_frametype frametype)
 {
 
     /*RWD vars */
@@ -1068,21 +1066,21 @@ long phasevocoder::process_frame(float *anal,float *outbuf,pvoc_frametype framet
             *(syn+i) = *(anal+i);
     }
     else {
-        for (i = 0; i <= N+1; i++) 
+        for (i = 0; i <= N+1; i++)
             *(syn+i) = *(anal+i);
-        for (i = N+2; i < NO+2; i++) 
+        for (i = N+2; i < NO+2; i++)
             *(syn+i) = 0.0f;
     }
 
     if(frametype==PVOC_AMP_PHASE){
         for(i=0, i0=syn, i1=syn+1; i<= NO2; i++, i0+=2,  i1+=2){
-            mag = *i0;          
+            mag = *i0;
             phase = *i1;
             *i0 = (float)((double)mag * cos((double)phase));
             *i1 = (float)((double)mag * sin((double)phase));
         }
     }
-    else if(frametype == PVOC_AMP_FREQ){        
+    else if(frametype == PVOC_AMP_FREQ){
         for(i=0, i0=syn, i1=syn+1; i<= NO2; i++, i0+=2,  i1+=2){
             mag = *i0;
             /* keep phase wrapped within +- TWOPI */
@@ -1110,12 +1108,12 @@ long phasevocoder::process_frame(float *anal,float *outbuf,pvoc_frametype framet
     if (P != 1.)
         for (i = 0; i < NO+2; i++)
             *(syn+i) *= Pinv;
-
+    
     /* synthesis: The synthesis subroutine uses the Weighted Overlap-Add
             technique to reconstruct the time-domain signal.  The (N/2 + 1)
             phase vocoder channel outputs at time n are inverse Fourier
             transformed, windowed, and added into the output array.  The
-            subroutine thinks of output as a shift register in which 
+            subroutine thinks of output as a shift register in which
             locations are referenced modulo obuflen.  Therefore, the main
             program must take care to zero each location which it "shifts"
             out (to standard output). The subroutines reals and fft
@@ -1164,7 +1162,7 @@ long phasevocoder::process_frame(float *anal,float *outbuf,pvoc_frametype framet
         if (nextOut >= (output + obuflen))
             nextOut -= obuflen;
     }
-                
+
     if (flag)   /* flag means do this operation only once */
         if ((nI > 0) && (Dd < D)){  /* EOF detected */
             flag = 0;
@@ -1206,147 +1204,17 @@ long phasevocoder::process_frame(float *anal,float *outbuf,pvoc_frametype framet
 
 }
 
-
-/*RWD arrgh! */
-long phasevocoder::process_frame(float *anal,short *outbuf,pvoc_frametype frametype)
-{
-
-    /*RWD vars */
-    int n;
-    long written;
-    short *obufptr;
-
-        /* reconversion: The magnitude and angle-difference-per-second in syn
-        (assuming an intermediate sampling rate of rOut) are
-        converted to real and imaginary values and are returned in syn.
-        This automatically incorporates the proper phase scaling for
-        time modifications. */
-
-    if (NO <= N){
-        for (i = 0; i < NO+2; i++)
-            *(syn+i) = *(anal+i);
-    }
-    else {
-        for (i = 0; i <= N+1; i++) 
-            *(syn+i) = *(anal+i);
-        for (i = N+2; i < NO+2; i++) 
-            *(syn+i) = 0.0f;
-    }
-    if(frametype != PVOC_COMPLEX){      /* assume AMP_FREQ otherwise, for now */
-        for(i=0, i0=syn, i1=syn+1; i<= NO2; i++, i0+=2,  i1+=2){
-            mag = *i0;
-            *(oldOutPhase + i) += *i1 - ((float) i * /*F*/ Fexact);
-            phase = *(oldOutPhase + i) * TwoPioverR;
-            *i0 = (float)((double)mag * cos((double)phase));
-            *i1 = (float)((double)mag * sin((double)phase));
-        }
-    }
-    if (P != 1.)
-        for (i = 0; i < NO+2; i++)
-            *(syn+i) *= Pinv;
-
-    /* synthesis: The synthesis subroutine uses the Weighted Overlap-Add
-            technique to reconstruct the time-domain signal.  The (N/2 + 1)
-            phase vocoder channel outputs at time n are inverse Fourier
-            transformed, windowed, and added into the output array.  The
-            subroutine thinks of output as a shift register in which 
-            locations are referenced modulo obuflen.  Therefore, the main
-            program must take care to zero each location which it "shifts"
-            out (to standard output). The subroutines reals and fft
-            together perform an efficient inverse FFT.  */
-
-
-#ifdef USE_FFTW
-    rfftwnd_one_complex_to_real(inverse_plan,(fftw_complex * )syn,NULL);
-#else
-    reals_(syn,bsyn,NO2,2);
-    fft_(syn,bsyn,1,NO2,1,2);
-#endif
-    j = nO - synWinLen - 1;
-    while (j < 0)
-        j += obuflen;
-    j = j % obuflen;
-
-    k = nO - synWinLen - 1;
-    while (k < 0)
-        k += NO;
-    k = k % NO;
-
-    for (i = -synWinLen; i <= synWinLen; i++) { /*overlap-add*/
-        if (++j >= obuflen)
-            j -= obuflen;
-        if (++k >= NO)
-            k -= NO;
-        *(output + j) += *(syn + k) * *(synWindow + i);
-    }
-
-    obufptr = outbuf;   /*RWD */
-    written = 0;
-    for (i = 0; i < IOi;){  /* shift out next IOi values */
-        int j;
-        int todo = MIN(IOi-i, output+obuflen-nextOut);
-        
-        /*copy data to external buffer */
-        for(n=0;n < todo;n++)
-            *obufptr++ = (short) round(32767.0 * nextOut[n]);
-        written += todo;
-
-        i += todo;
-        outCount += todo;
-        for(j = 0; j < todo; j++)
-            *nextOut++ = 0.0f;
-        if (nextOut >= (output + obuflen))
-            nextOut -= obuflen;
-    }
-                
-    if (flag)   /* flag means do this operation only once */
-        if ((nI > 0) && (Dd < D)){  /* EOF detected */
-            flag = 0;
-            nMax = nI + analWinLen - (D - Dd);
-        }
-
-
-    /*  D = some_function(nI);      for variable time-scaling */
-    /*  rIn = ((float) R / D);      for variable time-scaling */
-    /*  RoverTwoPi =  rIn / TwoPi;  for variable time-scaling */
-
-    nI += D;                /* increment time */
-    nO += IO;
-
-    /* Dd = D except when the end of the sample stream intervenes */
-
-    Dd = MIN(D, MAX(0L, D+nMax-nI-analWinLen));
-
-
-    if (nO > (synWinLen + I))
-        Ii = I;
-    else
-        if (nO > synWinLen)
-            Ii = nO - synWinLen;
-        else {
-            Ii = 0;
-            for (i=nO+synWinLen; i<obuflen; i++)
-                if (i > 0)
-                    *(output+i) = 0.0f;
-        }
-    IOi = (int)((float) Ii / P);
-
-
-
-    return written;
-
-}
 /* trying to get clean playback when looping! */
 void phasevocoder::reset_phases(void)
 {
     int i;
     if(oldInPhase){
-        for(i=0;i < N2+1;i++)    
+        for(i=0;i < N2+1;i++)
             oldInPhase[i] = 0.0f;
     }
     if(oldOutPhase){
         for(i=0;i < NO2+1;i++)
-            oldOutPhase[i] = 0.0f;          
+            oldOutPhase[i] = 0.0f;
     }
     if(syn){
         for(i=0;i < NO+2;i++)
@@ -1364,10 +1232,9 @@ void phasevocoder::reset_phases(void)
 
 }
 
-
 /* we don't read in a single sample, a la pvoc, but just output an empty first frame*/
 /* we assume final block zero-padded if necessary */
-long phasevocoder::generate_frame(float *fbuf,float *outanal,long samps,pvoc_frametype frametype)
+int phasevocoder::generate_frame(float *fbuf,float *outanal,int samps,pvoc_frametype frametype)
 {
     
     /*sblen = decfac = D */
@@ -1380,7 +1247,7 @@ long phasevocoder::generate_frame(float *fbuf,float *outanal,long samps,pvoc_fra
         Dd = got;
 
     fp = fbuf;
-
+    
 
     tocp = MIN(got, input+ibuflen-nextIn);
     got -= tocp;
@@ -1415,7 +1282,7 @@ long phasevocoder::generate_frame(float *fbuf,float *outanal,long samps,pvoc_fra
         one efficient FFT call for a real input sequence.  */
 
 
-    for (i = 0; i < N+2; i++) 
+    for (i = 0; i < N+2; i++)
         *(anal + i) = 0.0f; /*initialize*/
 
     j = (nI - analWinLen - 1 + ibuflen) % ibuflen;  /*input pntr*/
@@ -1540,7 +1407,4 @@ long phasevocoder::generate_frame(float *fbuf,float *outanal,long samps,pvoc_fra
 
     return D;
 }
-
-
-
 
