@@ -71,7 +71,7 @@ int main(int argc,char *argv[])
     if((bigfbuf=(float*)Malloc(buflen+sizeof(float))) == NULL) {
         fprintf(stdout,"ERROR: Failed to allocate float buffer.\n");
         fflush(stdout);
-        sffinish();
+//        sffinish();
         return 1;
     }
     n = ((size_t)bigfbuf+sizeof(float)-1)/sizeof(float) * sizeof(float);    /* align bigbuf to word boundary */
@@ -83,7 +83,7 @@ int main(int argc,char *argv[])
         fprintf(stdout,"INFO: Cannot open file: %s\n\t",argv[1]);
         fflush(stdout);
         Mfree(bigfbuf);
-        sffinish();
+//        sffinish();
         return 1;
     }
 
@@ -95,6 +95,6 @@ int main(int argc,char *argv[])
     }
     Mfree(bigfbuf);
     sndcloseEx(ifd);
-    sffinish();
+//    sffinish();
     return 1;
 }
