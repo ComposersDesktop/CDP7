@@ -370,6 +370,6 @@ int main(int argc, char **argv)
     }
 
     sndcloseEx(ifd);
-    sffinish();
+//    sffinish();
     return 0;
 }
