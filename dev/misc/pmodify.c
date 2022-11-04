@@ -78,7 +78,7 @@ int main(int argc,char *argv[])
     if((fp = fopen(argv[1],"r"))==NULL)     {
         fprintf(stdout,"INFO: Cannot open temporary data file: %s\n",argv[1]);
         fflush(stdout);
-        sffinish();
+//        sffinish();
     }
 
     //TW output is analysis file
@@ -91,56 +91,56 @@ int main(int argc,char *argv[])
     if(sscanf(argv[3],"%d",&origchans)!=1) {
         fprintf(stdout,"ERROR: Cannot read original-channels data,\n");
         fflush(stdout);
-        sffinish();
+ //       sffinish();
         return 1;
     }
     if(sscanf(argv[4],"%d",&origstype)!=1) {
         fprintf(stdout,"ERROR: Cannot read original-sample-type data,\n");
         fflush(stdout);
-        sffinish();
+ //       sffinish();
         return 1;
     }
     if(sscanf(argv[5],"%d",&origrate)!=1) {
         fprintf(stdout,"ERROR: Cannot read original-sample-rate data,\n");
         fflush(stdout);
-        sffinish();
+ //       sffinish();
         return 1;
     }
     if(sscanf(argv[6],"%f",&arate)!=1) {
         fprintf(stdout,"ERROR: Cannot read analysis-rate data,\n");
         fflush(stdout);
-        sffinish();
+//       sffinish();
         return 1;
     }
     if(sscanf(argv[7],"%d",&Mlen)!=1) {
         fprintf(stdout,"ERROR: Cannot read Mlen data,\n");
         fflush(stdout);
-        sffinish();
+ //       sffinish();
         return 1;
     }
     if(sscanf(argv[8],"%d",&Dfac)!=1) {
         fprintf(stdout,"ERROR: Cannot read Decimation Factor data,\n");
         fflush(stdout);
-        sffinish();
+//        sffinish();
         return 1;
     }
     if(sscanf(argv[9],"%d",&srate)!=1) {
         fprintf(stdout,"ERROR: Cannot read sample-rate data,\n");
         fflush(stdout);
-        sffinish();
+//        sffinish();
         return 1;
     }
     if(sscanf(argv[10],"%d",&chans)!=1) {
         fprintf(stdout,"ERROR: Cannot read channel data,\n");
         fflush(stdout);
-        sffinish();
+//        sffinish();
         return 1;
     }
     if((ofd = sndcreat_formatted(argv[2], -1, SAMP_FLOAT,
                                  chans,srate,CDP_CREATE_NORMAL)) < 0) {
         fprintf(stdout,"ERROR: Cannot open output file\n");
         fflush(stdout);
-        sffinish();
+//        sffinish();
         return 1;
     }
     bufsize = (size_t) Malloc(-1);
@@ -148,7 +148,7 @@ int main(int argc,char *argv[])
     if((bigfbuf=(float*)Malloc(bufsize+sizeof(float))) == NULL) {
         fprintf(stdout,"ERROR: Failed to allocate float buffer.\n");
         fflush(stdout);
-        sffinish();
+ //       sffinish();
         return 1;
     }
     n = ((size_t)bigfbuf+sizeof(float)-1)/sizeof(float) * sizeof(float);    /* align bigfbuf to word boundary */
@@ -186,7 +186,7 @@ int main(int argc,char *argv[])
     }
     Mfree(bigfbuf);
     sndcloseEx(ofd);
-    sffinish();
+//    sffinish();
     return 1;
 }
 
