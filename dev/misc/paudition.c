@@ -340,19 +340,19 @@ void do_finish(int n,int ifd,int ofd,float *bigbuf)
     case(1):
         sndcloseEx(ifd);
     case(0):
-        sffinish();
+//        sffinish();
         break;
     case(4):
         Mfree(bigbuf);
     case(3):
         sndcloseEx(ofd);
-        sffinish();
+//        sffinish();
         break;
     case(6):
         sndcloseEx(ofd);
     case(5):
         sndcloseEx(ifd);
-        sffinish();
+ //       sffinish();
         break;
     }
 }
