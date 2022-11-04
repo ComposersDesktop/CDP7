@@ -1404,7 +1404,7 @@ int print_messages_and_close_sndfiles(int exit_status,int is_launched,dataptr dz
                         }
                 }
         }
-        sffinish();
+//        sffinish();
         if(sloom)
                 fprintf(stdout,"END:");
         else
