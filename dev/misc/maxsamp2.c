@@ -259,7 +259,7 @@ int tidy_up(int where)
         case 1:
             sndcloseEx(ifd);
         case 2:
-            sffinish();
+//            sffinish();
         default:
             break;
         }
