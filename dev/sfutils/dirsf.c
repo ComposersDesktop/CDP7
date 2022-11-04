@@ -264,7 +264,7 @@ main(int argc, char *argv[])
         sfperror("dirsf");
         exit(1);
     }
-    sffinish();
+//    sffinish();
     return 0;
 }
 
