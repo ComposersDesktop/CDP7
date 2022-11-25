@@ -5,20 +5,20 @@
  *
  This file is part of the CDP System.
 
- The CDP System is free software; you can redistribute it
- and/or modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
+    The CDP System is free software; you can redistribute it
+    and/or modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
- The CDP System is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Lesser General Public License for more details.
+    The CDP System is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU Lesser General Public
- License along with the CDP System; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
- 02111-1307 USA
+    You should have received a copy of the GNU Lesser General Public
+    License along with the CDP System; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA
  *
  */
 
@@ -42,7 +42,7 @@
 #include <string.h>
 #include <math.h>
 
-#define SPACECNT        (32)
+#define SPACECNT    (32)
 
 static int  try_header(int chans,double inverse_sr,dataptr dz);
 static void make_time_display(char temp[],char timestr[],double secs);
@@ -61,7 +61,7 @@ static int  compare_infile_sizes(int *same_size,dataptr dz);
 
 static int  do_sfdiff(char temp[],dataptr dz);
 static int  prntprops(SFPROPS *prop, dataptr dz);
-static int      get_float_maxmin(float *buf,int chans, double inverse_sr,dataptr dz);
+static int  get_float_maxmin(float *buf,int chans, double inverse_sr,dataptr dz);
 /*RWD 6:2001 */
 static int getpeakdata(int ifd, float *peakval,SFPROPS *props);
 
@@ -116,7 +116,7 @@ int do_sndinfo(dataptr dz)
         print_outmessage(errstr);
         break;
 
-    case(INFO_TIMELIST):
+    case(INFO_TIMELIST):    
         if((ifp = (infileptr)malloc(sizeof(struct filedata)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY to store data on file.\n");
             return(MEMORY_ERROR);
@@ -131,7 +131,7 @@ int do_sndinfo(dataptr dz)
         strcat(errstr,timestr);
         strcat(errstr,"\n");
         print_outmessage(errstr);
-        //TW UPDATE
+//TW UPDATE
         if(sloom) {
             sprintf(errstr,"%lf\n",secs);
             if(fputs(errstr,dz->fp)<0) {
@@ -156,7 +156,7 @@ int do_sndinfo(dataptr dz)
             strcat(errstr,timestr);
             strcat(errstr,"\n");
             print_outmessage(errstr);
-            //TW UPDATE
+//TW UPDATE
             if(sloom) {
                 sprintf(errstr,"%lf\n",secs);
                 if(fputs(errstr,dz->fp)<0) {
@@ -167,22 +167,22 @@ int do_sndinfo(dataptr dz)
 
         }
         break;
-    case(INFO_LOUDLIST):
+    case(INFO_LOUDLIST):    
         orig_ifd0 = dz->ifd[0];
         for(m=0;m<dz->infilecnt;m++) {
-            float fmaxamp = 0.0f;           /*RWD 6:2001 */
+            float fmaxamp = 0.0f;       /*RWD 6:2001 */
             int gotpeak = 0;
             /*RWD 6:2001 try to read PEAK chunk too! */
             if(getpeakdata(dz->ifd[m],&fmaxamp,&props)){
                 level = fmaxamp;
                 gotpeak = 1;
             }
-
+            
             else {
                 /* RWD impossible to report int values without lot of hoohaa */
                 /* just look as if its floatsam file, for now */
                 if(sndgetprop(dz->ifd[m],"fmaxamp",(char *)&fmaxamp,sizeof(float)) < 0 ) {
-                    dz->samps_left = dz->insams[m];
+                    dz->samps_left = dz->insams[m];             
                     dz->ifd[0] = dz->ifd[m];
                     while(dz->samps_left) {
                         if((exit_status = read_samps(dz->bigbuf,dz))<0)
@@ -192,7 +192,7 @@ int do_sndinfo(dataptr dz)
                     }
                 }
             }
-            if(!gotpeak) /*RWD 6:2001 */
+            if(!gotpeak) /*RWD 6:2001 */                
                 level = (double)fmaxamp/F_MAXSAMP;
 
             sprintf(errstr,"%s\t",dz->wordstor[m]);
@@ -218,7 +218,7 @@ int do_sndinfo(dataptr dz)
         strcat(errstr,"\n");
         print_outmessage(errstr);
         break;
-
+    
     case(INFO_SFLEN):
         switch(dz->infile->filetype) {
         case(SNDFILE):
@@ -308,7 +308,7 @@ int do_sndinfo(dataptr dz)
             if(chanmax[m] > chanmax[maxpos])
                 maxpos = m;
         }
-        sprintf(errstr,"LOUDEST CHANNEL is %d\n",maxpos+1);
+        sprintf(errstr,"LOUDEST CHANNEL is %d\n",maxpos+1);                         
         print_outmessage(errstr);
         free(chanmax);
         break;
@@ -334,23 +334,23 @@ int do_sndinfo(dataptr dz)
     case(INFO_PROPS):
         errstr[0] = ENDOFSTR;
         switch(ftype) {
-        case(SNDFILE):
-            sprintf(errstr,"A SOUND file.\n");                                      break;
-        case(ANALFILE):
-            sprintf(errstr,"An ANALYSIS file.\n");                          break;
+        case(SNDFILE):      
+            sprintf(errstr,"A SOUND file.\n");                  break;
+        case(ANALFILE): 
+            sprintf(errstr,"An ANALYSIS file.\n");              break;
         case(PITCHFILE):
-            sprintf(errstr,"A binary PITCH file.\n");                       break;
-        case(TRANSPOSFILE):
-            sprintf(errstr,"A binary TRANSPOSITION file.\n");       break;
+            sprintf(errstr,"A binary PITCH file.\n");           break;
+        case(TRANSPOSFILE): 
+            sprintf(errstr,"A binary TRANSPOSITION file.\n");   break;
         case(FORMANTFILE):
-            sprintf(errstr,"A FORMANT data file.\n");                       break;
-        case(ENVFILE):
-            sprintf(errstr,"A binary ENVELOPE file.\n");            break;
-        default:
+            sprintf(errstr,"A FORMANT data file.\n");           break;
+        case(ENVFILE):  
+            sprintf(errstr,"A binary ENVELOPE file.\n");        break;
+        default:            
             if(is_a_textfile_type(ftype))    {
-                sprintf(errstr,"A TEXT data file.\n");
+                sprintf(errstr,"A TEXT data file.\n");              
                 is_a_text_file = TRUE;
-            } else {
+            } else {                                
                 print_outmessage("UNKNOWN input file type.\n");
                 return(FINISHED);
             }
@@ -376,10 +376,10 @@ int do_sndinfo(dataptr dz)
                 sprintf(errstr,"Could be a BREAKPOINT FILE:\n");
                 print_outmessage(errstr);
                 sprintf(errstr,"length %d minval %lf maxval %lf  duration %lf\n",
-                        dz->numsize/2,dz->minbrk,dz->maxbrk,dz->duration);
+                    dz->numsize/2,dz->minbrk,dz->maxbrk,dz->duration);
                 print_outmessage(errstr);
             }
-            if(dz->numsize > 0)     {
+            if(dz->numsize > 0) {
                 sprintf(errstr,"Could be a NUMBER LIST:\n");
                 print_outmessage(errstr);
                 sprintf(errstr,"length %d minval %lf maxval %lf\n",dz->numsize,dz->minnum,dz->maxnum);
@@ -390,19 +390,19 @@ int do_sndinfo(dataptr dz)
             print_outmessage(errstr);
             if(ftype!=SNDFILE) {
                 switch(ftype) {
-                case(ANALFILE):
-                    sprintf(errstr,"file type: .......... ANALYSIS DATA\n");                                break;
+                case(ANALFILE): 
+                    sprintf(errstr,"file type: .......... ANALYSIS DATA\n");                break;
                 case(PITCHFILE):
-                    sprintf(errstr,"file type: .......... PITCH DATA (binary)\n");                  break;
-                case(TRANSPOSFILE):
+                    sprintf(errstr,"file type: .......... PITCH DATA (binary)\n");          break;
+                case(TRANSPOSFILE): 
                     sprintf(errstr,"file type: .......... TRANSPOSITION DATA (binary)\n");  break;
                 case(FORMANTFILE):
-                    sprintf(errstr,"file type: .......... FORMANT DATA (binary)\n");                break;
-                case(ENVFILE):
-                    sprintf(errstr,"file type: .......... ENVELOPE DATA (binary)\n");               break;
+                    sprintf(errstr,"file type: .......... FORMANT DATA (binary)\n");        break;
+                case(ENVFILE):  
+                    sprintf(errstr,"file type: .......... ENVELOPE DATA (binary)\n");       break;
                 }
                 print_outmessage(errstr);
-                //TW UPDATE: moved srate & chans, as ENVFILES have srate and channels
+//TW UPDATE: moved srate & chans, as ENVFILES have srate and channels
                 sprintf(errstr,"sample rate: ........ %d\n",fptr->srate);
                 print_outmessage(errstr);
                 sprintf(errstr,"channels: ........... %d\n",fptr->channels);
@@ -410,15 +410,15 @@ int do_sndinfo(dataptr dz)
                 if(fptr->filetype==ENVFILE) {
                     sprintf(errstr,"window size: ........ %f ms\n",fptr->window_size);
                     print_outmessage(errstr);
-                    return(FINISHED);
+                    return(FINISHED);               
                 }
                 if(fptr->filetype==FORMANTFILE) {
                     sprintf(errstr,"formant envelope cnt: %d\n",fptr->specenvcnt);
                     print_outmessage(errstr);
                 }
                 /*RWD*/
-                //TW NOW REDUNDANT: flagging changed
-                //                              if(fptr->filetype!=SNDFILE){
+//TW NOW REDUNDANT: flagging changed
+//              if(fptr->filetype!=SNDFILE){
                 sprintf(errstr,"original sampsize: .. %d\n",fptr->origstype);
                 print_outmessage(errstr);
                 sprintf(errstr,"original sample rate: %d\n",fptr->origrate);
@@ -429,7 +429,7 @@ int do_sndinfo(dataptr dz)
                 print_outmessage(errstr);
                 sprintf(errstr,"decimation factor: .. %d\n",fptr->Dfac);
                 print_outmessage(errstr);
-                //                              }
+//              }
                 if(fptr->filetype==PITCHFILE || fptr->filetype==TRANSPOSFILE) {
                     sprintf(errstr,"original channels: .. %d\n",fptr->origchans);
                     print_outmessage(errstr);
@@ -451,15 +451,19 @@ int do_sndinfo(dataptr dz)
             sprintf(errstr,"This is a text file.\n");
             return(GOAL_FAILED);
         }
+        /* RWD 2022 this hangs if user supplies anal file */
+        if(dz->infile->filetype == ANALFILE){
+            sprintf(errstr,"This is an anlysis file.\n");
+            return(GOAL_FAILED);
+        }
         flbuf = (float *)dz->bigbuf;
         buf   = dz->bigbuf;
         if(!dz->vflag[FORCE_SCAN] && try_header(chans,inverse_sr,dz)==FINISHED)
             break;
         else {
-
-            if(dz->infile->filetype != SNDFILE)      {
+            if(dz->infile->filetype != SNDFILE)  {
                 if((exit_status = get_and_set_float_maxmina(flbuf,dz))<0)
-                    return(exit_status);
+                        return(exit_status);                                
             } else {
                 if((exit_status = get_and_set_float_maxmin(buf,chans,inverse_sr,dz))<0)
                     return(exit_status);
@@ -471,7 +475,7 @@ int do_sndinfo(dataptr dz)
         if((exit_status = get_float_maxmin(buf,chans,inverse_sr,dz))<0)
             return(exit_status);
         break;
-
+    
     case(INFO_PRNTSND):
         dz->ssampsread = 0;
         dz->iparam[PRNT_START] = round(dz->param[PRNT_START] * sr) * chans;
@@ -484,7 +488,7 @@ int do_sndinfo(dataptr dz)
             sprintf(errstr,"Start time is at end of file: can't proceed.\n");
             return(DATA_ERROR);
         }
-
+        
         dz->total_samps_read = 0;
         for(;;) {
             if((exit_status = read_samps(dz->bigbuf,dz))<0)
@@ -501,18 +505,18 @@ int do_sndinfo(dataptr dz)
         for(n=dz->iparam[PRNT_START];n<dz->iparam[PRNT_END];n+=chans,k+=chans,j++) {
             fprintf(dz->fp,"[%d]\t",j);
             for(m=0;m<chans;m++)
-                fprintf(dz->fp,"%.6f\t",(float) dz->bigbuf[n+m]);                               /*RWD 12:2003 was %d */
+                fprintf(dz->fp,"%.6f\t",(float) dz->bigbuf[n+m]);               /*RWD 12:2003 was %d */
             fprintf(dz->fp,"\n");
             if(n >= dz->ssampsread) {
                 if((exit_status = read_samps(dz->bigbuf,dz))<0)
                     return(exit_status);
-                //TW CHANGED to samps
+//TW CHANGED to samps
                 display_virtual_time(k,dz);
                 dz->iparam[PRNT_END] -= dz->ssampsread;
                 n = 0;
             }
         }
-        //TW CHANGED to samps
+//TW CHANGED to samps
         display_virtual_time(k,dz);
         break;
     case(INFO_FINDHOLE):
@@ -570,7 +574,7 @@ int try_header(int chans,double inverse_sr,dataptr dz)
     double gain, dbgain;
     float newmaxamp = 0.0f;
     if(dz->infile->filetype != SNDFILE) {
-        //TW SUBSTITUTED SNDgetprop
+//TW SUBSTITUTED SNDgetprop
         if( sndgetprop(dz->ifd[0],"maxpfamp",(char *)&maxpfamp,sizeof(float)) < 0 )
             return(CONTINUE);
         if( sndgetprop(dz->ifd[0],"maxnfamp",(char *)&maxnfamp,sizeof(float)) < 0 )
@@ -588,8 +592,8 @@ int try_header(int chans,double inverse_sr,dataptr dz)
         sprintf(errstr,"occurs: ............ %d times\n",neg_repeats);
         print_outmessage(errstr);
     } else {
-        if( sndgetprop(dz->ifd[0],"maxamp",(char *)&maxamp,sizeof(int)) < 0                     /* old files */
-            &&      sndgetprop(dz->ifd[0],"maxpfamp",(char *)&newmaxamp,sizeof(float)) < 0) /* new files */
+        if( sndgetprop(dz->ifd[0],"maxamp",(char *)&maxamp,sizeof(int)) < 0         /* old files */
+        &&  sndgetprop(dz->ifd[0],"maxpfamp",(char *)&newmaxamp,sizeof(float)) < 0) /* new files */
             return(CONTINUE);
         if( sndgetprop(dz->ifd[0],"maxloc",(char *)&maxloc,sizeof(int)) < 0 )
             return(CONTINUE);
@@ -629,9 +633,9 @@ void make_time_display(char temp[],char timestr[],double secs)
     if(mins > 60) {
         hrs   = round(floor((double)mins/60.0));
         mins -= hrs * 60;
-    }
+    }           
     timestr[0] = ENDOFSTR;
-    if(hrs) {
+    if(hrs) {       
         sprintf(temp,"%d hrs ",hrs);
         strcat(timestr,temp);
     }
@@ -662,16 +666,16 @@ int get_and_set_float_maxmina(float *flbuf,dataptr dz)
         if((exit_status = read_samps(flbuf,dz))<0)
             return(exit_status);
         for(n=0;n<dz->ssampsread;n++) {
-            if(flbuf[n] < maxpdamp)         /* IF < max, ignore */
-                ;
-            else if(flbuf[n] > maxpdamp) {
+            if(flbuf[n] < maxpdamp)     /* IF < max, ignore */
+                ; 
+            else if(flbuf[n] > maxpdamp) {  
                 maxpdamp = flbuf[n];    /* IF > max, reset max and count */
                 maxprep  = 1;
-            } else                                          /* else must be EQUAL to max; incr counter */
+            } else                      /* else must be EQUAL to max; incr counter */
                 maxprep++;
-
+    
             if(flbuf[n] > maxndamp)
-                ;
+                ; 
             else if(flbuf[n] < maxndamp) {
                 maxndamp = flbuf[n];
                 maxnrep  = 1;
@@ -681,15 +685,15 @@ int get_and_set_float_maxmina(float *flbuf,dataptr dz)
     }
     maxpfamp = (float)maxpdamp;
     maxnfamp = (float)maxndamp;
-    //TW cannot reset header of a read-in file
-    //      if( sndputprop(dz->ifd[0],"maxpfamp",(char *)&maxpfamp,sizeof(float)) < 0 )
-    //              fprintf(stdout,"WARNING: Cannot write maximum float value to header\n");
-    //      if(sndputprop(dz->ifd[0],"maxprep",(char *)&maxprep,sizeof(long)) < 0 )
-    //              fprintf(stdout,"WARNING: Cannot write maxfloat repeats-count to header\n");
-    //      if( sndputprop(dz->ifd[0],"maxnfamp",(char *)&maxnfamp,sizeof(float)) < 0 )
-    //              fprintf(stdout,"WARNING: Cannot write mimimum float value to header\n");
-    //      if(sndputprop(dz->ifd[0],"maxnrep",(char *)&maxnrep,sizeof(long)) < 0 )
-    //              fprintf(stdout,"WARNING: Cannot write minfloat repeats-count to header\n");
+//TW cannot reset header of a read-in file
+//  if( sndputprop(dz->ifd[0],"maxpfamp",(char *)&maxpfamp,sizeof(float)) < 0 )
+//      fprintf(stdout,"WARNING: Cannot write maximum float value to header\n");
+//  if(sndputprop(dz->ifd[0],"maxprep",(char *)&maxprep,sizeof(long)) < 0 )
+//      fprintf(stdout,"WARNING: Cannot write maxfloat repeats-count to header\n");
+//  if( sndputprop(dz->ifd[0],"maxnfamp",(char *)&maxnfamp,sizeof(float)) < 0 )
+//      fprintf(stdout,"WARNING: Cannot write mimimum float value to header\n");
+//  if(sndputprop(dz->ifd[0],"maxnrep",(char *)&maxnrep,sizeof(long)) < 0 )
+//      fprintf(stdout,"WARNING: Cannot write minfloat repeats-count to header\n");
 
     sprintf(errstr,"maximum float value: %f\n",maxpfamp);
     print_outmessage(errstr);
@@ -726,14 +730,14 @@ int get_and_set_float_maxmin(float *buf,int chans, double inverse_sr,dataptr dz)
                 maxrep++;
         }
     }
-    //TW Cannot alter heqader of an input file
-    //      if(sndputprop(dz->ifd[0],"maxamp",(char *)&maxamp,sizeof(float)) < 0 )
-    //      if(sndputprop(dz->ifd[0],"maxpfamp",(char *)&maxamp,sizeof(float)) < 0 )
-    //              fprintf(stdout,"WARNING: Cannot write maximum value to header.\n");
-    //      if(sndputprop(dz->ifd[0],"maxloc",(char *)&maxloc,sizeof(long)) < 0 )
-    //              fprintf(stdout,"WARNING: Cannot write location of maximum value to header.\n");
-    //      if(sndputprop(dz->ifd[0],"maxrep",(char *)&maxrep,sizeof(long)) < 0 )
-    //              fprintf(stdout,"WARNING: Cannot write maximum repeats to header.\n");
+//TW Cannot alter heqader of an input file
+//  if(sndputprop(dz->ifd[0],"maxamp",(char *)&maxamp,sizeof(float)) < 0 )
+//  if(sndputprop(dz->ifd[0],"maxpfamp",(char *)&maxamp,sizeof(float)) < 0 )
+//      fprintf(stdout,"WARNING: Cannot write maximum value to header.\n");
+//  if(sndputprop(dz->ifd[0],"maxloc",(char *)&maxloc,sizeof(long)) < 0 )
+//      fprintf(stdout,"WARNING: Cannot write location of maximum value to header.\n");
+//  if(sndputprop(dz->ifd[0],"maxrep",(char *)&maxrep,sizeof(long)) < 0 )
+//      fprintf(stdout,"WARNING: Cannot write maximum repeats to header.\n");
 
     if(maxamp>0.0f) {
         gain   = F_MAXSAMP/(double)maxamp;
@@ -759,14 +763,14 @@ int get_and_set_float_maxmin(float *buf,int chans, double inverse_sr,dataptr dz)
 /************************ COMPARE_INFILE_SIZES ***********************/
 
 int compare_infile_sizes(int *samesize,dataptr dz)
-{
+{   
     if(dz->insams[0] != dz->insams[1]) {
         print_outmessage_flush("Files are not same size.\n");
         if(!dz->vflag[IGNORE_LENDIFF])
             return(FINISHED);
         else {
             dz->insams[0] = min(dz->insams[0],dz->insams[1]);
-            *samesize = FALSE;
+            *samesize = FALSE;  
         }
     }
     dz->samps_left = dz->insams[0];
@@ -838,7 +842,7 @@ int sfdiff_process(char temp[],int samesize,dataptr dz)
             if(dz->param[SFDIFF_THRESH] > 0) {
                 sprintf(temp," to within %lf\n",dz->param[SFDIFF_THRESH]);
                 strcat(errstr,temp);
-            }else
+            }else 
                 strcat(errstr,"\n");
         } else {
             switch(dz->infile->filetype) {
@@ -846,7 +850,7 @@ int sfdiff_process(char temp[],int samesize,dataptr dz)
                 if(dz->param[SFDIFF_THRESH] > 0) {
                     sprintf(temp," to within %lf\n",dz->param[SFDIFF_THRESH]);
                     strcat(errstr,temp);
-                } else
+                } else 
                     strcat(errstr,"\n");
                 break;
             default:
@@ -871,7 +875,7 @@ int sfdiff_process(char temp[],int samesize,dataptr dz)
 /************************ READ_BOTH_THE_FILES *******************************/
 
 int read_both_the_files(int samesize,dataptr dz)
-{
+{   
     int samps_read2;
     if((dz->ssampsread = fgetfbufEx(dz->sampbuf[0], /*dz->bigbufsize*/dz->buflen,dz->ifd[0],0)) < 0) {
         sprintf(errstr, "Can't read samps from 1st soundfile\n");
@@ -896,13 +900,13 @@ int read_both_the_files(int samesize,dataptr dz)
 /************************ READ_SAMPS_FOR_CDIFF *******************************/
 
 int read_samps_for_cdiff(dataptr dz)
-{
+{   
     int n, m;
     if((dz->ssampsread = fgetfbufEx(dz->sampbuf[2], dz->buflen * 2,dz->ifd[0],0)) < 0) {
         sprintf(errstr, "Can't read samples from soundfile\n");
         return(SYSTEM_ERROR);
     }
-
+    
     for(n=0,m=0;m<dz->ssampsread;n++,m+=2) {
         dz->sampbuf[0][n] = dz->sampbuf[2][m];
         dz->sampbuf[1][n] = dz->sampbuf[2][m+1];
@@ -915,7 +919,7 @@ int read_samps_for_cdiff(dataptr dz)
 /**************************** COMPARE_SAMPS ***************************/
 
 void compare_samps(char temp[],int *badmatch,int *limitcnt,double threshold,dataptr dz)
-{
+{   
     int   n;
     int   sampsread = dz->ssampsread;
     switch(dz->infile->filetype) {
@@ -923,13 +927,13 @@ void compare_samps(char temp[],int *badmatch,int *limitcnt,double threshold,data
         if(dz->process==INFO_CDIFF)
             sampsread /= STEREO;
         for(n=0;n<sampsread;n++) {
-            if(fabs(dz->sampbuf[0][n]-dz->sampbuf[1][n]) > threshold) {
+            if(fabs(dz->sampbuf[0][n]-dz->sampbuf[1][n]) > threshold) { 
                 if(*badmatch==0) {
                     sprintf(errstr,"Badmatch from ");
                     snd_file_time(temp,n,dz);
                     *badmatch = 1;
                     if(++(*limitcnt) >= dz->iparam[SFDIFF_CNT]) {
-                        dz->samps_left = 0;      /* force calling loop to end */
+                        dz->samps_left = 0;  /* force calling loop to end */
                         return;
                     }
                 }
@@ -947,7 +951,7 @@ void compare_samps(char temp[],int *badmatch,int *limitcnt,double threshold,data
     case(ANALFILE):
         dz->ssampsread = sampsread;
         for(n=0;n<dz->ssampsread;n+=2) {
-            if(fabs(dz->flbufptr[0][n]-dz->flbufptr[1][n]) > threshold) {
+            if(fabs(dz->flbufptr[0][n]-dz->flbufptr[1][n]) > threshold) {   
                 if(*badmatch==0) {
                     sprintf(errstr,"Bad frq match from ");
                     anal_file_time(temp,n,dz);
@@ -966,7 +970,7 @@ void compare_samps(char temp[],int *badmatch,int *limitcnt,double threshold,data
                     *badmatch = 0;
                 }
             }
-        }
+        }       
         if(*badmatch) {
             strcat(errstr," as far as ");
             anal_file_time(temp,n,dz);
@@ -975,7 +979,7 @@ void compare_samps(char temp[],int *badmatch,int *limitcnt,double threshold,data
             *badmatch = 0;
         }
         for(n=1;n<dz->ssampsread;n+=2) {
-            if(fabs(dz->flbufptr[0][n]-dz->flbufptr[1][n]) > threshold) {
+            if(fabs(dz->flbufptr[0][n]-dz->flbufptr[1][n]) > threshold) {   
                 if(*badmatch==0) {
                     sprintf(errstr,"Bad amp match from ");
                     anal_file_time(temp,n,dz);
@@ -994,7 +998,7 @@ void compare_samps(char temp[],int *badmatch,int *limitcnt,double threshold,data
                     *badmatch = 0;
                 }
             }
-        }
+        }       
         if(*badmatch) {
             strcat(errstr," to buffer end ");
             anal_file_time(temp,n,dz);
@@ -1003,10 +1007,10 @@ void compare_samps(char temp[],int *badmatch,int *limitcnt,double threshold,data
             *badmatch = 0;
         }
         break;
-    default:        /* float files */
+    default:    /* float files */
         dz->ssampsread = sampsread;
         for(n=0;n<dz->ssampsread;n++) {
-            if(fabs(dz->flbufptr[0][n]-dz->flbufptr[1][n]) > threshold) {
+            if(fabs(dz->flbufptr[0][n]-dz->flbufptr[1][n]) > threshold) {   
                 if(*badmatch==0) {
                     sprintf(errstr,"Badmatch from ");
                     anal_file_time(temp,n,dz);
@@ -1025,7 +1029,7 @@ void compare_samps(char temp[],int *badmatch,int *limitcnt,double threshold,data
                     *badmatch = 0;
                 }
             }
-        }
+        }       
         break;
     }
 }
@@ -1033,7 +1037,7 @@ void compare_samps(char temp[],int *badmatch,int *limitcnt,double threshold,data
 /***************************** ANAL_FILE_TIME *************************/
 
 void anal_file_time(char temp[],int n,dataptr dz)
-{
+{   
     int this_channel;
     double this_time;
     int  wanted;
@@ -1042,8 +1046,8 @@ void anal_file_time(char temp[],int n,dataptr dz)
     switch(dz->infile->filetype) {
     case(ANALFILE):
         wanted = dz->infile->Mlen + 2;
-        this_window  = this_sample/wanted;       /* TRUNCATE */
-        this_sample  = this_sample%wanted;       /* sample count from window base */
+        this_window  = this_sample/wanted;   /* TRUNCATE */
+        this_sample  = this_sample%wanted;   /* sample count from window base */
         this_channel = this_sample/2;
         this_time    = (double)this_window/(double)dz->infile->arate;
         sprintf(temp,"  channel %d: window %d: time %.4lf ",this_channel,this_window,this_time);
@@ -1073,7 +1077,7 @@ void anal_file_time(char temp[],int n,dataptr dz)
 /**************************** SND_FILE_TIME ***************************/
 
 void snd_file_time(char temp [],int n,dataptr dz)
-{
+{   
     int   this_sample;
     double this_time, sr = (double)dz->infile->srate;
     if(dz->process==INFO_CDIFF) {
@@ -1143,8 +1147,8 @@ int compare_analfile_properties(dataptr dz)
             return(FINISHED);
         }
         if(dz->infile->Dfac != dz->otherfile->Dfac) {
-            sprintf(errstr,"Files do not have same DECIMATION FACTOR.\n");
-            return(FINISHED);
+            sprintf(errstr,"Files do not have same DECIMATION FACTOR.\n");  
+            return(FINISHED);   
         }
     }
     return(CONTINUE);
@@ -1166,7 +1170,7 @@ int do_sfdiff(char temp[],dataptr dz)
         break;
     default:
         if(is_a_text_input_filetype(dz->infile->filetype)
-           || is_a_text_input_filetype(dz->otherfile->filetype)) {
+        || is_a_text_input_filetype(dz->otherfile->filetype)) {
             sprintf(errstr,"Program only works with soundfiling system files.\n");
             return(DATA_ERROR);
         }
@@ -1177,13 +1181,13 @@ int do_sfdiff(char temp[],dataptr dz)
         if(compare_infile_sizes(&samesize,dz)!=CONTINUE)
             return(FINISHED);
 
-        switch(dz->infile->filetype) {
+        switch(dz->infile->filetype) {      
         case(SNDFILE):
             if(compare_sndfile_properties(temp,dz)!=CONTINUE) {
                 print_outmessage_flush(errstr);
                 return(FINISHED);
             }
-            break;
+            break; 
         default:
             if(compare_analfile_properties(dz)!=CONTINUE) {
                 print_outmessage_flush(errstr);
@@ -1193,7 +1197,7 @@ int do_sfdiff(char temp[],dataptr dz)
             dz->flbufptr[1] = dz->sampbuf[1];
             break;
         }
-        break;
+        break; 
     }
     if((exit_status = sfdiff_process(temp,samesize,dz))<0)
         return(exit_status);
@@ -1218,16 +1222,16 @@ int prntprops(SFPROPS *props,dataptr dz)
     }
 
     /*RWD find PEAK chunk as priority */
-
+    
     if(snd_headread(dz->ifd[0],props)){
         if((*props).type == wt_wave) {
-            switch(props->samptype){          /*RWD Nov 2003 show sample type now we have so many possibilities! */
+            switch(props->samptype){      /*RWD Nov 2003 show sample type now we have so many possibilities! */
             case(SHORT16):
                 sprintf(errstr,"sample type:  16bit\n");
                 break;
             case(FLOAT32):
                 sprintf(errstr,"sample type:  32bit floats\n");
-                break;
+                break;          
             case(INT2424):
                 sprintf(errstr,"sample type:  24bit packed\n");
                 break;
@@ -1245,7 +1249,7 @@ int prntprops(SFPROPS *props,dataptr dz)
                 break;
             }
             print_outmessage(errstr);
-            chans = (*props).chans;
+            chans = (*props).chans; 
             if(sndreadpeaks(dz->ifd[0],chans,peaks,&peaktime)>0){
                 int i;
                 thistime = (time_t) peaktime;
@@ -1253,7 +1257,7 @@ int prntprops(SFPROPS *props,dataptr dz)
                 print_outmessage(errstr);
                 for(i=0;i < chans;i++){
                     sprintf(errstr,"CH %d:\tamp = %.4f (%.2f dB)\tFrame %u\n",
-                            i+1,peaks[i].value,20 * log10(peaks[i].value),peaks[i].position);
+                        i+1,peaks[i].value,20 * log10(peaks[i].value),peaks[i].position); 
                     print_outmessage(errstr);
                 }
             }
@@ -1265,16 +1269,16 @@ int prntprops(SFPROPS *props,dataptr dz)
     }
 
     if(sndgetprop(dz->ifd[0], "date", prop, sizeof(unsigned int))>=0
-       || sndgetprop(dz->ifd[0], "DATE", prop, sizeof(unsigned int))>=0) {
+    || sndgetprop(dz->ifd[0], "DATE", prop, sizeof(unsigned int))>=0) {
         thistime = (time_t) *(int*)prop;
         p = ctime(&thistime);
-
+        
         sprintf(errstr,"Date: %s\n",p);
         print_outmessage(errstr);
     }
     fflush(stdout);
     return(FINISHED);
-}
+}       
 
 /************************** GET_SHORT_MAXMIN ************************/
 
@@ -1292,7 +1296,7 @@ int get_float_maxmin(float *buf,int chans, double inverse_sr,dataptr dz)
     int endsamp = round(dz->param[MAX_ETIME] * convertor);
     int last_total_samps_read;
     int startsrch, endsrch;
-    dz->total_samps_read = 0;       /* REDUNDANT ? */
+    dz->total_samps_read = 0;   /* REDUNDANT ? */
     while(dz->samps_left) {
         last_total_samps_read = dz->total_samps_read;
         if((exit_status = read_samps(buf,dz))<0)
@@ -1343,16 +1347,16 @@ int getpeakdata(int ifd, float *peakval,SFPROPS *props)
     CHPEAK peaks[16];
     int chans, peaktime;
     float maxamp = 0.0f;
-
+    
     if(snd_headread(ifd,props)){
-        chans = (*props).chans;
+        chans = (*props).chans; 
         if(sndreadpeaks(ifd,chans,peaks,&peaktime)){
             int i;
             for(i=0;i < chans;i++)
                 maxamp = max(maxamp,peaks[i].value);
             *peakval = maxamp;
             return 1;
-        }
+        }       
     }
     /* sf_headread error; but can't do much about it */
     return 0;
@@ -1403,7 +1407,7 @@ int do_zcross_ratio(dataptr dz)
         cnt[m] = 0;
     }
     k = bufstart + chans;
-    while(bufend > dz->buflen)      {
+    while(bufend > dz->buflen)  {
         for(n = k; n < dz->ssampsread;n+=chans) {
             for(m=0;m<chans;m++) {
                 switch(phase[m]) {
