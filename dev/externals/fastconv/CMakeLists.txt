@@ -14,9 +14,9 @@ link_directories(../lib)
 
 include_directories(../include)
 
-add_executable(fconv fconv.cpp genrespframe2.cpp mxfftd.c)
+add_executable(fastconv fconv.cpp genrespframe2.cpp mxfftd.c)
 
-target_link_libraries(fconv portsf sfsys ${EXTRA_LIBRARIES})
+target_link_libraries(fastconv portsf sfsys ${EXTRA_LIBRARIES})
 
-my_install(fconv)
+my_install(fastconv)
 
