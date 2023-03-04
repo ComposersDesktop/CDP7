@@ -61,6 +61,7 @@
 #ifdef linux
 #include <stdint.h>
 #include <sys/vfs.h>
+#include <time.h>
 #endif
 
 /*RWD May 2005: has to be a signed value sadly!*/

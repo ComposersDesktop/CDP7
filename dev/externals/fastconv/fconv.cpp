@@ -41,8 +41,8 @@ extern "C"
 #include <string.h>
 #include <time.h>
 #include <sys/types.h>
-#include <sys/timeb.h>
-
+//#include <sys/timeb.h>
+#include <sys/time.h>
 
 #ifdef _DEBUG
 #include <assert.h>
@@ -110,11 +110,11 @@ void usage(const char *progname)
 double
 timer()
 {
-    struct timeb now;
+    struct timeval now;
     double secs, ticks;
-    ftime(&now);
-    ticks = (double)now.millitm/(1000.0);
-    secs = (double) now.time;
+    gettimeofday(&now, NULL);
+    ticks = (double)now.tv_usec/(1000.0);
+    secs = (double) now.tv_sec;
 
     return secs + ticks;
 }
