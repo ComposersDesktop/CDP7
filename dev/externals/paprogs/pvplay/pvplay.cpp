@@ -243,7 +243,7 @@ static int MemCallback(const    void *inputBuffer, void *outputBuffer,
     // everything now in inbuf
     if(pdata->do_decode) {
         ABFSAMPLE abfsamp;
-        int j;    
+        unsigned int j;    
         for(j=0; j < framesToPlay; j++){
             pdata->copyfunc(&abfsamp,pdata->inbuf + (j * pdata->inchans));
             pdata->decodefunc(&abfsamp,out + (j * pdata->outchans), 1);
@@ -362,7 +362,7 @@ int main(int argc,char **argv)
     fmhdecodefunc decodefunc = NULL;
     /* chorder facility not included in pvplay - use paplay! */
     unsigned int flags[FLAG_NFLAGS] = {0};
-    int speakermask = 0;
+    //int speakermask = 0;
     int do_speakermask = 0;
     int do_updatemessages = 1;
 #ifdef unix
@@ -798,7 +798,7 @@ int main(int argc,char **argv)
                 }
                 // ensure ring buffer is large enough even for huge FFT lengths!
                 adjusted = false;
-                while(ringframelen < (sfdata.fftsize * 4)) {
+                while((signed int)ringframelen < (sfdata.fftsize * 4)) {
                     ringframelen <<= 1;
                     adjusted = true;
                 }
@@ -826,7 +826,7 @@ int main(int argc,char **argv)
                                 printf("Could not read speaker mask. Using 0\n");
                             }
                             else 
-                                speakermask = mask;
+                              /*speakermask = mask*/;
                         }
                     }
                 }
@@ -1120,7 +1120,9 @@ int main(int argc,char **argv)
             directSoundStreamInfo.hostApiType = paDirectSound; 
             directSoundStreamInfo.version = 2;
             directSoundStreamInfo.flags = paWinDirectSoundUseChannelMask;
+#ifdef FIXME
             directSoundStreamInfo.channelMask = speakermask;
+#endif
             outputParameters.hostApiSpecificStreamInfo = &directSoundStreamInfo;
         }
         else if(apiinfo->type == paASIO)

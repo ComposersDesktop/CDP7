@@ -214,7 +214,7 @@ unsigned int __stdcall threadFunctionReadFromAnalFile(void* ptr)
             
             if (file_playing)  {
                 /* find out where we are ... */
-                int framepos1 = sndtellEx(pdata->ifd) / pdata->anal_framesize;
+                unsigned int framepos1 = sndtellEx(pdata->ifd) / pdata->anal_framesize;
                 
                 for(i = 0;i < framestoget;i++){ 
                     /* read one frame*/
@@ -239,7 +239,7 @@ unsigned int __stdcall threadFunctionReadFromAnalFile(void* ptr)
                         pbuf += samps;
                     }
                     
-                    if (got==0 || framepos1 >= pdata->to_frame){
+                    if (got==0 || (framepos1 >= pdata->to_frame)){
                         if(pdata->play_looped) {
                             int pos;
                             pos = sndseekEx(pdata->ifd,pdata->from_frame * pdata->anal_framesize,SEEK_SET);
@@ -328,7 +328,7 @@ unsigned int __stdcall threadFunctionReadFromPVXFile(void* ptr)
                 float *pbuf = pdata->inbuf;
                 if (file_playing)  {
                     /* find out where we are ...multi-chan frame count */
-                    int framepos = pvoc_framepos(pdata->pvfile) / pdata->inchans; // NB
+                    unsigned int framepos = pvoc_framepos(pdata->pvfile) / pdata->inchans; // NB
                     if(framepos < 0){
                         fprintf(stderr,"\nError reading file frame position\n");
                         file_playing  = 0;
@@ -400,7 +400,7 @@ unsigned int __stdcall threadFunctionReadFromPVXFile(void* ptr)
                 // framestoget is count of m/c analysis frames to read
                 if(file_playing){
                     /* find out where we are ...multi-chan frame count */
-                    int framepos = pvoc_framepos(pdata->pvfile) / pdata->inchans; // NB
+                    unsigned int framepos = pvoc_framepos(pdata->pvfile) / pdata->inchans; // NB
                     if(framepos < 0){
                         fprintf(stderr,"\nError reading file frame position\n");
                         file_playing  = 0;

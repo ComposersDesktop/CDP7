@@ -141,7 +141,7 @@ static int32_t write_pvocdata(int32_t fd,int32_t byterev,const PVOCDATA *pData)
 
 
     if(byterev){
-        int32_t revdwval;
+      //int32_t revdwval;
         PVOCDATA data;
         SND_SAMP ssamp;
         data.wWordFormat = REVWBYTES(pData->wWordFormat);
@@ -154,10 +154,10 @@ static int32_t write_pvocdata(int32_t fd,int32_t byterev,const PVOCDATA *pData)
         data.dwFrameAlign = REVDWBYTES(pData->dwFrameAlign);
         
         ssamp.fsamp = pData->fAnalysisRate;
-        dwval = * (int32_t *) &(pData->fAnalysisRate);
-        revdwval = REVDWBYTES(/*dwval*/ ssamp.lsamp);
+        //dwval = * (int32_t *) &(pData->fAnalysisRate);
+        //revdwval = REVDWBYTES(/*dwval*/ ssamp.lsamp);
 #ifdef _DEBUG
-        assert(dwval == revdwval);
+        //assert(dwval == revdwval);
 #endif
         //data.fAnalysisRate = * (float *) &dwval;
         data.fAnalysisRate = ssamp.fsamp;
